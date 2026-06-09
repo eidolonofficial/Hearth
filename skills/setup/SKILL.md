@@ -78,7 +78,7 @@ When a session runs long, Claude's working context can get trimmed. Two
 small hooks prevent losing your place:
 
 ```
-session-preserve   before context is trimmed   save a short note of where things stand
+session-save       before context is trimmed   save a short note of where things stand
 session-restore    when a session starts        bring that note back
 ```
 
