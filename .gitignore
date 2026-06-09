@@ -1,0 +1,14 @@
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node
+node_modules/
+
+# Transient runtime state (if the bundled harness runs here)
+.claude/active-persona.json
+.claude/.drift-count
+.claude/.session-state
+.claude/.memory-synced-head
+verify-packet/
