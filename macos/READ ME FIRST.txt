@@ -1,0 +1,36 @@
+READ ME FIRST (macOS)
+
+Welcome. Take a breath. You are in the right place, and there is nothing here you can get wrong.
+
+This is the macOS version of Hearth. It does exactly what the Windows one does, just with Mac-friendly steps. Everything that matters, the warmth, the safety, the "nothing happens without your yes," is the same.
+
+
+HOW TO START
+
+Find the file named "Welcome.command" in this folder and double-click it. A calm Terminal window opens and walks you through everything in plain words. You do not need to type any commands or know anything technical.
+
+
+IF MACOS WILL NOT OPEN IT THE FIRST TIME
+
+macOS is careful with files that came from somewhere else, so the very first time it may refuse to open this one. That is normal, and it is not a problem. Do one of these, just once:
+
+  - Right-click (or hold Control and click) "Welcome.command", choose Open, then click Open again in the box that appears. After that first time, a normal double-click works.
+
+  - If it still will not run, open the Terminal app, type  chmod +x  followed by a space, drag "Welcome.command" onto the Terminal window, and press Enter. Then double-click the file as usual.
+
+You are safe the whole way. Nothing happens without your yes, you can close the window any time, and it cannot harm your computer.
+
+
+WHAT IT DOES
+
+The same as the main READ ME FIRST.txt one folder up. It sets up your two skills, Setup and Eidolon, right away, then offers a couple of optional helpers one at a time. Each helper, if you say yes, is fetched from its maker's own official source, never quietly. That file also explains, in plain terms, why you want both skills, and it previews the one gentle question Setup asks the very first time, how familiar you are with coding and engineering, where there is no wrong answer.
+
+On a Mac, the optional helpers install through a small friendly tool called uv, and if uv is not on your computer yet, Hearth shows you the one official command to add it and then stops, so you stay in charge.
+
+
+A NOTE OF THANKS
+
+Everyone whose work made Hearth possible is named in CREDITS.md, in their own words, with thanks.
+
+
+When you feel ready, double-click "Welcome.command". We will take it slowly, together.
