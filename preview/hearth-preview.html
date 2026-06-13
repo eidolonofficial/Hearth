@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hearth — a calm way to set up Claude</title>
+<style>
+  :root{
+    --bg:#15161d; --bg2:#0f1015; --warm:#e8b964; --cyan:#6cc4cc;
+    --green:#8ec07c; --gray:#7c818d; --rail:#5b6068; --edge:#23252f;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    min-height:100vh;
+    background:radial-gradient(1200px 800px at 70% -10%, #20222c 0%, #0c0d12 60%, #08090d 100%);
+    color:#cdd1d8;
+    font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex; flex-direction:column; align-items:center;
+    padding:40px 18px 64px;
+  }
+  .head{max-width:860px; width:100%; margin-bottom:18px}
+  .head h1{font-size:19px; font-weight:600; margin:0 0 4px; color:#e7eaef; letter-spacing:.2px}
+  .head p{margin:0; color:#8b909b; font-size:13.5px}
+  .toolbar{
+    max-width:860px; width:100%; display:flex; gap:10px; align-items:center;
+    margin:14px 0 12px; flex-wrap:wrap;
+  }
+  button{
+    font:inherit; font-size:13px; color:#dfe3ea; background:#1c1e27;
+    border:1px solid #313440; padding:7px 13px; border-radius:8px; cursor:pointer;
+    transition:.15s ease; display:inline-flex; align-items:center; gap:7px;
+  }
+  button:hover{background:#242732; border-color:#3d4150}
+  button.active{background:#2a2d3a; border-color:var(--warm); color:#f3e6c8}
+  .toolbar .sp{flex:1}
+  .toolbar .hint{color:#73788400; font-size:12.5px}
+  .hint{color:#737884; font-size:12.5px}
+  .window{
+    max-width:860px; width:100%;
+    background:linear-gradient(180deg,#16171f,#121319);
+    border:1px solid var(--edge); border-radius:13px; overflow:hidden;
+    box-shadow:0 24px 70px -24px rgba(0,0,0,.75), 0 1px 0 rgba(255,255,255,.03) inset;
+  }
+  .titlebar{
+    display:flex; align-items:center; gap:8px; padding:11px 14px;
+    background:#1b1c24; border-bottom:1px solid #23252f;
+  }
+  .dot{width:12px; height:12px; border-radius:50%}
+  .dot.r{background:#ec6a5e} .dot.y{background:#f4bf4f} .dot.g{background:#61c554}
+  .titlebar .name{
+    flex:1; text-align:center; color:#8b909b; font-size:12.5px;
+    font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+    letter-spacing:.3px;
+  }
+  .screen{
+    padding:18px 20px 22px; overflow:auto; max-height:74vh;
+    background:var(--bg);
+    font-family:ui-monospace,"SF Mono","Cascadia Code","Roboto Mono",Menlo,Consolas,monospace;
+    font-size:13px; line-height:1.5; white-space:pre; color:#cdd1d8;
+    -webkit-font-smoothing:antialiased;
+  }
+  .screen::-webkit-scrollbar{width:11px;height:11px}
+  .screen::-webkit-scrollbar-thumb{background:#2c2f3a; border-radius:8px; border:3px solid var(--bg)}
+  .wm{color:var(--warm)} .cy{color:var(--cyan)} .gn{color:var(--green)}
+  .gy{color:var(--gray)} .rail{color:var(--rail)}
+  .wm{text-shadow:0 0 18px rgba(232,185,100,.16)}
+  #breath{color:var(--cyan)}
+  .caption{max-width:860px; width:100%; margin-top:14px; color:#73788e; font-size:12.5px}
+  .caption code{background:#1c1e27; padding:1px 6px; border-radius:5px; color:#b9c0cc; font-size:12px}
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Hearth — what the installer looks like</h1>
+    <p>A faithful render of the terminal welcome flow. The box-breathing animates live, just like during a real install.</p>
+  </div>
+
+  <div class="toolbar">
+    <button id="btnUni" class="active">● Soft Unicode</button>
+    <button id="btnAscii">● Plain ASCII</button>
+    <button id="btnBreath" class="active">⏸ Pause breathing</button>
+    <span class="sp"></span>
+    <span class="hint">Both looks ship in the same script — it picks automatically and falls back when needed.</span>
+  </div>
+
+  <div class="window">
+    <div class="titlebar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="name">Hearth — a calm way to set up Claude</span>
+    </div>
+    <div id="screen" class="screen"></div>
+  </div>
+
+  <div class="caption">
+    Toggle <code>Soft Unicode</code> / <code>Plain ASCII</code> to see both modes the installer can render
+    (<code>HEARTH_ASCII=1</code> forces the plain look). Frames, widths, and word-wrap mirror
+    <code>welcome.ps1</code> and <code>macos/Welcome.command</code> exactly.
+  </div>
+
+<script>
+"use strict";
+
+const INW = 64, INNER = INW - 2;
+
+const GLYPHS = {
+  unicode: { TL:'╭', TR:'╮', BL:'╰', BR:'╯', H:'─', V:'│', ML:'├', MR:'┤', Fill:'█', Empty:'░', Check:'✓', Bullet:'•' },
+  ascii:   { TL:'+', TR:'+', BL:'+', BR:'+', H:'-', V:'|', ML:'+', MR:'+', Fill:'#', Empty:'.', Check:'[ok]', Bullet:'-' }
+};
+
+let mode = 'unicode';
+let breathing = true;
+let G = GLYPHS[mode];
+
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const rep = (s,n) => s.repeat(n);
+const padEnd = (s,n) => s.length >= n ? s.slice(0,n) : s + ' '.repeat(n - s.length);
+
+// --- line builders (return HTML for one screen line) ------------------------
+const L = [];
+const blank   = () => L.push('');
+const text    = (cls, s) => L.push(`<span class="${cls}">${esc(s)}</span>`);
+const boxTop  = () => L.push(`<span class="gy">    ${G.TL}${rep(G.H,INW)}${G.TR}</span>`);
+const boxBot  = () => L.push(`<span class="gy">    ${G.BL}${rep(G.H,INW)}${G.BR}</span>`);
+const boxDiv  = () => L.push(`<span class="gy">    ${G.ML}${rep(G.H,INW)}${G.MR}</span>`);
+const divider = () => L.push(`<span class="gy">    ${rep(G.H,INW)}</span>`);
+
+function boxLine(cls, s){
+  const t = padEnd(s, INNER);
+  L.push(`<span class="gy">    ${G.V} </span><span class="${cls}">${esc(t)}</span><span class="gy"> ${G.V}</span>`);
+}
+function boxCenter(cls, s){
+  if (s.length > INNER) s = s.slice(0, INNER);
+  const left = Math.floor((INNER - s.length) / 2);
+  boxLine(cls, ' '.repeat(left) + s);
+}
+function cardRow(label, value){
+  const indent = ' '.repeat(label.length);
+  const avail = INNER - label.length;
+  const words = value.split(' ');
+  let line = '', first = true;
+  for (const w of words){
+    if (line === '') line = w;
+    else if (line.length + 1 + w.length <= avail) line = line + ' ' + w;
+    else { boxLine('cy', (first ? label : indent) + line); first = false; line = w; }
+  }
+  boxLine('cy', (first ? label : indent) + line);
+}
+
+// --- the breathing line (animated; rendered as its own span) ----------------
+const breathPhases = [['Breathe in','fill'],['Hold','full'],['Breathe out','drain'],['Hold','empty']];
+let breathStep = 0;
+function breathLine(){
+  const pIndex = Math.floor(breathStep / 4), c = (breathStep % 4) + 1;
+  const [name, kind] = breathPhases[pIndex];
+  let n = kind === 'fill' ? c : kind === 'full' ? 4 : kind === 'drain' ? 4 - c : 0;
+  let bar = '';
+  for (let i = 1; i <= 4; i++) bar += (i <= n ? G.Fill : G.Empty);
+  return `    ${padEnd(name,12)} ${String(c).padStart(2,' ')}   [${bar}] `;
+}
+
+// --- the full transcript ----------------------------------------------------
+function build(){
+  L.length = 0;
+  G = GLYPHS[mode];
+
+  // wordmark
+  blank();
+  text('wm', '        _   _   _____      _      ____    _____   _   _   ');
+  text('wm', '       | | | | | ____|    / \\    |  _ \\  |_   _| | | | |  ');
+  text('wm', '       | |_| | |  _|     / _ \\   | |_) |   | |   | |_| |  ');
+  text('wm', '       |  _  | | |___   / ___ \\  |  _ <    | |   |  _  |  ');
+  text('wm', '       |_| |_| |_____| /_/   \\_\\ |_| \\_\\   |_|   |_| |_|  ');
+  blank();
+  boxTop();
+  boxLine('cy', '');
+  boxCenter('cy', 'a calm way to set up Claude');
+  boxCenter('gy', G.Bullet);
+  boxBot();
+  blank();
+  text('gy', '    (The real logo is in the assets folder. Full credits are in CREDITS.md.)');
+  blank();
+
+  text('cy', '    Hello, and welcome. Take a breath. You are in the right place.');
+  blank();
+  text('cy', '    Here is the shape of what happens next, so nothing is a surprise:');
+  blank();
+  text('cy', `      ${G.Bullet} You are safe here. Nothing happens without your yes.`);
+  text('cy', `      ${G.Bullet} You can close this window any time you like.`);
+  text('cy', `      ${G.Bullet} This cannot harm your computer.`);
+  text('cy', `      ${G.Bullet} Every step tells you what just happened and what comes next.`);
+  blank();
+  text('cy', '    We start with a small gift, then I introduce a couple of helpers.');
+  text('cy', '    For each helper you can say yes, no, or later. You are in control the whole time.');
+  blank();
+
+  text('wm', '    Your two skills, and why there are two.');
+  blank();
+  text('cy', '      Setup is the calm start of a work session. When you sit down to a');
+  text('cy', '      piece of work, it asks a few short questions so Claude works the way');
+  text('cy', '      you like, it quietly remembers what helped and what did not, and it');
+  text('cy', '      double-checks its own work before calling anything done.');
+  blank();
+  text('cy', '      Eidolon is about the project itself. It reads a whole project folder');
+  text('cy', '      and sets up what Claude needs, then carries a build from a plain idea');
+  text('cy', '      all the way to finished: it plans, builds a careful piece at a time,');
+  text('cy', '      checks it for safety and mistakes, and only then puts it in place.');
+  blank();
+  text('wm', '    One gentle thing Setup will ask, the first time you work:');
+  blank();
+  text('cy', '      "People come to this at all different levels, and there is no wrong answer.');
+  text('cy', '       How familiar are you with coding and engineering?"');
+  text('gy', '         new to this            some familiarity');
+  text('gy', '         comfortable, I code    expert');
+  blank();
+
+  divider();
+
+  // instant win
+  blank();
+  text('wm', '    First, a gift that is already yours.');
+  text('cy', '    These two skills were made for you, so they go in right away.');
+  blank();
+  for (const f of [
+    'setup/SKILL.md',
+    'eidolon/SKILL.md',
+    'eidolon/hooks/lib.mjs',
+    'eidolon/references/scaling.md',
+    'eidolon/scripts/selfcheck.mjs',
+    'eidolon/LICENSE'
+  ]) text('gn', `    ${G.Check}  ${f}`);
+  text('gy', '    ...');
+  blank();
+  text('gn', '    Done. Setup and Eidolon are in place.');
+  text('cy', '    That is your first win, and it took only a few seconds.');
+  blank();
+
+  // graphify card
+  blank();
+  boxTop();
+  boxLine('wm', 'graphify');
+  boxDiv();
+  cardRow('What:  ', 'It turns a folder of work into a clear map you can explore.');
+  cardRow('Why:   ', 'When your project grows, this helps you and Claude see how the pieces connect.');
+  cardRow('Who:   ', 'Made by Safi Shamsi. https://github.com/safishamsi/graphify (MIT license).');
+  cardRow('Where: ', 'Installed from its official package, named graphifyy, the same one the maker publishes.');
+  cardRow('When:  ', 'Reach for it when you want a birds eye view of a project folder.');
+  cardRow('How:   ', 'If you say yes: I run uv tool install graphifyy, then graphify install.');
+  boxBot();
+  blank();
+
+  // the "yes" path -> live breathing
+  text('wm', '    Want this set up?');
+  text('gy', '    Type yes, no, or later, then press Enter.');
+  text('cy', '    your answer: yes');
+  blank();
+  text('wm', '    Wonderful. Let us set it up. This part does real work, so breathe with me.');
+  blank();
+  text('gy', '    Box breathing while this finishes. Follow the count if you like.');
+  blank();
+  L.push('<span id="breath">' + esc(breathLine()) + '</span>');
+  blank();
+  text('gn', `    ${G.Check}  graphify is set up and ready.`);
+  text('cy', '    Nicely done. That is another piece in place.');
+  blank();
+
+  divider();
+
+  // send-off
+  blank();
+  boxTop();
+  boxCenter('gn', 'You did it.');
+  boxBot();
+  blank();
+  text('wm', '    Here is what you now have:');
+  blank();
+  text('cy', `      ${G.Bullet} Setup and Eidolon, your two skills, ready in Claude.`);
+  text('cy', `      ${G.Bullet} Any helpers you said yes to, installed from their own makers.`);
+  blank();
+  text('wm', '    With thanks.');
+  blank();
+  text('cy', '      Addy Osmani, first and foremost. He built the agent-skills harness');
+  text('cy', '      that this whole pattern grows from. The idea starts with his work.');
+  blank();
+  text('gn', '    Thank you for being here. Be gentle with yourself. You did well.');
+  blank();
+
+  document.getElementById('screen').innerHTML = L.join('\n');
+}
+
+// --- wiring -----------------------------------------------------------------
+const btnUni = document.getElementById('btnUni');
+const btnAscii = document.getElementById('btnAscii');
+const btnBreath = document.getElementById('btnBreath');
+
+function setMode(m){
+  mode = m;
+  btnUni.classList.toggle('active', m === 'unicode');
+  btnAscii.classList.toggle('active', m === 'ascii');
+  build();
+}
+btnUni.onclick = () => setMode('unicode');
+btnAscii.onclick = () => setMode('ascii');
+btnBreath.onclick = () => {
+  breathing = !breathing;
+  btnBreath.textContent = breathing ? '⏸ Pause breathing' : '▶ Resume breathing';
+  btnBreath.classList.toggle('active', breathing);
+};
+
+build();
+setInterval(() => {
+  if (!breathing) return;
+  breathStep = (breathStep + 1) % 16;
+  const el = document.getElementById('breath');
+  if (el) el.textContent = breathLine();
+}, 700);
+</script>
+</body>
+</html>
