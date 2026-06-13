@@ -14,6 +14,25 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 # Soft palette. Gentle colors. Green is a small win. Cyan is a calm voice.
 CYAN=$'\033[36m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; GRAY=$'\033[90m'; RESET=$'\033[0m'
 
+# Can this terminal show soft Unicode shapes? Default yes when the locale is UTF-8,
+# and fall back to plain ASCII otherwise. Set HEARTH_ASCII=1 to force the plain look.
+USE_UNICODE=1
+case "${LC_ALL}${LANG}" in *UTF-8*|*utf8*|*UTF8*) ;; *) USE_UNICODE=0 ;; esac
+[ "${HEARTH_ASCII:-0}" = "1" ] && USE_UNICODE=0
+
+# The two glyph sets. Soft rounded shapes when we can, plain ASCII when we cannot.
+# Either way the layout is identical, so the experience stays the same.
+if [ "$USE_UNICODE" = "1" ]; then
+  G_TL='╭'; G_TR='╮'; G_BL='╰'; G_BR='╯'; G_H='─'; G_V='│'; G_ML='├'; G_MR='┤'
+  G_FILL='█'; G_EMPTY='░'; G_CHECK='✓'; G_BULLET='•'
+else
+  G_TL='+'; G_TR='+'; G_BL='+'; G_BR='+'; G_H='-'; G_V='|'; G_ML='+'; G_MR='+'
+  G_FILL='#'; G_EMPTY='.'; G_CHECK='[ok]'; G_BULLET='-'
+fi
+
+# The inside width of every framed box, so the cards and banners all line up.
+INW=64
+
 say()   { printf '%s%s%s\n' "$CYAN"   "$1" "$RESET"; }
 warm()  { printf '%s%s%s\n' "$YELLOW" "$1" "$RESET"; }
 soft()  { printf '%s%s%s\n' "$GRAY"   "$1" "$RESET"; }
@@ -21,6 +40,53 @@ win()   { printf '%s%s%s\n' "$GREEN"  "$1" "$RESET"; }
 blank() { printf '\n'; }
 pause() { sleep "${1:-0.35}"; }
 have()  { command -v "$1" >/dev/null 2>&1; }
+
+# Repeat a string n times. Used to draw the smooth top and bottom of a box.
+rep() { local s="$1" n="$2" out="" i=0; while [ "$i" -lt "$n" ]; do out="$out$s"; i=$((i+1)); done; printf '%s' "$out"; }
+
+# The three frame edges of a box, drawn in soft gray.
+box_top()    { soft "    ${G_TL}$(rep "$G_H" "$INW")${G_TR}"; }
+box_bottom() { soft "    ${G_BL}$(rep "$G_H" "$INW")${G_BR}"; }
+box_div()    { soft "    ${G_ML}$(rep "$G_H" "$INW")${G_MR}"; }
+
+# One content line inside a box: gray rails on both sides, colored text between.
+box_line() {
+  local color="$1" text="$2" inner=$((INW - 2))
+  text="$(printf '%.*s' "$inner" "$text")"
+  printf '%s    %s %s%-*s%s %s%s\n' "$GRAY" "$G_V" "$color" "$inner" "$text" "$GRAY" "$G_V" "$RESET"
+}
+
+# A centered content line inside a box.
+box_center() {
+  local color="$1" text="$2" inner=$((INW - 2)) len left
+  len=${#text}
+  if [ "$len" -gt "$inner" ]; then text="$(printf '%.*s' "$inner" "$text")"; len=$inner; fi
+  left=$(((inner - len) / 2))
+  box_line "$color" "$(rep ' ' "$left")$text"
+}
+
+# One labeled row of a card (What, Why, ...), word-wrapped to fit inside the rails.
+# Continuation lines are indented under the value so the column stays clean.
+card_row() {
+  local label="$1" value="$2" inner=$((INW - 2)) indent avail line="" w first=1
+  indent="$(rep ' ' "${#label}")"
+  avail=$((inner - ${#label}))
+  local -a words; IFS=' ' read -r -a words <<<"$value"
+  for w in "${words[@]}"; do
+    if [ -z "$line" ]; then
+      line="$w"
+    elif [ $(( ${#line} + 1 + ${#w} )) -le "$avail" ]; then
+      line="$line $w"
+    else
+      if [ "$first" = 1 ]; then box_line "$CYAN" "$label$line"; first=0; else box_line "$CYAN" "$indent$line"; fi
+      line="$w"
+    fi
+  done
+  if [ "$first" = 1 ]; then box_line "$CYAN" "$label$line"; else box_line "$CYAN" "$indent$line"; fi
+}
+
+# A thin, calm divider between major moments, for a little breathing room.
+divider() { soft "    $(rep "$G_H" "$INW")"; }
 
 show_header() {
   blank
@@ -34,11 +100,11 @@ show_header() {
 ART
   printf '%s' "$RESET"
   blank
-  soft "    +----------------------------------------------------+"
-  soft "    |                                                    |"
-  say  "    |          a calm way to set up Claude               |"
-  soft "    |                                                    |"
-  soft "    +----------------------------------------------------+"
+  box_top
+  box_line   "$CYAN" ""
+  box_center "$CYAN" "a calm way to set up Claude"
+  box_center "$GRAY" "$G_BULLET"
+  box_bottom
   blank
   soft "    (The real logo is in the assets folder. Full credits are in CREDITS.md.)"
   blank
@@ -89,16 +155,16 @@ show_skills_intro() {
 show_card() {
   local name="$1" what="$2" why="$3" who="$4" where="$5" when="$6" how="$7"
   blank
-  soft "    +----------------------------------------------------------------+"
-  warm "      $name"
-  blank
-  say  "      What:  $what"
-  say  "      Why:   $why"
-  say  "      Who:   $who"
-  say  "      Where: $where"
-  say  "      When:  $when"
-  say  "      How:   $how"
-  soft "    +----------------------------------------------------------------+"
+  box_top
+  box_line "$YELLOW" "$name"
+  box_div
+  card_row "What:  " "$what"
+  card_row "Why:   " "$why"
+  card_row "Who:   " "$who"
+  card_row "Where: " "$where"
+  card_row "When:  " "$when"
+  card_row "How:   " "$how"
+  box_bottom
   blank
 }
 
@@ -119,11 +185,14 @@ ask_ynl() {
   done
 }
 
-# Draws one line of the breathing square.
+# Draws one line of the breathing square: a small four-cell box that fills and
+# empties on the count, so the wait feels like a calm breath rather than a stall.
 breath_line() {
-  local phase="$1" count="$2" n="$3" bar=""
-  if [ "$n" -gt 0 ]; then bar="$(printf '#%.0s' $(seq 1 "$n"))"; fi
-  printf '\r%s    %-12s %2s   %-16s%s' "$CYAN" "$phase" "$count" "$bar" "$RESET"
+  local phase="$1" count="$2" n="$3" i bar=""
+  for i in 1 2 3 4; do
+    if [ "$i" -le "$n" ]; then bar="$bar$G_FILL"; else bar="$bar$G_EMPTY"; fi
+  done
+  printf '\r%s    %-12s %2s   [%s]%s ' "$CYAN" "$phase" "$count" "$bar" "$RESET"
 }
 
 # Runs a real install command in the background and breathes a calm box on a four
@@ -171,7 +240,7 @@ install_skills() {
     td="$(dirname "$dest/$rel")"
     mkdir -p "$td" 2>/dev/null
     if cp "$f" "$dest/$rel" 2>/dev/null; then
-      win "    [ok]  $rel"
+      win "    $G_CHECK  $rel"
       count=$((count + 1))
       sleep 0.12
     else
@@ -249,7 +318,7 @@ offer_tool() {
   fi
   blank
   if [ "$allgood" = "1" ] && [ "$landed" = "1" ]; then
-    win "    [ok]  $name is set up and ready."
+    win "    $G_CHECK  $name is set up and ready."
     say "    Nicely done. That is another piece in place."
   else
     say "    $name did not finish going in this time."
@@ -272,10 +341,10 @@ pause
 blank
 say "    Here is the shape of what happens next, so nothing is a surprise:"
 blank
-say "      You are safe here. Nothing happens without your yes."
-say "      You can close this window any time you like."
-say "      This cannot harm your computer."
-say "      Every step tells you what just happened and what comes next."
+say "      $G_BULLET You are safe here. Nothing happens without your yes."
+say "      $G_BULLET You can close this window any time you like."
+say "      $G_BULLET This cannot harm your computer."
+say "      $G_BULLET Every step tells you what just happened and what comes next."
 pause
 blank
 say "    We start with a small gift, then I introduce a couple of helpers."
@@ -285,6 +354,8 @@ show_skills_intro
 
 blank
 printf '%s    Press Enter when you are ready %s' "$CYAN" "$RESET"; read -r _
+
+divider
 
 # Instant win.
 install_skills
@@ -313,16 +384,18 @@ offer_tool \
   "uv" "mempalace" \
   "uv tool install mempalace" "mempalace init" "claude mcp add mempalace -- mempalace-mcp"
 
+divider
+
 # Warm send-off.
 blank
-soft "    +----------------------------------------------------+"
-win  "    |                  You did it.                       |"
-soft "    +----------------------------------------------------+"
+box_top
+box_center "$GREEN" "You did it."
+box_bottom
 blank
 warm "    Here is what you now have:"
 blank
-say  "      Setup and Eidolon, your two skills, ready in Claude."
-say  "      Any helpers you said yes to, installed from their own makers."
+say  "      $G_BULLET Setup and Eidolon, your two skills, ready in Claude."
+say  "      $G_BULLET Any helpers you said yes to, installed from their own makers."
 blank
 warm "    How to use your new skills:"
 blank

@@ -14,10 +14,82 @@ $cCyan  = 'Cyan'
 $cSoft  = 'DarkGray'
 $cWarm  = 'Yellow'
 
+# Can this console show soft Unicode shapes? Default yes when our UTF-8 output
+# encoding took hold at the top of this file, and fall back to plain ASCII
+# otherwise. Set HEARTH_ASCII=1 to force the plain look. Either way the layout
+# is identical, so the experience stays the same.
+$script:UseUnicode = $true
+try { if ([Console]::OutputEncoding.CodePage -ne 65001) { $script:UseUnicode = $false } } catch { $script:UseUnicode = $false }
+if ($env:HEARTH_ASCII -eq '1') { $script:UseUnicode = $false }
+
+# The two glyph sets. Soft rounded shapes when we can, plain ASCII when we cannot.
+if ($script:UseUnicode) {
+    $g = @{ TL='╭'; TR='╮'; BL='╰'; BR='╯'; H='─'; V='│'; ML='├'; MR='┤'; Fill='█'; Empty='░'; Check='✓'; Bullet='•' }
+} else {
+    $g = @{ TL='+'; TR='+'; BL='+'; BR='+'; H='-'; V='|'; ML='+'; MR='+'; Fill='#'; Empty='.'; Check='[ok]'; Bullet='-' }
+}
+
+# The inside width of every framed box, so the cards and banners all line up.
+$script:INW = 64
+
 # A small pause helper, so words land gently instead of all at once.
 function Pause-Soft {
     param([int]$Ms = 350)
     try { Start-Sleep -Milliseconds $Ms } catch {}
+}
+
+# ----------------------------------------------------------------------------
+# Box drawing helpers. Every frame in Hearth is one closed, aligned rectangle.
+# The rails are soft gray; the text between them carries its own gentle color.
+# ----------------------------------------------------------------------------
+function Draw-BoxTop    { Write-Host ("    " + $g.TL + ($g.H * $script:INW) + $g.TR) -ForegroundColor $cSoft }
+function Draw-BoxBottom { Write-Host ("    " + $g.BL + ($g.H * $script:INW) + $g.BR) -ForegroundColor $cSoft }
+function Draw-BoxDiv    { Write-Host ("    " + $g.ML + ($g.H * $script:INW) + $g.MR) -ForegroundColor $cSoft }
+function Draw-Divider   { Write-Host ("    " + ($g.H * $script:INW)) -ForegroundColor $cSoft }
+
+# One content line inside a box: gray rails, colored text padded to the width.
+function Draw-BoxLine {
+    param([string]$text, [string]$color = $cCyan)
+    $inner = $script:INW - 2
+    if ($text.Length -gt $inner) { $text = $text.Substring(0, $inner) }
+    $text = $text.PadRight($inner)
+    Write-Host ("    " + $g.V + " ") -ForegroundColor $cSoft -NoNewline
+    Write-Host $text -ForegroundColor $color -NoNewline
+    Write-Host (" " + $g.V) -ForegroundColor $cSoft
+}
+
+# A centered content line inside a box.
+function Draw-BoxCenter {
+    param([string]$text, [string]$color = $cCyan)
+    $inner = $script:INW - 2
+    if ($text.Length -gt $inner) { $text = $text.Substring(0, $inner) }
+    $left = [int](($inner - $text.Length) / 2)
+    Draw-BoxLine -text ((' ' * $left) + $text) -color $color
+}
+
+# One labeled row of a card (What, Why, ...), word-wrapped to fit the rails.
+# Continuation lines are indented under the value so the column stays clean.
+function Draw-CardRow {
+    param([string]$label, [string]$value)
+    $inner  = $script:INW - 2
+    $indent = ' ' * $label.Length
+    $avail  = $inner - $label.Length
+    $words  = $value -split ' '
+    $line   = ''
+    $first  = $true
+    foreach ($w in $words) {
+        if ($line -eq '') {
+            $line = $w
+        } elseif (($line.Length + 1 + $w.Length) -le $avail) {
+            $line = "$line $w"
+        } else {
+            if ($first) { Draw-BoxLine -text ($label + $line) -color $cCyan; $first = $false }
+            else        { Draw-BoxLine -text ($indent + $line) -color $cCyan }
+            $line = $w
+        }
+    }
+    if ($first) { Draw-BoxLine -text ($label + $line) -color $cCyan }
+    else        { Draw-BoxLine -text ($indent + $line) -color $cCyan }
 }
 
 # ----------------------------------------------------------------------------
@@ -31,11 +103,11 @@ function Show-Header {
     Write-Host "       |  _  | | |___   / ___ \  |  _ <    | |   |  _  |  " -ForegroundColor $cWarm
     Write-Host "       |_| |_| |_____| /_/   \_\ |_| \_\   |_|   |_| |_|  " -ForegroundColor $cWarm
     Write-Host ""
-    Write-Host "    +----------------------------------------------------+" -ForegroundColor $cSoft
-    Write-Host "    |                                                    |" -ForegroundColor $cSoft
-    Write-Host "    |          a calm way to set up Claude               |" -ForegroundColor $cCyan
-    Write-Host "    |                                                    |" -ForegroundColor $cSoft
-    Write-Host "    +----------------------------------------------------+" -ForegroundColor $cSoft
+    Draw-BoxTop
+    Draw-BoxLine   -text "" -color $cCyan
+    Draw-BoxCenter -text "a calm way to set up Claude" -color $cCyan
+    Draw-BoxCenter -text $g.Bullet -color $cSoft
+    Draw-BoxBottom
     Write-Host ""
     Write-Host "    (The real logo is in the assets folder. Full credits are in CREDITS.md.)" -ForegroundColor $cSoft
     Write-Host ""
@@ -101,16 +173,16 @@ function Show-Card {
         [string]$how
     )
     Write-Host ""
-    Write-Host "    +----------------------------------------------------------------+" -ForegroundColor $cSoft
-    Write-Host "      $name" -ForegroundColor $cWarm
-    Write-Host ""
-    Write-Host "      What:  $what" -ForegroundColor $cCyan
-    Write-Host "      Why:   $why" -ForegroundColor $cCyan
-    Write-Host "      Who:   $who" -ForegroundColor $cCyan
-    Write-Host "      Where: $wherefrom" -ForegroundColor $cCyan
-    Write-Host "      When:  $when" -ForegroundColor $cCyan
-    Write-Host "      How:   $how" -ForegroundColor $cCyan
-    Write-Host "    +----------------------------------------------------------------+" -ForegroundColor $cSoft
+    Draw-BoxTop
+    Draw-BoxLine -text $name -color $cWarm
+    Draw-BoxDiv
+    Draw-CardRow -label "What:  " -value $what
+    Draw-CardRow -label "Why:   " -value $why
+    Draw-CardRow -label "Who:   " -value $who
+    Draw-CardRow -label "Where: " -value $wherefrom
+    Draw-CardRow -label "When:  " -value $when
+    Draw-CardRow -label "How:   " -value $how
+    Draw-BoxBottom
     Write-Host ""
 }
 
@@ -141,10 +213,15 @@ function Ask-YNL {
 # A calm box breathing square that fills on a four count while real work runs.
 # It only animates while actual work is happening.
 # ----------------------------------------------------------------------------
+# Draws one line of the breathing square: a small four-cell box that fills and
+# empties on the count, so the wait feels like a calm breath rather than a stall.
 function Show-BreathLine {
-    param([string]$phase, [int]$count, [string]$bar)
-    $pad = $bar.PadRight(16)
-    Write-Host ("`r    {0,-12} {1,2}   {2}" -f $phase, $count, $pad) -NoNewline -ForegroundColor $cCyan
+    param([string]$phase, [int]$count, [int]$n)
+    $bar = ''
+    for ($i = 1; $i -le 4; $i++) {
+        if ($i -le $n) { $bar += $g.Fill } else { $bar += $g.Empty }
+    }
+    Write-Host ("`r    {0,-12} {1,2}   [{2}] " -f $phase, $count, $bar) -NoNewline -ForegroundColor $cCyan
 }
 
 function Invoke-WithBreathing {
@@ -213,15 +290,15 @@ function Invoke-WithBreathing {
             if ($job.State -ne 'Running') { break }
             for ($i = 1; $i -le $blocks; $i++) {
                 if ($phase.fill) {
-                    $bar = ('#' * $i)
+                    $n = $i
                 } elseif ($phase.full) {
-                    $bar = ('#' * $blocks)
+                    $n = $blocks
                 } elseif ($phase.empty) {
-                    $bar = ('#' * ($blocks - $i))
+                    $n = $blocks - $i
                 } else {
-                    $bar = ''
+                    $n = 0
                 }
-                Show-BreathLine -phase $phase.name -count $i -bar $bar
+                Show-BreathLine -phase $phase.name -count $i -n $n
                 Pause-Soft 700
                 if ($job.State -ne 'Running') { break }
             }
@@ -319,7 +396,7 @@ function Install-Skills {
             $text = $text -replace "`r`n", "`n"
             $text = $text -replace "`r", "`n"
             [System.IO.File]::WriteAllText($target, $text, $utf8NoBom)
-            Write-Host ("    [ok]  {0}" -f $relative) -ForegroundColor $cGreen
+            Write-Host ("    {0}  {1}" -f $g.Check, $relative) -ForegroundColor $cGreen
             Pause-Soft 120
         } catch {
             Write-Host ("    One file did not copy: {0}" -f $file.Name) -ForegroundColor $cCyan
@@ -450,7 +527,7 @@ function Offer-Tool {
 
     Write-Host ""
     if ($allGood -and $landed) {
-        Write-Host ("    [ok]  {0} is set up and ready." -f $card.name) -ForegroundColor $cGreen
+        Write-Host ("    {0}  {1} is set up and ready." -f $g.Check, $card.name) -ForegroundColor $cGreen
         Write-Host "    Nicely done. That is another piece in place." -ForegroundColor $cCyan
     } else {
         Write-Host ("    {0} did not finish going in this time." -f $card.name) -ForegroundColor $cCyan
@@ -474,10 +551,10 @@ Pause-Soft
 Write-Host ""
 Write-Host "    Here is the shape of what happens next, so nothing is a surprise:" -ForegroundColor $cCyan
 Write-Host ""
-Write-Host "      You are safe here. Nothing happens without your yes." -ForegroundColor $cCyan
-Write-Host "      You can close this window any time you like." -ForegroundColor $cCyan
-Write-Host "      This cannot harm your computer." -ForegroundColor $cCyan
-Write-Host "      Every step tells you what just happened and what comes next." -ForegroundColor $cCyan
+Write-Host "      $($g.Bullet) You are safe here. Nothing happens without your yes." -ForegroundColor $cCyan
+Write-Host "      $($g.Bullet) You can close this window any time you like." -ForegroundColor $cCyan
+Write-Host "      $($g.Bullet) This cannot harm your computer." -ForegroundColor $cCyan
+Write-Host "      $($g.Bullet) Every step tells you what just happened and what comes next." -ForegroundColor $cCyan
 Pause-Soft
 Write-Host ""
 Write-Host "    We start with a small gift, then I introduce a couple of helpers." -ForegroundColor $cCyan
@@ -487,6 +564,8 @@ Show-Skills-Intro
 
 Write-Host ""
 try { $null = Read-Host "    Press Enter when you are ready" } catch {}
+
+Draw-Divider
 
 # 2. Instant win: install Setup and Eidolon.
 Install-Skills
@@ -528,15 +607,16 @@ $mempalaceSteps = @(
 Offer-Tool -card $mempalaceCard -runtime 'uv' -steps $mempalaceSteps -verifyCmd 'mempalace' -workingDir $null
 
 # 5. Warm send-off.
+Draw-Divider
 Write-Host ""
-Write-Host "    +----------------------------------------------------+" -ForegroundColor $cSoft
-Write-Host "    |                  You did it.                       |" -ForegroundColor $cGreen
-Write-Host "    +----------------------------------------------------+" -ForegroundColor $cSoft
+Draw-BoxTop
+Draw-BoxCenter -text "You did it." -color $cGreen
+Draw-BoxBottom
 Write-Host ""
 Write-Host "    Here is what you now have:" -ForegroundColor $cWarm
 Write-Host ""
-Write-Host "      Setup and Eidolon, your two skills, ready in Claude." -ForegroundColor $cCyan
-Write-Host "      Any helpers you said yes to, installed from their own makers." -ForegroundColor $cCyan
+Write-Host "      $($g.Bullet) Setup and Eidolon, your two skills, ready in Claude." -ForegroundColor $cCyan
+Write-Host "      $($g.Bullet) Any helpers you said yes to, installed from their own makers." -ForegroundColor $cCyan
 Write-Host ""
 Write-Host "    How to use your new skills:" -ForegroundColor $cWarm
 Write-Host ""
