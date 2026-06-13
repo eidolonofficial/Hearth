@@ -106,7 +106,25 @@ ART
   box_center "$GRAY" "$G_BULLET"
   box_bottom
   blank
-  soft "    (The real logo is in the assets folder. Full credits are in CREDITS.md.)"
+  # A cozy hearth: fire in the fireplace, a cat dozing on the rug.
+  warm '              (   )     (   )     (   )'
+  warm '               ) (   )   ) (   )   ) ('
+  warm '              (   )  (  (   )  )  (   )'
+  warm '          .--------------------------------------.'
+  warm '          |   )(    )(    )(    )(    )(    )(     |'
+  warm '          |  (  )  (  )  (  )  (  )  (  )  (  )    |'
+  warm '          |   \|/    \|/    \|/    \|/    \|/      |'
+  warm '          |  __|______|______|______|______|___   |'
+  warm '          | /=====/=====/=====/=====/=====/====/   |'
+  warm '          |______________________________________|'
+  soft '        __|______________________________________|__'
+  soft '       [__________________________________________]'
+  blank
+  say  '                     /\_/\'
+  say  '                    ( -.- )    ~ purr ~'
+  say  '                 ___m(")_(")m___'
+  soft '         .-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-.'
+  soft '        (_________________________________________)'
   blank
 }
 

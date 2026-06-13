@@ -109,7 +109,25 @@ function Show-Header {
     Draw-BoxCenter -text $g.Bullet -color $cSoft
     Draw-BoxBottom
     Write-Host ""
-    Write-Host "    (The real logo is in the assets folder. Full credits are in CREDITS.md.)" -ForegroundColor $cSoft
+    # A cozy hearth: fire in the fireplace, a cat dozing on the rug.
+    Write-Host '              (   )     (   )     (   )' -ForegroundColor $cWarm
+    Write-Host '               ) (   )   ) (   )   ) (' -ForegroundColor $cWarm
+    Write-Host '              (   )  (  (   )  )  (   )' -ForegroundColor $cWarm
+    Write-Host '          .--------------------------------------.' -ForegroundColor $cWarm
+    Write-Host '          |   )(    )(    )(    )(    )(    )(     |' -ForegroundColor $cWarm
+    Write-Host '          |  (  )  (  )  (  )  (  )  (  )  (  )    |' -ForegroundColor $cWarm
+    Write-Host '          |   \|/    \|/    \|/    \|/    \|/      |' -ForegroundColor $cWarm
+    Write-Host '          |  __|______|______|______|______|___   |' -ForegroundColor $cWarm
+    Write-Host '          | /=====/=====/=====/=====/=====/====/   |' -ForegroundColor $cWarm
+    Write-Host '          |______________________________________|' -ForegroundColor $cWarm
+    Write-Host '        __|______________________________________|__' -ForegroundColor $cSoft
+    Write-Host '       [__________________________________________]' -ForegroundColor $cSoft
+    Write-Host ""
+    Write-Host '                     /\_/\' -ForegroundColor $cCyan
+    Write-Host '                    ( -.- )    ~ purr ~' -ForegroundColor $cCyan
+    Write-Host '                 ___m(")_(")m___' -ForegroundColor $cCyan
+    Write-Host '         .-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-.' -ForegroundColor $cSoft
+    Write-Host '        (_________________________________________)' -ForegroundColor $cSoft
     Write-Host ""
 }
 
