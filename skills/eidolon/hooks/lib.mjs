@@ -94,3 +94,27 @@ export function advise(label, why) {
   }));
   process.exit(0);
 }
+
+// Escalate to the human (the consent tier): the call neither proceeds nor dies; Claude Code
+// shows the reason and waits for an explicit yes. Documented PreToolUse output:
+// hookSpecificOutput.permissionDecision "ask". (Backported additively for the security-
+// awareness dispatch gate; mirrors canonical eidolon's lib.mjs.)
+export function ask(label, why) {
+  process.stdout.write(JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision: "ask",
+      permissionDecisionReason: label + ": " + why,
+    },
+  }));
+  process.exit(0);
+}
+
+// One verdict ({ kind: "block"|"ask"|"advise", label, why, tag? }) emitted the way the suite
+// speaks, so a standalone guard renders a verdict identically to the consolidated suite.
+export function emitVerdict(v) {
+  if (!v) return;
+  if (v.kind === "block") block(v.label, v.why, v.tag);
+  if (v.kind === "ask") ask(v.label, v.why);
+  if (v.kind === "advise") advise(v.label, v.why);
+}
