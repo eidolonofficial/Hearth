@@ -58,6 +58,11 @@ operations  crashes that leak internal details, no rate limit on a login
 Cite a real, current source when you flag one of these (for example the OWASP
 list for security, WCAG for accessibility). Do not invent a source.
 
+For agent-side threats (prompt injection from content you read, dispatch
+boundaries, secret handling), the security-awareness training and its
+externally-graded attestation live in eidolon's references/security-awareness.md;
+complete it before dispatching destructive or sensitive work.
+
 ## The other half
 
 before_done has a mirror: before_reuse, in remember.md. One proves a worry is
