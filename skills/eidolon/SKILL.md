@@ -386,6 +386,12 @@ uncertainty:     docs/spec design § 9 - subagents return literal evidence (file
                  evidence itself and names the second signal; hedged language is refused.
 security_swarm:  references/security-swarm.md - red/blue methodology, the coverage manifest,
                  the seeded-defect fire drill, the five anti-handwave gates.
+security_awareness: references/security-awareness.md - the read-hash-quiz-externally-grade-attest
+                 comprehension loop (adapted from slartz/agent-security-awareness-training, MIT);
+                 the agent reads references/security-policy.md, is graded by an EXTERNAL validator,
+                 and a destructive/sensitive dispatch with no valid signed attestation asks the human
+                 (hooks/dispatch-attestation-guard.mjs, ask; scripts/security-attestation.mjs signs/verifies).
+                 A SOFT layer: it asks, it never replaces the deterministic gates.
 explain_mode:    references/explain-mode.md - plain-language teaching, comprehension checks,
                  the favorite-teacher disposition; available at every stage on request.
 personas:        references/persona-template.md - the ten-part construction template, the
