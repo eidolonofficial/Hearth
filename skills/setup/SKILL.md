@@ -70,7 +70,16 @@ parts:     [remember, check]
 go_ahead:  cheap-steps-then-pause
 run_until: "tests pass"
 work_type: judgment
+security:                # the session-start security tier eidolon reads (optional)
+  policy:       references/security-policy.md            # the policy an agent reads + hashes
+  attestation:  .claude/security-attestation.json        # where the signed attestation lives
+  required_for: [destructive, sensitive]                 # dispatch tiers that ASK without a valid attestation
 ```
+
+At the start of a session, eidolon surfaces this policy and the attestation
+status, and a destructive or sensitive dispatch with no valid attestation asks
+you first. The training itself lives in eidolon's
+references/security-awareness.md.
 
 ## Keeping context across long sessions
 
