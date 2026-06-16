@@ -2,7 +2,8 @@
 //
 // Eidolon hook suite - shared plumbing. Every guard reads the same Claude Code
 // hook JSON from stdin, fails open on bad input, blocks via stderr + exit 2,
-// and advises via stdout JSON. Before this module each guard carried its own
+// asks via the documented permissionDecision JSON (the consent tier), and
+// advises via stdout JSON. Before this module each guard carried its own
 // copy of that contract, and three of them had drifted into three different
 // git-commit detectors; the weaker two missed `git -C <path> commit`. One
 // implementation, one behavior.
@@ -60,8 +61,19 @@ export function withoutMessage(cmd) {
 // code, not the suite, and does not match.
 const HOOKS_SEGMENT = /(?:^|[\s'"=:;&|])(?:\.[\/\\])?(?:\.git[\/\\])?hooks(?:[\/\\]|(?=['"\s;&|)]|$))/i;
 const HOOKS_GOV_FILE = /hooks[\/\\]\S*\.(?:mjs|cjs|ps1|sh|py)\b/i;
+// The vendored evolve engine (engine/asi-evolve/ and its on-demand venv at engine/.venv/)
+// carries third-party hooks/ paths that are NOT Eidolon's governance suite: pip alone vendors
+// pyproject_hooks/ and requests/hooks.py, and faiss/sentence-transformers bring more. A routine
+// rm/chmod inside the engine tree or its venv must not read as tampering with the suite. So
+// neutralize ONLY engine-prefixed path tokens before testing: a command that ALSO names a real
+// hook outside engine/ (e.g. `cp hooks/guard-bash.mjs engine/x`) keeps its real-hook token and
+// still trips - the true catch is preserved, only the vendored-tree false positive is removed.
+// Beneficial change (fewer false catches, never fewer true ones); proof + provenance in
+// docs/fixes/FIX-2026-06-16-engine-hook-suite-exemption.md.
+const ENGINE_TOKEN = /(^|[\s'"=:;&|(])(?:\.[\/\\])?engine[\/\\][^\s;&|]*/gi;
 export function touchesHookSuite(cmd) {
-  return HOOKS_SEGMENT.test(String(cmd)) || HOOKS_GOV_FILE.test(String(cmd));
+  const scrubbed = String(cmd).replace(ENGINE_TOKEN, "$1 ");
+  return HOOKS_SEGMENT.test(scrubbed) || HOOKS_GOV_FILE.test(scrubbed);
 }
 
 // Run a hook body against the parsed stdin JSON. A parse failure exits 0: a
@@ -80,9 +92,27 @@ export function runHook(fn) {
 }
 
 // Hard block: the reason goes to stderr, exit 2. Claude sees it and retries.
-export function block(label, why) {
-  process.stderr.write(label + " [BLOCKED - fix and retry]: " + why + "\n");
+// The tag is the bracketed disposition; persona-conduct's Expediter lock uses
+// "HARD STOP - seat cleared", everything else the default.
+export function block(label, why, tag = "BLOCKED - fix and retry") {
+  process.stderr.write(label + " [" + tag + "]: " + why + "\n");
   process.exit(2);
+}
+
+// Escalate to the human: the call neither proceeds nor dies; Claude Code shows
+// the reason and waits for an explicit yes. The consent tier between advise and
+// block, for an action the operator may legitimately have a safety net for (a
+// rollback path the guard cannot see). Documented PreToolUse output:
+// hookSpecificOutput.permissionDecision "ask".
+export function ask(label, why) {
+  process.stdout.write(JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision: "ask",
+      permissionDecisionReason: label + ": " + why,
+    },
+  }));
+  process.exit(0);
 }
 
 // Advisory: the tool call proceeds; the note rides along as context.
@@ -95,26 +125,35 @@ export function advise(label, why) {
   process.exit(0);
 }
 
-// Escalate to the human (the consent tier): the call neither proceeds nor dies; Claude Code
-// shows the reason and waits for an explicit yes. Documented PreToolUse output:
-// hookSpecificOutput.permissionDecision "ask". (Backported additively for the security-
-// awareness dispatch gate; mirrors canonical eidolon's lib.mjs.)
-export function ask(label, why) {
-  process.stdout.write(JSON.stringify({
-    hookSpecificOutput: {
-      hookEventName: "PreToolUse",
-      permissionDecision: "ask",
-      permissionDecisionReason: label + ": " + why,
-    },
-  }));
-  process.exit(0);
-}
-
-// One verdict ({ kind: "block"|"ask"|"advise", label, why, tag? }) emitted the way the suite
-// speaks, so a standalone guard renders a verdict identically to the consolidated suite.
+// One verdict ({ kind: "block"|"ask"|"advise", label, why, tag? }), emitted the
+// way the suite speaks. The standalone guard entry points and the dispatchers
+// both speak through this, so a verdict renders identically whether the guard
+// ran alone or in the consolidated suite.
 export function emitVerdict(v) {
   if (!v) return;
   if (v.kind === "block") block(v.label, v.why, v.tag);
   if (v.kind === "ask") ask(v.label, v.why);
   if (v.kind === "advise") advise(v.label, v.why);
+}
+
+// Run an ordered suite of pure evaluators against one stdin payload: the
+// dispatcher shape, one spawn for a whole matcher instead of one per guard.
+// Precedence: the first block halts the call immediately (wiring order is
+// preserved, so consolidation never changes which guard speaks first); next an
+// ask escalates to the human, its reason carrying every ask that fired; only
+// when nothing blocks or asks do the advisories ride along together.
+export function runSuite(evaluators) {
+  runHook((j) => {
+    const asks = [];
+    const advisories = [];
+    for (const evaluate of evaluators) {
+      const v = evaluate(j);
+      if (!v) continue;
+      if (v.kind === "block") block(v.label, v.why, v.tag);
+      else if (v.kind === "ask") asks.push(v);
+      else advisories.push(v);
+    }
+    if (asks.length) ask(asks[0].label, asks.map((a) => a.why).join(" "));
+    else if (advisories.length) advise(advisories[0].label, advisories.map((a) => a.why).join(" "));
+  });
 }
