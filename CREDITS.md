@@ -1,8 +1,8 @@
 # With thanks
 
 Hearth is not built alone. It rests on the work of people who chose to share
-what they made, often for free, often quietly, so that the rest of us could
-stand a little higher.
+what they made, often for free and asking nothing back, so that the rest of us
+could stand a little higher.
 
 These are those people. Where we can name them, we name them, and we link to
 their own work so you can meet them on their terms. Leads are marked, because
@@ -75,8 +75,8 @@ to set things down so they are still there when you come back tomorrow.
 
 ## The foundations underneath
 
-These are the deep layers, the runtimes and libraries that everything above
-quietly leans on. Each one keeps its own gallery of thanks, and we point you to
+These are the deep layers, the runtimes and libraries that everything above is
+built on. Each one keeps its own gallery of thanks, and we point you to
 those rather than try to copy thousands of names here. Go read them. They are
 worth it.
 
