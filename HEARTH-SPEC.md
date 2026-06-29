@@ -8,9 +8,9 @@ Status: draft for review. Nothing gets built until Jonah approves this document.
 
 ## 1. What Hearth is
 
-Hearth is a kind, plain language front door for Claude Code. A person who is
-nervous around computers can open it, follow a calm conversation, and walk away
-with a working setup. It installs Jonah's own Claude skills, and for the outside
+Hearth is a plain-language front door for Claude Code. A person who is nervous
+around computers can open it, follow a clear conversation, and walk away with a
+working setup. It installs Jonah's own Claude skills, and for the outside
 tools they might also want, it explains each one in plain language and offers to
 install it from its official source, only on a clear yes.
 
@@ -25,10 +25,26 @@ whole tool is built so that person never feels lost and never feels small.
 
 ## 3. The voice
 
-- Warm, human, and technically honest at the same time. Precision without coldness.
-- Calming, present, mindful. Second person, present tense.
-- No em dashes. Plain language, never baby talk.
-- Every step ends by saying what just happened and what comes next.
+Warm and human, confident and concrete, with a light wit. Precision without
+coldness, personality without noise.
+
+- **Warm at the core.** You are glad the person is here and you are on their
+  side. Never cold, never corporate, never talking down.
+- **Confident and concrete.** Say what Hearth does in vivid, specific terms, with
+  strong verbs and real nouns. "Give Claude a memory and a backbone," not "a calm
+  way to set up Claude."
+- **A light, dry wit.** About one wink per screen. Charm, not a comedy act, used
+  to settle nerves rather than show off.
+- **Safety through clarity, not mood.** Reassurance comes from "you say yes to
+  every step" and "close it anytime, it cannot harm your computer," stated plainly,
+  not from soothing adjectives. The person should feel capable, not coddled.
+- **Honest.** Technically true, never overpromising. The trust model (the five W's
+  card, official-source-only installs) stays in plain view.
+- Second person, present tense. Plain language, never baby talk. Every step ends
+  by saying what just happened and what comes next.
+- **Banned crutch-words** (as filler): quietly, calm, gently, soft, mindful,
+  breathing, seamless, "no fuss," "out of the way," "take it slowly together."
+- Em dashes, once banned outright, are now allowed sparingly, for rhythm.
 
 ## 4. Design pillars
 
@@ -43,7 +59,8 @@ whole tool is built so that person never feels lost and never feels small.
 4. Failure is never your fault. No red ERROR. Instead: "That did not go through.
    Here is the one thing to try, or skip it for now. You have not broken anything."
 5. End on "you did it." A warm summary of what they now have and how to use it.
-6. Mindful. During any real wait, a calm box breathing animation plays.
+6. Real progress. During any real wait, a true progress indicator advances,
+   labeled with the step it is on. No frozen window, no mystery spinner.
 7. Flowers. Everyone whose tools Hearth stands on is credited, in their own words.
 
 ## 5. What ships
@@ -52,17 +69,23 @@ A single folder, `Hearth/`, with human file names:
 
 ```
 Hearth/
-  Start Here.cmd        double-clickable launcher (novices cannot double-click a .ps1).
-                        Fully readable. Calls PowerShell with a one-time, single-file
-                        execution-policy bypass so it just runs.
-  welcome.ps1           the kind, plain-language guided installer (the heart of it).
-  READ ME FIRST.txt     the same five W's and How in calm, printable plain text,
-                        for someone who would rather read before clicking anything.
+  Start Here.cmd        double-clickable Windows launcher (novices cannot double-click
+                        a .ps1). Fully readable. Opens the graphical window, and falls
+                        back to the text installer if the window cannot run.
+  gui/                  the Windows installer window (WPF), plus the shared install core
+                        the window and the text installer both call.
+  welcome.ps1           the text installer, used as the fallback (and by anyone who
+                        prefers plain text).
+  macos/
+    Hearth.app          the double-clickable macOS installer window.
+    Welcome.command     the macOS text installer, used as the fallback.
+    READ ME FIRST.txt   the macOS version of the printable guide.
+  READ ME FIRST.txt     the same five W's and How in printable plain text, for someone
+                        who would rather read before clicking anything.
   CREDITS.md            the complete "with thanks" record. Every contributor, linked.
   assets/
-    EidolonLogo.png     Jonah's logo (1536 x 1024). Used in the docs and any future
-                        web credits page. The console shows an ASCII rendition since
-                        a terminal cannot display a PNG.
+    EidolonLogo.png     Jonah's logo (1536 x 1024). The graphical installer renders it
+                        directly; the text installer shows an ASCII wordmark.
 ```
 
 ## 6. What gets installed, and what gets pointed to
@@ -72,10 +95,10 @@ This is the line that keeps Jonah out of trouble, so it is a hard rule.
 **Bundled (Jonah's own work, installed directly into `~/.claude/skills`):**
 
 - **Setup** (trigger `/setup`). Formerly "basecamp". The start-of-session skill:
-  a few calm questions up front, then memory, self-checking, and attunement to how
+  a few short questions up front, then memory, self-checking, and attunement to how
   you like to work. Four files (SKILL.md plus three references).
-- **Eidolon** (trigger `/eidolon`, display name capitalized). The repo setup skill.
-  One file.
+- **Eidolon** (trigger `/eidolon`, display name capitalized). The repo setup skill,
+  bundled as the full harness: its skill, hooks, references, scripts, and docs.
 
 **Pointed to (other people's tools, never bundled, installed from the official
 source only on an explicit yes):**
@@ -92,7 +115,7 @@ person can get them, first hand, from the makers.
 
 1. **Greeting.** Warm welcome. "Here is what this is. You are safe. You can stop
    anytime. Nothing here can hurt your computer."
-2. **Instant win.** Install Setup and Eidolon. Show a calm green check for each.
+2. **Instant win.** Install Setup and Eidolon. Show a green check for each.
 3. **Power-ups, one at a time.** For graphify, then mempalace:
    a. Show the five W's and How card (section 8).
    b. Ask: yes, no, or later.
@@ -100,16 +123,16 @@ person can get them, first hand, from the makers.
       the same kind way and show the one verified command to install it, then stop
       and let the person run it or approve it. Never silently install system tooling
       (check-and-instruct, section 11).
-   d. With the runtime present, run the official install for the tool. Box breathing
-      plays during the wait.
-   e. On no or later, move on gently. No pressure.
+   d. With the runtime present, run the official install for the tool. A progress
+      indicator advances during the wait.
+   e. On no or later, move on. No pressure.
 4. **Send-off.** Warm summary: what you now have, how to use it (type `/` in Claude
    Code to see your skills), where help lives.
 5. **With thanks.** Show the credits gallery (section 10), and write `CREDITS.md`.
 
 ## 8. The five W's and How card
 
-Shown before every yes-or-no on an outside tool. Calm, short, true.
+Shown before every yes-or-no on an outside tool. Short, honest, true.
 
 ```
 <Tool name>
@@ -122,13 +145,13 @@ Shown before every yes-or-no on an outside tool. Calm, short, true.
 Want this set up?   [ yes ]   [ no ]   [ maybe later ]
 ```
 
-## 9. Mindful: box breathing
+## 9. Real progress, not a frozen window
 
-During any real wait (an install or download), the console draws a calm square on
-a four count: breathe in for four, hold for four, out for four, hold for four. It
-only animates while real work is happening, and it tells you what finished when the
-work is done. If the console cannot render the box cleanly, it falls back to a calm
-text line. No frozen black window, no scary spinner.
+During any real wait (an install or download), a determinate progress indicator
+advances and names the step it is on ("Installing graphify..."). In the graphical
+installer it is an ember progress bar; in the text fallback it is a single status
+line that updates in place. It moves only while real work is happening, and it says
+what finished when the work is done. No frozen window, no mystery spinner.
 
 ## 10. Credits: the "with thanks" gallery
 
@@ -214,11 +237,11 @@ On an explicit yes, and only then. Sources verified against primary docs.
 
 - **No base64.** Every skill file is visible plain text in the installer. This is
   the fix for the original safety flag.
-- **Encoding, the lesson learned the hard way.** `welcome.ps1` is saved as UTF-8
-  with a BOM so Windows PowerShell 5.1 reads its non-ASCII characters correctly (the
-  eidolon arrow bug). The console output encoding is set to UTF-8 at startup so the
-  box breathing glyphs render. Installed skill files are written UTF-8 without BOM,
-  LF line endings, to match Jonah's originals exactly.
+- **Encoding, the lesson learned the hard way.** The PowerShell scripts are saved
+  as UTF-8 with a BOM so Windows PowerShell 5.1 reads their non-ASCII characters
+  correctly (the eidolon arrow bug). The console output encoding is set to UTF-8 at
+  startup so the text installer's glyphs render. Installed skill files are written
+  UTF-8 without BOM, LF line endings, to match Jonah's originals exactly.
 - **Verification.** Every generated command and path is checked against an
   independent second signal before it ships. The build will syntax-parse each script,
   dry-run the installers into a sandbox, and diff the result against the source files,
@@ -231,11 +254,13 @@ On an explicit yes, and only then. Sources verified against primary docs.
   updated to "Setup".
 - eidolon display name capitalized to Eidolon. Trigger stays `/eidolon`.
 
-## 15. Out of scope for v1 (YAGNI)
+## 15. Scope
 
-- No graphical window. The warm console comes first. A soft GUI is a later option.
-- No auto-install of runtimes. No editing of arbitrary user config.
-- No bundling of third-party code, ever.
+- The graphical window now ships: a native double-click installer on Windows (WPF)
+  and macOS (a small app), with the text installer kept as the fallback. Code
+  signing and notarization are the next polish step, not a v1 blocker.
+- Still out of scope: auto-installing runtimes, editing arbitrary user config, and
+  bundling third-party code, ever.
 
 ## 16. Open items
 

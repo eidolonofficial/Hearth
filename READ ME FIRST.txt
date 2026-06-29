@@ -1,70 +1,126 @@
 READ ME FIRST
 
-Welcome. Take a breath. You are in the right place, and there is nothing here you can get wrong.
+
+Welcome. You are in the right place, and there is nothing here you can get wrong.
 
 
 WHAT HEARTH IS
 
-Hearth is a kind, plain language front door that sets up some helpful tools for you, one calm step at a time.
+Hearth is a plain-language front door that sets Claude up for you, one step at a
+time. You double-click one file; it does the rest, and it asks before every step.
 
 
 YOU ARE SAFE
 
-Nothing happens without your yes. Every real step pauses and asks you first, and you can answer yes, no, or maybe later. You can close Hearth at any moment and walk away. It cannot harm your computer, and you cannot break anything by clicking around. If you stop halfway, that is completely fine.
+Nothing happens without your yes. Every real step pauses and asks first, and you
+can answer yes, no, or maybe later. Close Hearth whenever you want and walk away.
+It cannot harm your computer, and you cannot break anything by clicking around.
+Stop halfway and that is fine too.
 
 
 HOW TO START
 
-When you are ready, find the file named "Start Here" and double-click it. That is the whole first step. A calm, friendly window will open and walk you through the rest in plain words. You do not need to type any commands or know anything technical.
+Find the file named "Start Here" and double-click it. That is the whole first
+step. A window opens and walks you through the rest in plain words. No commands
+to type, nothing technical to know.
 
 
 THE SHORT STORY (the five W's and How)
 
-What:  Hearth sets up a small set of tools that help your computer assistant remember things and understand your work. It does this gently, asking before each step.
+What:  Hearth sets up a small set of tools that help Claude remember your work
+       and understand your projects. It asks before each step.
 
-Why:   So that you, running your own business, can get a working setup without ever feeling lost or talked down to. You stay in charge the entire time.
+Why:   So you, running your own business, get a working setup without ever
+       feeling lost or talked down to. You stay in charge the entire time.
 
-Who:   Hearth was made by Jonah Butterbaugh, working alongside Claude. The makers of every other tool it mentions are thanked by name in a file called CREDITS.md.
+Who:   Hearth was made by Jonah Butterbaugh, working alongside Claude. The
+       makers of every other tool it mentions are thanked by name in CREDITS.md.
 
-Where: Jonah's own tools come with Hearth, already included. Any tool made by someone else is never carried inside Hearth. If you say yes to one, Hearth fetches it fresh from the maker's own official source, and only then.
+Where: Jonah's own tools come with Hearth, already included. Any tool made by
+       someone else is never carried inside Hearth. Say yes to one and Hearth
+       fetches it fresh from the maker's own official source, and only then.
 
-When:  Whenever you are ready. There is no clock and no pressure. Come back to it later if you like.
+When:  Whenever you are ready. There is no clock and no pressure. Come back
+       later if you like.
 
-How:   You double-click "Start Here". Hearth greets you, sets up the included tools, and then, one at a time, offers a few optional extras. For each one it shows you a short, honest card explaining what it is, and waits for your yes, no, or maybe later.
+How:   You double-click "Start Here". Hearth greets you, sets up the included
+       tools, and then offers a few optional extras one at a time. For each one
+       it shows a short, honest card explaining what it is, and waits for your
+       yes, no, or maybe later.
 
 
 WHAT GETS SET UP RIGHT AWAY, AND WHY BOTH
 
-Two tools that Jonah built himself come with Hearth and install right at the start, so you see something work in the first few seconds. They do two different jobs, and that is exactly why you want both.
+Two tools Jonah built himself come with Hearth and install at the very start, so
+you see something work in the first few seconds. They do two different jobs, and
+that is exactly why you want both.
 
-  Setup    A calm start-of-session helper. When you sit down to a piece of work, it asks a few gentle questions about how you want to work today, then quietly remembers what worked and what did not, and double-checks its own claims before it says anything is done. The very first time, it also asks one gentle question, how familiar you are with coding and engineering (new to this, some familiarity, comfortable I code, or expert), so Claude can meet you where you are. There is no wrong answer, and you can change it any time. Setup is about the session: this visit, this stretch of work.
+  Setup    Gets a work session off to a strong start. When you sit down to a
+           piece of work, it asks a few short questions about how you want to
+           work today, then it remembers what worked and what broke, and
+           double-checks its own claims before it says anything is done. The
+           first time, it also asks how familiar you are with coding and
+           engineering (new to this, some familiarity, comfortable I code, or
+           expert), so Claude can meet you where you are. There is no wrong
+           answer, and you can change it any time. Setup is about the session:
+           this visit, this stretch of work.
 
-  Eidolon  A helper that reads a whole project folder and sets up everything your assistant needs to understand it. When you want to build or change something, it carries that work from a plain idea all the way to finished: it plans, builds a careful piece at a time, checks for safety and mistakes, and only then puts it in place. It looks out for you the whole way, with built-in helpers that watch for risky moves, a safety check that looks for ways a change could go wrong, and nothing important deleted or shipped without your clear yes. Eidolon is about the project: the place itself.
+  Eidolon  Reads a whole project folder and sets up everything Claude needs to
+           understand it. When you want to build or change something, it carries
+           that work from a plain idea all the way to finished: it plans, builds
+           one careful piece at a time, checks for safety and mistakes, and only
+           then puts it in place. It looks out for you the whole way, with guards
+           that watch for risky moves, a safety review that hunts for ways a
+           change could go wrong, and nothing important deleted or shipped
+           without your clear yes. Eidolon is about the project: the place itself.
 
-Here is why both, in plain terms. Picture your project as a workshop. Eidolon gets the workshop ready, so your assistant knows where every tool lives and works safely in it. Setup is how you settle in for a good session once you are inside. One makes the place ready, the other makes the visit go well. With only Eidolon, your assistant understands the project but starts every session cold and keeps forgetting how you like to work. With only Setup, each session is focused but your assistant never really learns the project. Together, the project is understood and every session inside it is calm, remembered, and checked. They even hand off to each other: Setup can pass your answers straight to Eidolon, so the two run as a pair.
+Here is why both, in plain terms. Picture your project as a workshop. Eidolon
+gets the workshop ready, so Claude knows where every tool lives and works safely
+in it. Setup is how you settle in for a good session once you are inside. With
+only Eidolon, Claude understands the project but starts every session cold and
+keeps forgetting how you like to work. With only Setup, each session is focused
+but Claude never really learns the project. Together, the project is understood
+and every session inside it is remembered and checked. They even hand off to
+each other: Setup passes your answers straight to Eidolon, so the two run as a
+pair.
 
-These are Jonah's own work. They are included in plain view, with nothing hidden, and they go in without needing any extra runtimes or downloads.
+These are Jonah's own work. They are included in plain view, with nothing
+hidden, and they go in without needing any extra runtimes or downloads.
 
 
 WHAT YOU CAN ADD, ONLY IF YOU WANT
 
-After the quick win, Hearth introduces two optional extras, one at a time. You are free to skip either one, now or forever. Nothing is ever added quietly. If you say yes, Hearth installs it from the maker's own official site, in the open, and tells you exactly what is happening.
+After the first win, Hearth introduces two optional extras, one at a time. Skip
+either one, now or forever. Nothing is ever added behind your back. Say yes and
+Hearth installs it from the maker's own official site, in the open, telling you
+exactly what is happening.
 
-  graphify   A tool that maps out how the pieces of a project connect to each other, so your assistant can see the bigger picture. Made by Safi Shamsi.
+  graphify   Maps how the pieces of a project connect, so Claude can see the
+             whole shape of your code. Made by Safi Shamsi.
 
-  mempalace  A tool that gives your assistant a longer memory across sessions, like a tidy filing cabinet it can search later. Led by a maker who goes by igorls, with many hands helping.
+  mempalace  Gives Claude a longer memory across sessions, like a filing cabinet
+             it can search later. Led by a maker who goes by igorls, with many
+             hands helping.
 
-If one of these needs a small piece of background software to run, Hearth will explain that just as kindly, show you the one command to set it up, and then stop and let you decide. It never installs that kind of thing behind your back.
+If one of these needs a small piece of background software to run, Hearth
+explains it the same way, shows you the one command to set it up, and then stops
+and lets you decide. It never installs that kind of thing behind your back.
 
 
 IF SOMETHING DOES NOT GO THROUGH
 
-Sometimes a step does not complete on the first try. That is normal, and it is not your fault. When it happens, Hearth will not show a scary red error. It will simply say, in plain words, here is the one thing to try, or you can skip it for now. You have not broken anything, and your computer is fine.
+Sometimes a step does not finish on the first try. That is normal, and it is not
+your fault. When it happens, Hearth does not throw a scary red error. It tells
+you, in plain words, the one thing to try, or you can skip it for now. You have
+not broken anything, and your computer is fine.
 
 
 A NOTE OF THANKS
 
-Hearth stands on the work of many generous people. Every one of them is credited in a file called CREDITS.md, in their own words, with a link to their own work. None of their code is copied into Hearth. Their tools are theirs, fetched from their own sources, with thanks. That care is part of what Hearth is.
+Hearth stands on the work of many generous people. Every one of them is credited
+in CREDITS.md, in their own words, with a link to their own work. None of their
+code is copied into Hearth. Their tools are theirs, fetched from their own
+sources, with thanks. That care is part of what Hearth is.
 
 
-When you feel ready, double-click "Start Here". We will take it slowly, together.
+When you're ready, double-click "Start Here". The first win takes about a minute.
