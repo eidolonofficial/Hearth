@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+# Hearth: the graphical installer (macOS).
+#
+# Double-clicking Hearth.app runs this. It shows native macOS dialogs, no Terminal.
+# If there is no desktop session to draw on, it hands off to the text installer
+# (Welcome.command) in Terminal. Plain, visible text, no hidden code. Nothing
+# installs without your yes. Same work as the text installer, with a window.
+
+set -u
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+export LANG="${LANG:-en_US.UTF-8}"
+
+# This executable lives at  Hearth/macos/Hearth.app/Contents/MacOS/Hearth
+APP="$(cd "$(dirname "$0")/../.." && pwd)"          # Hearth.app
+MACOS_DIR="$(cd "$APP/.." && pwd)"                  # Hearth/macos
+ROOT="$(cd "$MACOS_DIR/.." && pwd)"                 # Hearth
+. "$MACOS_DIR/hearth-core.sh"
+
+TITLE="Hearth"
+
+# Escape a string for embedding inside an AppleScript double-quoted literal.
+esc() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
+
+text_fallback() { open -a Terminal "$MACOS_DIR/Welcome.command" 2>/dev/null; exit 0; }
+
+# Show a dialog. $1 message, $2.. button labels (last is default). Echoes the
+# button pressed. Returns non-zero if the dialog could not be shown or was cancelled.
+dialog() {
+  local msg; msg="$(esc "$1")"; shift
+  local btns="" def=""
+  for b in "$@"; do btns="$btns, \"$(esc "$b")\""; def="$b"; done
+  btns="${btns#, }"
+  osascript -e "display dialog \"$msg\" with title \"$TITLE\" buttons {$btns} default button \"$(esc "$def")\"" \
+            -e "button returned of result" 2>/dev/null
+}
+
+note() { dialog "$1" "OK" >/dev/null; }
+
+# First dialog doubles as the GUI probe: if it cannot be shown, fall back to Terminal.
+WELCOME="Welcome. You say yes to every step.
+
+Hearth sets Claude up for you, one step at a time. No commands to type.
+
+  -  Nothing happens without your yes.
+  -  Close this any time. It cannot harm your computer.
+  -  First a quick win, then two optional helpers, one at a time."
+
+choice="$(dialog "$WELCOME" "Use text version" "Begin")" || text_fallback
+[ "$choice" = "Use text version" ] && text_fallback
+
+# Meet the two skills.
+SKILLS="Your two skills, and why there are two.
+
+Setup gets a work session off to a strong start: it asks a few short questions, remembers what worked, and checks its own work before it says 'done.'
+
+Eidolon reads a whole project and sets up what Claude needs to understand it, then carries any change from idea to finished, checking for safety the whole way. Nothing important ships without your yes.
+
+One gets the place ready; the other makes the visit go well."
+dialog "$SKILLS" "Back" "Set up my skills" >/dev/null || true
+
+# Instant win: copy the skills. Fast, so we report the result.
+result="$(hc_install_skills "$ROOT")"
+if [ "${result%% *}" = "OK" ]; then
+  installed="Setup, Eidolon"
+  note "Done. Setup and Eidolon are in place (${result#OK } files).
+
+That is your first win, and it took only a few seconds."
+else
+  installed=""
+  note "I could not finish the copy. Make sure the whole Hearth folder stayed together, then open Hearth again. You have not broken anything."
+fi
+
+# Offer a tool. Args: name what why who where when how runtime verify -- step...
+offer_tool() {
+  local name="$1" what="$2" why="$3" who="$4" where="$5" when="$6" how="$7" runtime="$8" verify="$9"
+  shift 9; [ "${1:-}" = "--" ] && shift
+  local card="$name  (optional)
+
+What:  $what
+Why:   $why
+Who:   $who
+Where: $where
+How:   $how"
+  local pick; pick="$(dialog "$card" "No thanks" "Maybe later" "Yes, set it up")" || return 0
+  case "$pick" in
+    "No thanks"|"Maybe later") return 0;;
+  esac
+  if [ "$runtime" = "uv" ] && ! hc_uv_ready; then
+    local cmd="curl -LsSf https://astral.sh/uv/install.sh | sh"
+    local act; act="$(dialog "$name needs uv, a small helper by Astral. It is not on your computer yet, and Hearth will not install it for you without asking.
+
+Run this one official command yourself, then open Hearth again and pick $name:
+
+    $cmd" "Skip for now" "Copy command")" || return 0
+    [ "$act" = "Copy command" ] && printf '%s' "$cmd" | pbcopy 2>/dev/null
+    return 0
+  fi
+  if hc_install_tool "$ROOT" "$verify" -- "$@"; then
+    installed="${installed:+$installed, }$name"
+    note "$name is set up and ready. Nicely done."
+  else
+    note "$name did not finish this time. You can open Hearth again and choose it once more. You have not broken anything."
+  fi
+}
+
+offer_tool \
+  "graphify" \
+  "It turns a folder of work into a clear map you can explore." \
+  "As your project grows, this helps you and Claude see how the pieces connect." \
+  "Safi Shamsi. github.com/safishamsi/graphify (MIT)." \
+  "Its official package, graphifyy, installed with uv." \
+  "A birds-eye view of a project folder." \
+  "uv tool install graphifyy, then graphify install." \
+  "uv" "graphify" -- \
+  "uv tool install graphifyy" "graphify install ."
+
+offer_tool \
+  "mempalace" \
+  "It gives Claude a searchable memory across sessions." \
+  "Instead of repeating yourself each session, Claude looks things up and keeps up." \
+  "igorls; Claude plugin by milla-jovovich. github.com/MemPalace/mempalace (MIT)." \
+  "Its official package, installed with uv." \
+  "Remembering context across days and projects." \
+  "uv tool install mempalace, mempalace init, then register with Claude." \
+  "uv" "mempalace" -- \
+  "uv tool install mempalace" "mempalace init" "claude mcp add mempalace -- mempalace-mcp"
+
+DONE="You did it.
+
+You now have: ${installed:-your skills}, ready in Claude.
+
+To use them, open Claude Code and type a single slash, the / key. Your skills appear in the list. Pick one and follow along.
+
+With thanks to Addy Osmani, whose agent-skills harness this pattern grows from, and to every maker named in CREDITS.md."
+note "$DONE"
+exit 0

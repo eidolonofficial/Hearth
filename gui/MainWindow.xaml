@@ -1,0 +1,226 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Hearth" Height="620" Width="780"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
+        FontFamily="Segoe UI Variable Text, Segoe UI" SnapsToDevicePixels="True">
+
+    <!-- Palette: ember #E8794A, ember-deep #C75B30, ink #2B2522, slate #6B615B,
+         teal #3E8E8A, win-green #3F9D6B, parchment #FBF7F2 / #F6EDE2, card #FFFFFF -->
+    <Window.Resources>
+        <SolidColorBrush x:Key="Ember"     Color="#E8794A"/>
+        <SolidColorBrush x:Key="EmberDeep" Color="#C75B30"/>
+        <SolidColorBrush x:Key="Ink"       Color="#2B2522"/>
+        <SolidColorBrush x:Key="Slate"     Color="#6B615B"/>
+        <SolidColorBrush x:Key="Teal"      Color="#3E8E8A"/>
+        <SolidColorBrush x:Key="WinGreen"  Color="#3F9D6B"/>
+        <SolidColorBrush x:Key="CardBorder" Color="#EDE4DA"/>
+
+        <!-- Primary button: ember fill, white text, rounded, no harsh border -->
+        <Style x:Key="Primary" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Ember}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="22,11"/>
+            <Setter Property="MinHeight" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" Background="{TemplateBinding Background}" CornerRadius="10"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="{StaticResource EmberDeep}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Secondary button: outline ember -->
+        <Style x:Key="Secondary" TargetType="Button" BasedOn="{StaticResource Primary}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource Ember}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" Background="{TemplateBinding Background}" CornerRadius="10"
+                                BorderBrush="{StaticResource Ember}" BorderThickness="1.5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="#1AE8794A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Tertiary "maybe later": text only -->
+        <Style x:Key="Tertiary" TargetType="Button" BasedOn="{StaticResource Primary}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource Slate}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="H1" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <Style x:Key="Body" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Foreground" Value="{StaticResource Ink}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="22"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource CardBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="22"/>
+            <Setter Property="Margin" Value="0,4,0,14"/>
+        </Style>
+    </Window.Resources>
+
+    <Border>
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#FBF7F2" Offset="0"/>
+                <GradientStop Color="#F6EDE2" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid Margin="32,28,32,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header: logo + wordmark -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,18">
+                <Border CornerRadius="10" Width="64" Height="64" ClipToBounds="True" Margin="0,0,14,0">
+                    <Image x:Name="LogoImage" Stretch="UniformToFill"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Hearth" FontSize="22" FontWeight="SemiBold" Foreground="{StaticResource Ink}"/>
+                    <TextBlock Text="Give Claude a memory and a backbone." FontSize="13" Foreground="{StaticResource Slate}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Content: one screen visible at a time -->
+            <Grid Grid.Row="1">
+
+                <!-- 1. Welcome -->
+                <StackPanel x:Name="ScreenWelcome" Visibility="Visible">
+                    <TextBlock Style="{StaticResource H1}" Text="Welcome. You say yes to every step."/>
+                    <TextBlock Style="{StaticResource Body}"
+                        Text="Hearth sets Claude up for you, one step at a time. No commands to type, nothing technical to know. Here is the shape of it, so nothing is a surprise:"/>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Body}" Margin="0,0,0,4" Text="&#x2022;  Nothing happens without your yes. Every real step pauses and asks."/>
+                            <TextBlock Style="{StaticResource Body}" Margin="0,0,0,4" Text="&#x2022;  Close this window any time. It cannot harm your computer."/>
+                            <TextBlock Style="{StaticResource Body}" Margin="0,0,0,0" Text="&#x2022;  First, a quick win. Then two optional helpers, one at a time."/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 2. Meet your two skills -->
+                <ScrollViewer x:Name="ScreenSkills" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Style="{StaticResource H1}" Text="Your two skills, and why there are two"/>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <TextBlock FontSize="17" FontWeight="SemiBold" Foreground="{StaticResource Ember}" Text="Setup" Margin="0,0,0,6"/>
+                                <TextBlock Style="{StaticResource Body}" Margin="0"
+                                    Text="Gets a work session off to a strong start. It asks a few short questions so Claude works the way you like, then it remembers what worked, checks its own work before it says 'done,' and learns how you like to work. Setup is about the session."/>
+                            </StackPanel>
+                        </Border>
+                        <Border Style="{StaticResource Card}">
+                            <StackPanel>
+                                <TextBlock FontSize="17" FontWeight="SemiBold" Foreground="{StaticResource Ember}" Text="Eidolon" Margin="0,0,0,6"/>
+                                <TextBlock Style="{StaticResource Body}" Margin="0"
+                                    Text="Reads a whole project folder and sets up what Claude needs to understand it, then carries any change from a plain idea all the way to finished: it plans, builds one careful piece at a time, checks for safety and mistakes, and only then puts it in place. Guards watch the risky moves; nothing important ships or gets deleted without your yes."/>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Style="{StaticResource Body}"
+                            Text="One gets the place ready; the other makes the visit go well. They hand off to each other, so they work as a pair."/>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- 3. Instant win / progress -->
+                <StackPanel x:Name="ScreenInstall" Visibility="Collapsed">
+                    <TextBlock Style="{StaticResource H1}" Text="First, a gift that is already yours"/>
+                    <TextBlock Style="{StaticResource Body}" Text="These two skills were made for you, so they go in right away."/>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock x:Name="SkillsStatus" Style="{StaticResource Body}" Margin="0,0,0,12" Text="Getting ready..."/>
+                            <ProgressBar x:Name="SkillsProgress" Height="8" Minimum="0" Maximum="100" Value="0"
+                                         Foreground="{StaticResource Ember}" Background="#EDE4DA" BorderThickness="0"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- 4 & 5. Tool card (reused for graphify then mempalace) -->
+                <StackPanel x:Name="ScreenCard" Visibility="Collapsed">
+                    <TextBlock Style="{StaticResource H1}" x:Name="CardName" Text="Tool"/>
+                    <TextBlock Style="{StaticResource Body}" x:Name="CardLead" Text="Optional. Skip it now or forever; nothing is added behind your back."/>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource Body}" x:Name="CardWhat"  Margin="0,0,0,6"/>
+                            <TextBlock Style="{StaticResource Body}" x:Name="CardWhy"   Margin="0,0,0,6"/>
+                            <TextBlock Style="{StaticResource Body}" x:Name="CardWho"   Margin="0,0,0,6" Foreground="{StaticResource Slate}"/>
+                            <TextBlock Style="{StaticResource Body}" x:Name="CardHow"   Margin="0" Foreground="{StaticResource Teal}"/>
+                        </StackPanel>
+                    </Border>
+                    <TextBlock x:Name="CardNotice" Style="{StaticResource Body}" Visibility="Collapsed" Foreground="{StaticResource EmberDeep}"/>
+                </StackPanel>
+
+                <!-- 6. Done -->
+                <StackPanel x:Name="ScreenDone" Visibility="Collapsed">
+                    <TextBlock Style="{StaticResource H1}" Foreground="{StaticResource WinGreen}" Text="You did it."/>
+                    <TextBlock Style="{StaticResource Body}" Text="Here is what you now have, and how to use it."/>
+                    <Border Style="{StaticResource Card}">
+                        <StackPanel x:Name="DoneList"/>
+                    </Border>
+                    <TextBlock Style="{StaticResource Body}"
+                        Text="To use them: open Claude Code and type a single slash, the / key. Your skills appear in the list. Pick one and follow along."/>
+                    <TextBlock Style="{StaticResource Body}" Foreground="{StaticResource Slate}"
+                        Text="With thanks to Addy Osmani, whose agent-skills harness this pattern grows from, and to every maker named in CREDITS.md."/>
+                </StackPanel>
+
+            </Grid>
+
+            <!-- Footer buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <Button x:Name="BtnText"   Style="{StaticResource Tertiary}" Content="Use text version" Visibility="Collapsed"/>
+                <Button x:Name="BtnNo"     Style="{StaticResource Secondary}" Content="No thanks" Visibility="Collapsed"/>
+                <Button x:Name="BtnLater"  Style="{StaticResource Tertiary}" Content="Maybe later" Visibility="Collapsed"/>
+                <Button x:Name="BtnYes"    Style="{StaticResource Primary}" Content="Yes, set it up" Visibility="Collapsed"/>
+                <Button x:Name="BtnNext"   Style="{StaticResource Primary}" Content="Begin"/>
+                <Button x:Name="BtnClose"  Style="{StaticResource Primary}" Content="Close" Visibility="Collapsed"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
