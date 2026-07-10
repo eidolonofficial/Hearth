@@ -2,7 +2,8 @@
 
 Date: 2026-06-08
 Author: Jonah Butterbaugh (with Claude)
-Status: draft for review. Nothing gets built until Jonah approves this document.
+Status: built and shipping; kept as the design record. The installers this spec
+describes are in this repo, and section 15 reflects the shipped scope.
 
 ---
 
@@ -79,6 +80,8 @@ Hearth/
   macos/
     Hearth.app          the double-clickable macOS installer window.
     Welcome.command     the macOS text installer, used as the fallback.
+    hearth-core.sh      the shared install core Hearth.app and Welcome.command both call.
+    build-icon.command  optional; run once on a Mac to build Hearth.icns from the logo.
     READ ME FIRST.txt   the macOS version of the printable guide.
   READ ME FIRST.txt     the same five W's and How in printable plain text, for someone
                         who would rather read before clicking anything.
@@ -86,6 +89,10 @@ Hearth/
   assets/
     EidolonLogo.png     Jonah's logo (1536 x 1024). The graphical installer renders it
                         directly; the text installer shows an ASCII wordmark.
+  skills/
+    setup/              the Setup skill, in plain text (SKILL.md plus three references).
+    eidolon/            the full Eidolon harness (skill, hooks, references, scripts,
+                        engine, docs). Both installers copy skills/ into ~/.claude/skills.
 ```
 
 ## 6. What gets installed, and what gets pointed to
@@ -267,5 +274,5 @@ On an explicit yes, and only then. Sources verified against primary docs.
 - The deep warm bios from the research panel (Addy first) fold into the credits when
   they land. The verified facts above are enough to write the gallery either way.
 - uv's exact install command verified at build time.
-- The logo is staged locally. It will sit in `Hearth/assets/` in the final build.
-```
+- Done: the logo lives in `Hearth/assets/EidolonLogo.png` (with a copy inside
+  macos/Hearth.app/Contents/Resources/).
