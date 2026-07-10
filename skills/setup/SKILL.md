@@ -184,9 +184,11 @@ check        trust-but-verify      github.com/gmrmk/trust-but-verify
 work-style   ai-pairing-playbook   github.com/gmrmk/ai-pairing-playbook
 ```
 
-The opening questions are the first four of the playbook's six habits. The
-other two (sending a whole thought at once, and proving risky changes on a copy
-first) live in references/collaborate.md.
+The first three opening questions are the first three of the playbook's six
+habits; the fourth (what kind of work this is) maps to the playbook's three
+kinds of work. The other three habits (sending a whole thought at once, saying
+what does not happen when describing something visual, and proving risky
+changes on a copy first) live in references/collaborate.md.
 
 ## How to use this in a conversation
 

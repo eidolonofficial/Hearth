@@ -58,9 +58,11 @@ official command and stops there, so you stay in charge.
 
 - Nothing happens without your yes. Every real step pauses and asks.
 - Close the window whenever you want. It cannot harm your computer.
-- Your own tools ship inside, in plain view. Anyone else's tool is never carried
-  inside Hearth; say yes to one and it is fetched fresh from the maker's own
-  official source, and only then.
+- Your own tools ship inside, in plain view, with one openly credited exception:
+  Eidolon's evolve engine is a vendored copy of GAIR-NLP's ASI-Evolve toolbelt
+  (Apache-2.0, provenance recorded inside it). Any other maker's tool is never
+  carried inside Hearth; say yes to one and it is fetched fresh from the maker's
+  own official source, and only then.
 
 ## What is in here
 
@@ -76,23 +78,29 @@ CREDITS.md              everyone whose work made Hearth possible, in their words
 assets/                 the logo
 skills/setup/           the Setup skill
 skills/eidolon/         the full Eidolon harness: its skill, hooks, references,
-                        scripts, and its own spec and decision logs
+                        scripts, its vendored evolve engine (engine/asi-evolve,
+                        Apache-2.0), and its own spec and decision logs
 ```
 
 ## Credits
 
 Hearth stands on the work of many generous people, each credited by name and
 link in `CREDITS.md`, in their own words. Addy Osmani first of all, whose
-agent-skills harness is the pattern this grows from. None of their code is
-copied into Hearth; their tools stay theirs, fetched from their own sources,
-with thanks.
+agent-skills harness is the pattern this grows from. With one exception, none of
+their code is copied into Hearth; their tools stay theirs, fetched from their
+own sources, with thanks. The exception is GAIR-NLP's ASI-Evolve evolve engine,
+vendored verbatim under its own Apache-2.0 license inside Eidolon at
+`skills/eidolon/engine/asi-evolve/`, credited in `CREDITS.md`, with full
+provenance in `skills/eidolon/engine/asi-evolve/PROVENANCE.md`.
 
 Hearth and Eidolon were made by Jonah Butterbaugh, working alongside Claude.
 
 ## License
 
 Hearth's installers and the bundled skills are MIT licensed (see
-`skills/eidolon/LICENSE`). The third-party tools Hearth points to keep their own
+`skills/eidolon/LICENSE`), except the vendored ASI-Evolve engine at
+`skills/eidolon/engine/asi-evolve/`, which keeps its own Apache-2.0 license (see
+its LICENSE and NOTICE). The third-party tools Hearth points to keep their own
 licenses, named in `CREDITS.md`.
 
 ---

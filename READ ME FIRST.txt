@@ -20,9 +20,11 @@ Stop halfway and that is fine too.
 
 HOW TO START
 
-Find the file named "Start Here" and double-click it. That is the whole first
-step. A window opens and walks you through the rest in plain words. No commands
-to type, nothing technical to know.
+On Windows, find the file named "Start Here" and double-click it. On a Mac, open
+the "macos" folder and double-click the app named "Hearth" (the Mac copy of this
+guide, macos/READ ME FIRST.txt, has the one extra first-open step). Either way,
+a window opens and walks you through the rest in plain words. No commands to
+type, nothing technical to know.
 
 
 THE SHORT STORY (the five W's and How)
@@ -36,14 +38,18 @@ Why:   So you, running your own business, get a working setup without ever
 Who:   Hearth was made by Jonah Butterbaugh, working alongside Claude. The
        makers of every other tool it mentions are thanked by name in CREDITS.md.
 
-Where: Jonah's own tools come with Hearth, already included. Any tool made by
-       someone else is never carried inside Hearth. Say yes to one and Hearth
-       fetches it fresh from the maker's own official source, and only then.
+Where: Jonah's own tools come with Hearth, already included, along with one
+       openly credited piece by others: the ASI-Evolve evolve engine by
+       GAIR-NLP, carried inside Eidolon with its license and provenance in
+       plain view. Any other tool made by someone else is never carried inside
+       Hearth. Say yes to one and Hearth fetches it fresh from the maker's own
+       official source, and only then.
 
 When:  Whenever you are ready. There is no clock and no pressure. Come back
        later if you like.
 
-How:   You double-click "Start Here". Hearth greets you, sets up the included
+How:   You double-click "Start Here" (on a Mac: the Hearth app in the macos
+       folder). Hearth greets you, sets up the included
        tools, and then offers a few optional extras one at a time. For each one
        it shows a short, honest card explaining what it is, and waits for your
        yes, no, or maybe later.
@@ -84,8 +90,10 @@ and every session inside it is remembered and checked. They even hand off to
 each other: Setup passes your answers straight to Eidolon, so the two run as a
 pair.
 
-These are Jonah's own work. They are included in plain view, with nothing
-hidden, and they go in without needing any extra runtimes or downloads.
+These are Jonah's own work, with one credited exception carried inside Eidolon:
+the ASI-Evolve evolve engine by GAIR-NLP, included in plain view with its
+license and provenance. Everything goes in openly, with nothing hidden, and the
+install itself needs no extra runtimes or downloads.
 
 
 WHAT YOU CAN ADD, ONLY IF YOU WANT
@@ -118,9 +126,12 @@ not broken anything, and your computer is fine.
 A NOTE OF THANKS
 
 Hearth stands on the work of many generous people. Every one of them is credited
-in CREDITS.md, in their own words, with a link to their own work. None of their
-code is copied into Hearth. Their tools are theirs, fetched from their own
-sources, with thanks. That care is part of what Hearth is.
+in CREDITS.md, in their own words, with a link to their own work. With one
+exception named there, the ASI-Evolve evolve engine by GAIR-NLP that Eidolon
+carries with its license and provenance, none of their code is copied into
+Hearth. Their tools are theirs, fetched from their own sources, with thanks.
+That care is part of what Hearth is.
 
 
-When you're ready, double-click "Start Here". The first win takes about a minute.
+When you're ready, double-click "Start Here" (on a Mac: the Hearth app in the
+macos folder). The first win takes about a minute.
