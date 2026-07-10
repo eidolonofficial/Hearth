@@ -112,7 +112,7 @@ install_skills() {
   case "$result" in
     OK\ *)
       blank
-      win "    Done. Setup and Eidolon are in place (${result#OK }) files)."
+      win "    Done. Setup and Eidolon are in place (${result#OK } files)."
       say "    That is your first win, and it took only a few seconds." ;;
     *)
       say "    I could not finish the copy. Make sure the whole Hearth folder stayed"

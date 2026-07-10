@@ -6,8 +6,9 @@ SKILL.md.
 
 ## Six habits
 
-The first four are the opening questions in SKILL.md. All six live here so the
-intent is in one place.
+The first three are the first three opening questions in SKILL.md; its fourth
+question (what kind of work this is) maps to the kinds of work below. All six
+live here so the intent is in one place.
 
 1. Say which parts are on at the start. "Remember and check this session." A
    few seconds up front saves a mid-task correction.

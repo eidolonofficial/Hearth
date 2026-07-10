@@ -73,6 +73,19 @@ to set things down so they are still there when you come back tomorrow.
 
 ---
 
+## ASI-Evolve
+
+By GAIR-NLP (SII / SJTU Generative AI Research Lab).
+
+[github.com/GAIR-NLP/ASI-Evolve](https://github.com/GAIR-NLP/ASI-Evolve) | License: Apache-2.0
+
+The agent-driven evolve toolbelt that powers Eidolon's evolve mode. This is the
+one piece of other people's code carried inside Hearth, vendored verbatim at
+skills/eidolon/engine/asi-evolve/ with its license kept and its provenance
+recorded there in NOTICE and PROVENANCE.md.
+
+---
+
 ## The foundations underneath
 
 These are the deep layers, the runtimes and libraries that everything above is
