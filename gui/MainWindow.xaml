@@ -140,7 +140,7 @@
                     <Border Style="{StaticResource Card}">
                         <StackPanel>
                             <TextBlock Style="{StaticResource Body}" Margin="0,0,0,4" Text="&#x2022;  Nothing happens without your yes. Every real step pauses and asks."/>
-                            <TextBlock Style="{StaticResource Body}" Margin="0,0,0,4" Text="&#x2022;  Close this window any time. It cannot harm your computer."/>
+                            <TextBlock Style="{StaticResource Body}" Margin="0,0,0,4" Text="&#x2022;  Review the listed changes before approving. Replacements require separate consent."/>
                             <TextBlock Style="{StaticResource Body}" Margin="0,0,0,0" Text="&#x2022;  First, a quick win. Then two optional helpers, one at a time."/>
                         </StackPanel>
                     </Border>

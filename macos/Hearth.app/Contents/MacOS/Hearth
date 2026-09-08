@@ -42,7 +42,7 @@ WELCOME="Welcome. You say yes to every step.
 Hearth sets Claude up for you, one step at a time. No commands to type.
 
   -  Nothing happens without your yes.
-  -  Close this any time. It cannot harm your computer.
+  -  Close this any time. Review the listed changes before approving.
   -  First a quick win, then two optional helpers, one at a time."
 
 choice="$(dialog "$WELCOME" "Use text version" "Begin")" || text_fallback
@@ -56,7 +56,8 @@ Setup gets a work session off to a strong start: it asks a few short questions, 
 Eidolon reads a whole project and sets up what Claude needs to understand it, then carries any change from idea to finished, checking for safety the whole way. Nothing important ships without your yes.
 
 One gets the place ready; the other makes the visit go well."
-dialog "$SKILLS" "Back" "Set up my skills" >/dev/null || true
+choice="$(dialog "$SKILLS" "Back" "Set up my skills")" || exit 0
+[ "$choice" = "Set up my skills" ] || exit 0
 
 # Instant win: copy the skills. Fast, so we report the result.
 result="$(hc_install_skills "$ROOT")"
@@ -67,7 +68,7 @@ if [ "${result%% *}" = "OK" ]; then
 That is your first win, and it took only a few seconds."
 else
   installed=""
-  note "I could not finish the copy. Make sure the whole Hearth folder stayed together, then open Hearth again. You have not broken anything."
+  note "Installation stopped: $result. Use Start Agents for prerequisites or an explicitly backed-up replacement."
 fi
 
 # Offer a tool. Args: name what why who where when how runtime verify -- step...
@@ -127,7 +128,7 @@ offer_tool \
 
 DONE="You did it.
 
-You now have: ${installed:-your skills}, ready in Claude.
+Completed installations: ${installed:-none}.
 
 To use them, open Claude Code and type a single slash, the / key. Your skills appear in the list. Pick one and follow along.
 

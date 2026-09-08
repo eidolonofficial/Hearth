@@ -1,57 +1,14 @@
-READ ME FIRST (macOS)
+HEARTH ON macOS
 
+Open Start Agents.command in this folder to choose Codex, Claude Code, or both.
+This picker uses Terminal. Node.js 18 or newer on PATH and Git are required.
+It previews its changes and asks for explicit approval; replacement is separate
+and retains a backup. Nothing installs optional services through this picker.
 
-Welcome. You are in the right place, and there is nothing here you can get wrong.
+Hearth.app remains the legacy Claude-only graphical interface. Its Back or
+Cancel choice does not authorize a copy. Its text fallback opens Start Agents.
+Unsigned application launch and native GUI behavior still require testing on
+your macOS version; do not assume a Linux or Node test proves the GUI works.
 
-This is the macOS version of Hearth. It does exactly what the Windows one does,
-with Mac-friendly steps. Everything that matters, the warmth, the safety, the
-"nothing happens without your yes," is the same.
-
-
-HOW TO START
-
-Find the app named "Hearth" in this folder and double-click it. A window opens
-and walks you through everything in plain words. No commands to type, nothing
-technical to know.
-
-Prefer plain text over a window? "Welcome.command" in this folder does the exact
-same thing in a Terminal window. Either one is fine.
-
-
-IF MACOS WILL NOT OPEN IT THE FIRST TIME
-
-macOS is careful with apps that came from somewhere else, so the very first time
-it may refuse to open this one. That is normal, and it is not a problem. Do this
-once: right-click (or hold Control and click) "Hearth", choose Open, then click
-Open again in the box that appears. After that first time, a normal double-click
-works.
-
-If you are using "Welcome.command" instead and it will not run, open the Terminal
-app, type  chmod +x  followed by a space, drag "Welcome.command" onto the
-Terminal window, and press Enter. Then double-click it as usual.
-
-You are safe the whole way. Nothing happens without your yes, you can close the
-window any time, and it cannot harm your computer.
-
-
-WHAT IT DOES
-
-The same as the main READ ME FIRST.txt one folder up. It sets up your two skills,
-Setup and Eidolon, right away, then offers a couple of optional helpers one at a
-time. Each helper, if you say yes, is fetched from its maker's own official
-source, out in the open. That file also explains why you want both skills, and
-it previews the one question Setup asks the first time: how familiar you are with
-coding and engineering, where there is no wrong answer.
-
-On a Mac, the optional helpers install through a small tool called uv. If uv is
-not on your computer yet, Hearth shows you the one official command to add it and
-then stops, so you stay in charge.
-
-
-A NOTE OF THANKS
-
-Everyone whose work made Hearth possible is named in CREDITS.md, in their own
-words, with thanks.
-
-
-When you're ready, double-click "Hearth". The first win takes about a minute.
+After a Codex project install, restart Codex and review project trust and /hooks.
+See the parent folder's README.md for installation scope and limitations.

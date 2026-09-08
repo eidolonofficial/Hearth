@@ -1,0 +1,30 @@
+name: UI source snapshot
+on:
+  push:
+    branches: [release/codex-claude-compat]
+    paths: [.github/workflows/ui-snapshot.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: |
+          mkdir evidence
+          git archive --format=tar HEAD > evidence/Hearth.tar
+          git rev-parse HEAD > evidence/hearth-head.txt
+          git clone --quiet https://github.com/eidolonofficial/eidolon.git "$RUNNER_TEMP/eidolon"
+          git -C "$RUNNER_TEMP/eidolon" checkout --quiet a075bbb51cbd5e75330057191b8147fe42a667a0
+          git -C "$RUNNER_TEMP/eidolon" archive --format=tar HEAD > evidence/eidolon.tar
+          git clone --quiet https://github.com/eidolonofficial/eidolon-setup.git "$RUNNER_TEMP/setup"
+          git -C "$RUNNER_TEMP/setup" checkout --quiet ed077751d985b5b8154300e42b4bb48f1c8903ad
+          git -C "$RUNNER_TEMP/setup" archive --format=tar HEAD > evidence/setup.tar
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: exact-ui-sources
+          path: evidence/
+          retention-days: 7
