@@ -5,7 +5,8 @@ if ! command -v node >/dev/null 2>&1; then
   read -r -p "Press Return to close. " _
   exit 1
 fi
-node "$ROOT/scripts/welcome.mjs"
-code=$?
-read -r -p "Press Return to close. " _
-exit "$code"
+if [ "${HEARTH_TEXT:-}" = "1" ]; then
+  node "$ROOT/scripts/welcome.mjs"
+else
+  node "$ROOT/scripts/hearth-ui.mjs"
+fi
