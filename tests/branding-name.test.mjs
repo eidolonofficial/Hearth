@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SKIP_DIRS = new Set(['.git', 'node_modules', '.ci-source']);
 const BINARY_EXT = /\.(png|jpg|jpeg|gif|webp|ico|icns|pdf|zip|tar|gz|woff2?|ttf|otf)$/i;
 const legacyName = ['Fable', 'fox'].join('');
