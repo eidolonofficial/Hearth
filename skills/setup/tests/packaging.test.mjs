@@ -23,7 +23,7 @@ test('all referenced workflow modules are present', () => {
 test('shared handoff and consent remain explicit', () => {
   assert.match(text('SKILL.md'), /\.claude\/session\.yaml/);
   assert.match(text('SKILL.md'), /wait for the answer/);
-  assert.match(text('SKILL.md'), /Never\n   bypass hook trust/);
+  assert.match(text('SKILL.md'), /Never bypass hook trust/);
 });
 test('standalone setup does not claim installed automation', () => {
   assert.match(text('SKILL.md'), /not a running memory service/);
@@ -31,5 +31,23 @@ test('standalone setup does not claim installed automation', () => {
 });
 test('instruction files preserve cross-host maintenance rules', () => {
   assert.match(text('CLAUDE.md'), /@AGENTS.md/);
-  assert.match(text('AGENTS.md'), /Do not publish/);
+  assert.match(text('AGENTS.md'), /current host capabilities/);
+  assert.match(text('AGENTS.md'), /smallest sufficient set/);
+});
+test('skill selection is evidence-based and gap-aware', () => {
+  for (const name of ['SKILL.md', 'codex/SKILL.md']) {
+    const s = text(name);
+    assert.match(s, /explicit user choice first/);
+    assert.match(s, /inspected repository signals/);
+    assert.match(s, /risk signals/);
+    assert.match(s, /smallest sufficient non-conflicting set/);
+    assert.match(s, /record a gap/);
+    assert.match(s, /Generic words/);
+  }
+});
+test('model and delegation behavior are capability based', () => {
+  const s = text('SKILL.md');
+  assert.match(s, /Never pin behavior to a remembered\n    Claude point release/);
+  assert.match(s, /Skill selection does not imply delegation/);
+  assert.match(s, /subagents when parallelism, isolated context, specialist work, or\n    independent verification creates real value/);
 });
