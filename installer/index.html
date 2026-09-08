@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hearth</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="scene" aria-hidden="true">
+      <canvas id="hearth-scene"></canvas>
+      <div class="scene-copy">
+        <div class="mark" aria-hidden="true">H</div>
+        <p>Same heart.<br/>Wherever you build.</p>
+      </div>
+    </section>
+
+    <section class="installer" aria-labelledby="title">
+      <header class="brand">
+        <span class="eyebrow">HEARTH</span>
+        <h1 id="title">A beautiful way in.</h1>
+        <p class="lede">Install Eidolon and Setup for Claude Code, Codex, or both. Hearth previews every change before it writes a file.</p>
+      </header>
+
+      <div class="rule"></div>
+
+      <form id="install-form" novalidate>
+        <fieldset>
+          <legend>Where do you work?</legend>
+          <div class="choices" role="radiogroup" aria-label="AI coding host">
+            <label class="choice"><input type="radio" name="host" value="claude" checked><span><strong>Claude Code</strong><small>Install for Claude</small></span></label>
+            <label class="choice"><input type="radio" name="host" value="codex"><span><strong>Codex</strong><small>Install for Codex</small></span></label>
+            <label class="choice"><input type="radio" name="host" value="both"><span><strong>Both</strong><small>Keep one shared doctrine</small></span></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Project</legend>
+          <label class="field">
+            <span>Project folder <em>optional</em></span>
+            <input id="project" name="project" type="text" autocomplete="off" placeholder="Leave blank for user skills only" />
+          </label>
+          <label class="check"><input id="replace" type="checkbox"><span>Allow replacement of an existing Eidolon or Setup install. A backup will be kept.</span></label>
+        </fieldset>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+        <div id="preview" class="preview" hidden></div>
+
+        <div class="actions">
+          <button id="preview-btn" class="secondary" type="button">Review changes</button>
+          <button id="install-btn" class="primary" type="submit" disabled>Install</button>
+        </div>
+      </form>
+
+      <footer>
+        <span>Nothing consequential happens without your approval.</span>
+        <a href="https://github.com/eidolonofficial/Hearth" target="_blank" rel="noreferrer">Source</a>
+      </footer>
+    </section>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
