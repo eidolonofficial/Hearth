@@ -35,8 +35,7 @@ jobs:
       - name: Gate generated content before commit
         run: |
           node --test tests/*.test.mjs skills/eidolon/hooks/codex-hook.test.mjs skills/eidolon/scripts/install.test.mjs skills/eidolon/scripts/rehost.test.mjs skills/eidolon/scripts/skill-router.test.mjs skills/setup/tests/*.test.mjs
-          node skills/eidolon/scripts/platform-refresh.mjs --check
-          (cd skills/eidolon && node scripts/selfcheck.mjs && node scripts/eidolon-audit.mjs)
+          (cd skills/eidolon && node scripts/platform-refresh.mjs --check && node scripts/selfcheck.mjs && node scripts/eidolon-audit.mjs)
       - name: Commit regenerated tracked bundle only when changed
         shell: bash
         run: |
