@@ -5,5 +5,8 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-node "%~dp0scripts\welcome.mjs"
-pause
+if /I "%HEARTH_TEXT%"=="1" (
+  node "%~dp0scripts\welcome.mjs"
+) else (
+  node "%~dp0scripts\hearth-ui.mjs"
+)
