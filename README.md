@@ -1,109 +1,80 @@
 # Hearth
 
-Hearth is the front door to a smarter Claude. Double-click one file and it sets
-everything up for you, asking before every step. Built for people who run a
-business, not a server room.
+Install **Eidolon and Setup for Codex, Claude Code, or both**. The new host picker
+and command-line installer share one tested copy engine. The existing graphical
+installers remain Claude-only; they now use that engine too.
 
-No terminal. No jargon. You say yes to every step.
+## Start here
 
-## How to start
+Requires Node.js 18 or newer on PATH and Git. Hearth does not silently install
+Node, API credentials, or optional services.
 
-- **Windows:** double-click **Start Here**. A window opens and walks you through
-  the rest. No PowerShell, no typing.
-- **macOS:** double-click **macos/Hearth**. The first time, macOS may ask you to
-  confirm it once; `macos/READ ME FIRST.txt` has the one step.
+- Windows: double-click **Start Agents.cmd** to choose Codex, Claude, or both.
+- macOS: open **macos/Start Agents.command** for the same terminal-based picker.
+- Linux or any terminal: `node scripts/welcome.mjs`.
 
-Would rather read before clicking anything? Open `READ ME FIRST.txt`. It says
-the same thing in plain text.
+The picker shows the target paths and requires an explicit yes before writing.
+A blank project path installs user skills only. A project path also installs
+project-local instructions and hook configuration.
 
-## What it sets up
+For a non-interactive preview, from this checkout:
 
-Two skills come with Hearth and go in right away:
-
-- **Setup** gets a work session off to a strong start. It asks a few short
-  questions so Claude works the way you like, then it remembers what worked,
-  checks its own work before it says "done," and learns how you like to work.
-  Setup is about the session: this visit, this stretch of work.
-- **Eidolon** is about the project itself. Point it at a project folder and it
-  reads the whole thing, works out what Claude needs to understand it, and then
-  carries any change from a plain idea all the way to finished: it plans the
-  work, builds it one careful piece at a time, checks it for safety and
-  mistakes, and only then puts it in place. Built-in guards watch for the risky
-  moves, and a safety review hunts for ways a change could go wrong. Nothing
-  important ships or gets deleted without a clear yes from you.
-
-One gets the place ready; the other makes the visit go well. They hand off to
-each other, so they work as a pair.
-
-The first time you work, Setup asks one thing: how familiar you are with coding
-and engineering, so Claude can meet you where you are. There is no wrong answer,
-and you can change it any time.
-
-## What you can add, only if you want
-
-After the first win, Hearth offers two optional helpers, one at a time. Skip
-either, now or forever. Say yes and Hearth installs it from the maker's own
-official source, out in the open:
-
-- **graphify** maps how the pieces of a project connect, so Claude can see the
-  whole shape of your code. Made by Safi Shamsi.
-- **mempalace** gives Claude a longer, searchable memory across sessions, like a
-  filing cabinet that actually stays organized. Led by a maker who goes by
-  igorls, with many hands helping.
-
-If one needs a small piece of background software, Hearth shows you the one
-official command and stops there, so you stay in charge.
-
-## You are safe
-
-- Nothing happens without your yes. Every real step pauses and asks.
-- Close the window whenever you want. It cannot harm your computer.
-- Your own tools ship inside, in plain view, with one openly credited exception:
-  Eidolon's evolve engine is a vendored copy of GAIR-NLP's ASI-Evolve toolbelt
-  (Apache-2.0, provenance recorded inside it). Any other maker's tool is never
-  carried inside Hearth; say yes to one and it is fetched fresh from the maker's
-  own official source, and only then.
-
-## What is in here
-
-```
-Start Here.cmd          double-click this on Windows
-gui/                    the Windows installer window
-welcome.ps1             the text installer Windows falls back to
-macos/Hearth.app        double-click this on macOS
-macos/Welcome.command   the text installer macOS falls back to
-READ ME FIRST.txt       the printable guide (macos/ has a Mac version)
-HEARTH-SPEC.md          the design spec
-CREDITS.md              everyone whose work made Hearth possible, in their words
-assets/                 the logo
-skills/setup/           the Setup skill
-skills/eidolon/         the full Eidolon harness: its skill, hooks, references,
-                        scripts, its vendored evolve engine (engine/asi-evolve,
-                        Apache-2.0), and its own spec and decision logs
+```sh
+node scripts/install.mjs --host codex --project /path/to/project
+node scripts/install.mjs --host both --project /path/to/project --yes
 ```
 
-## Credits
+Omit `--project` for user skills only. Existing skill directories are refused
+unless `--replace` is explicitly supplied. Replaced files remain under
+`.eidolon/backups/` with a receipt. Byte verification must succeed for the whole
+bundle before targets change; a failed transaction attempts rollback and reports
+any recovery work rather than calling a partial copy successful.
 
-Hearth stands on the work of many generous people, each credited by name and
-link in `CREDITS.md`, in their own words. Addy Osmani first of all, whose
-agent-skills harness is the pattern this grows from. With one exception, none of
-their code is copied into Hearth; their tools stay theirs, fetched from their
-own sources, with thanks. The exception is GAIR-NLP's ASI-Evolve evolve engine,
-vendored verbatim under its own Apache-2.0 license inside Eidolon at
-`skills/eidolon/engine/asi-evolve/`, credited in `CREDITS.md`, with full
-provenance in `skills/eidolon/engine/asi-evolve/PROVENANCE.md`.
+After a Codex project install, restart Codex, review project trust, then inspect
+and trust `/hooks`. User skill installation alone does not enable project hooks.
+Invoke `$eidolon` and `$setup` in Codex; `/eidolon` and `/setup` in Claude Code.
 
-Hearth and Eidolon were made by Jonah Butterbaugh, working alongside Claude.
+## Compatibility boundary
 
-## License
+The shared policy evaluators retain the Claude behavior. Codex edits are parsed
+as patches, not shell commands. Unsupported or ambiguous patch formats fail
+closed. Codex does not support the same native ask response: ask-tier operations
+stay blocked for operator review outside the agent or until the documented
+prerequisite is satisfied. No bypass receipt is manufactured from a chat yes.
+See `skills/eidolon/codex/README.md` for the exact boundary and test checklist.
 
-Hearth's installers and the bundled skills are MIT licensed (see
-`skills/eidolon/LICENSE`), except the vendored ASI-Evolve engine at
-`skills/eidolon/engine/asi-evolve/`, which keeps its own Apache-2.0 license (see
-its LICENSE and NOTICE). The third-party tools Hearth points to keep their own
-licenses, named in `CREDITS.md`.
+The original GUI launchers remain Claude-specific; their text fallback now uses
+the host picker. Their visual behavior still needs real Windows/macOS acceptance
+testing; automated installer tests are not a claim that the windows have been
+clicked through.
 
----
+## What is bundled
 
-When you're ready, double-click **Start Here**. The first win takes about a
-minute.
+Setup establishes the session's working boundaries and project notes. Eidolon
+provides setup/build/evolve workflows, shared policy checks and host adapters.
+The source-of-record repositories remain `eidolonofficial/eidolon` and
+`eidolonofficial/eidolon-setup`. `vendor-lock.json` records exact commits and
+per-file hashes; `scripts/sync-bundles.mjs` regenerates tracked bundles from those
+reviewed pins, not from moving default branches.
+
+The new picker installs no third-party optional services. The legacy GUI's
+Graphify and MemPalace offers remain separate and Claude-specific. Verify each
+optional tool's current official instructions before use.
+
+## Verification
+
+```sh
+node --test tests/*.test.mjs
+node --test skills/eidolon/hooks/*.test.mjs skills/eidolon/scripts/*.test.mjs
+node --test skills/setup/tests/*.test.mjs
+```
+
+See `gui/TESTING.md` for the real-client and GUI acceptance checks that remain
+separate from automated tests.
+
+## License and credits
+
+Hearth and the authored skills are MIT licensed; see the root `LICENSE`.
+The vendored ASI-Evolve engine retains its Apache-2.0 `LICENSE`, `NOTICE`,
+and provenance inside `skills/eidolon/engine/asi-evolve/`.
+`CREDITS.md` preserves the upstream acknowledgments.
