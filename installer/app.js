@@ -3,6 +3,8 @@ const previewButton = document.querySelector('#preview-btn');
 const installButton = document.querySelector('#install-btn');
 const status = document.querySelector('#status');
 const preview = document.querySelector('#preview');
+const installing = document.querySelector('#installing');
+const ritualStatus = document.querySelector('#ritual-status');
 let token = '';
 let reviewedFingerprint = '';
 
@@ -18,6 +20,15 @@ function setStatus(message = '', tone = '') {
 }
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function showInstalling(message) {
+  ritualStatus.textContent = message;
+  installing.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+function hideInstalling() {
+  installing.hidden = true;
+  document.body.style.overflow = '';
 }
 async function api(path, payload) {
   const response = await fetch(path, {
@@ -81,9 +92,13 @@ form.addEventListener('submit', async event => {
   }
   installButton.disabled = true;
   previewButton.disabled = true;
-  setStatus('Installing. Hearth is staging and verifying the complete bundle before it changes a destination…');
+  setStatus('Installing…');
+  showInstalling('Staging the complete bundle and verifying every file before Hearth changes a destination.');
+  await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   try {
     const data = await api('/api/install', {...request, confirm:true});
+    ritualStatus.textContent = 'Everything is in place. Verifying the finished installation and recording any rollback receipt.';
+    await new Promise(resolve => setTimeout(resolve, 520));
     const backup = data.backups ? ` Backup receipt: ${data.backups}` : '';
     setStatus(`Installed and verified ${data.changed ?? 0} change${data.changed === 1 ? '' : 's'}.${backup}`, 'good');
     installButton.textContent = 'Installed';
@@ -93,6 +108,7 @@ form.addEventListener('submit', async event => {
     setStatus(error.message, 'error');
     installButton.disabled = false;
   } finally {
+    hideInstalling();
     previewButton.disabled = false;
   }
 });
@@ -147,19 +163,30 @@ async function enhanceScene() {
     tealGlow.position.set(-1.2,.4,-1);
     group.add(tealGlow);
 
-    const count = 94;
-    const positions = new Float32Array(count * 3);
-    const sizes = new Float32Array(count);
-    for (let i=0;i<count;i++) {
-      positions[i*3] = (Math.random()-.5)*8;
-      positions[i*3+1] = (Math.random()-.5)*7;
-      positions[i*3+2] = -1.8 + Math.random()*4;
-      sizes[i] = .7 + Math.random()*1.8;
+    const dustCount = 94;
+    const dustPositions = new Float32Array(dustCount * 3);
+    for (let i=0;i<dustCount;i++) {
+      dustPositions[i*3] = (Math.random()-.5)*8;
+      dustPositions[i*3+1] = (Math.random()-.5)*7;
+      dustPositions[i*3+2] = -1.8 + Math.random()*4;
     }
     const dustGeo = new THREE.BufferGeometry();
-    dustGeo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+    dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPositions,3));
     const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({color:0xf1c078,size:.026,transparent:true,opacity:.43,sizeAttenuation:true,depthWrite:false}));
     scene3d.add(dust);
+
+    const fireflyGroup = new THREE.Group();
+    group.add(fireflyGroup);
+    const fireflies = Array.from({length:15}, (_, i) => {
+      const material = new THREE.SpriteMaterial({color:i % 4 === 0 ? 0x98e4cf : 0xffc36e, transparent:true, opacity:.72, blending:THREE.AdditiveBlending, depthWrite:false});
+      const sprite = new THREE.Sprite(material);
+      const phase = Math.random() * Math.PI * 2;
+      const radius = .82 + Math.random() * 1.05;
+      const speed = .24 + Math.random() * .3;
+      sprite.scale.setScalar(.035 + Math.random()*.035);
+      fireflyGroup.add(sprite);
+      return {sprite,phase,radius,speed,y:-.05+(Math.random()-.5)*1.85,z:.25+(Math.random()-.5)*.5};
+    });
 
     let mx = 0, my = 0;
     window.addEventListener('pointermove', event => {
@@ -183,6 +210,11 @@ async function enhanceScene() {
       glowMaterial.opacity = .105 + Math.sin(t*2.35)*.018;
       dust.rotation.z = t * .006;
       dust.position.y = Math.sin(t*.18)*.05;
+      for (const fly of fireflies) {
+        const a = fly.phase + t * fly.speed;
+        fly.sprite.position.set(.9 + Math.cos(a)*fly.radius, fly.y + Math.sin(a*1.7)*.34, fly.z + Math.sin(a*.7)*.24);
+        fly.sprite.material.opacity = .34 + .5 * (.5 + .5*Math.sin(t*2.4 + fly.phase));
+      }
       renderer.render(scene3d,camera);
       requestAnimationFrame(frame);
     }
