@@ -76,7 +76,7 @@ test('installer UI keeps the visual layer progressive and user intent explicit',
   assert.match(html, /Review changes/);
   assert.match(html, /Nothing consequential happens without your approval/);
   assert.match(html, /paw-trail/);
-  assert.doesNotMatch(html, /Breathe with Fablefox/i);
+  assert.doesNotMatch(html, /Breathe with Eidolon/i);
   assert.match(css, /prefers-reduced-motion/);
   assert.match(css, /paw-step/);
   assert.match(js, /cinematic layer unavailable; using static fallback/);
