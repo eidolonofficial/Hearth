@@ -7,18 +7,13 @@ on:
 permissions:
   contents: read
 jobs:
-  prepare:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/release/codex-claude-compat'
+  bundle-integrity:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: write
-    outputs:
-      sha: ${{ steps.commit.outputs.sha }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: release/codex-claude-compat
+          persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
@@ -34,27 +29,12 @@ jobs:
           ref: b68f7b88b54e3d275f589c43142adc0637be2bff
           path: .ci-source/setup
           persist-credentials: false
-      - name: Regenerate from reviewed pins and test before commit
+      - name: Check committed bundles against reviewed source commits
         run: |
-          node scripts/sync-bundles.mjs
           node scripts/sync-bundles.mjs --check
           node scripts/prepare-legacy.mjs
-          node --test tests/*.test.mjs
-      - name: Commit generated bundle only on review branch
-        id: commit
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git branch --show-current)" = 'release/codex-claude-compat'
-          git add skills/eidolon skills/setup vendor-lock.json gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth
-          if ! git diff --cached --quiet; then
-            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: sync reviewed Codex-compatible bundles and legacy consent fixes'
-            git push origin HEAD:refs/heads/release/codex-claude-compat
-          fi
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git diff --exit-code -- gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth
   compatibility:
-    needs: prepare
-    if: always() && (needs.prepare.result == 'success' || needs.prepare.result == 'skipped')
     strategy:
       fail-fast: false
       matrix:
@@ -64,7 +44,6 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          ref: ${{ needs.prepare.outputs.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
@@ -76,10 +55,14 @@ jobs:
           mkdir -p evidence
           git rev-parse HEAD > evidence/commit.txt
           node --test tests/*.test.mjs skills/eidolon/hooks/codex-hook.test.mjs skills/eidolon/scripts/install.test.mjs skills/eidolon/scripts/rehost.test.mjs skills/setup/tests/*.test.mjs 2>&1 | tee evidence/compatibility.txt
-      - name: PowerShell copy core
+      - name: PowerShell 7 and Windows PowerShell 5.1 copy core
         if: runner.os == 'Windows'
         shell: pwsh
-        run: ./tests/windows-core.ps1
+        run: |
+          & pwsh -NoProfile -File ./tests/windows-core.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'PowerShell 7 copy-core test failed' }
+          & powershell.exe -NoProfile -File ./tests/windows-core.ps1
+          if ($LASTEXITCODE -ne 0) { throw 'Windows PowerShell 5.1 copy-core test failed' }
       - name: POSIX copy core and shell syntax
         if: runner.os != 'Windows'
         shell: bash
