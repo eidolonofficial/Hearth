@@ -1,0 +1,51 @@
+name: Regenerate reviewed bundles
+on:
+  push:
+    branches: [release/codex-claude-compat]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: eidolonofficial/eidolon
+          ref: a075bbb51cbd5e75330057191b8147fe42a667a0
+          path: .ci-source/eidolon
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: eidolonofficial/eidolon-setup
+          ref: ed077751d985b5b8154300e42b4bb48f1c8903ad
+          path: .ci-source/setup
+          persist-credentials: false
+      - name: Regenerate exact bundles
+        run: |
+          node scripts/sync-bundles.mjs
+          node scripts/prepare-legacy.mjs
+      - name: Gate generated content before commit
+        run: |
+          node --test tests/*.test.mjs skills/eidolon/hooks/codex-hook.test.mjs skills/eidolon/scripts/install.test.mjs skills/eidolon/scripts/rehost.test.mjs skills/eidolon/scripts/skill-router.test.mjs skills/setup/tests/*.test.mjs
+          node skills/eidolon/scripts/platform-refresh.mjs --check
+          (cd skills/eidolon && node scripts/selfcheck.mjs && node scripts/eidolon-audit.mjs)
+      - name: Commit regenerated tracked bundle only when changed
+        shell: bash
+        run: |
+          if git diff --quiet -- skills vendor-lock.json gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth; then
+            echo 'Bundles already match reviewed pins.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add skills vendor-lock.json gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth
+          git commit -m 'build: sync intelligent Claude and Codex bundles from merged pins'
+          git push origin HEAD:release/codex-claude-compat
