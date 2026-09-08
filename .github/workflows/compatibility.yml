@@ -20,13 +20,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon
-          ref: 8fca9d67209310eb5c77ff3c5693dc99fb5af7b0
+          ref: a075bbb51cbd5e75330057191b8147fe42a667a0
           path: .ci-source/eidolon
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon-setup
-          ref: b68f7b88b54e3d275f589c43142adc0637be2bff
+          ref: ed077751d985b5b8154300e42b4bb48f1c8903ad
           path: .ci-source/setup
           persist-credentials: false
       - name: Check committed bundles against reviewed source commits
@@ -48,13 +48,14 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - name: Installer and bundled compatibility tests
+      - name: Installer, routing and bundled compatibility tests
         shell: bash
         run: |
           set -o pipefail
           mkdir -p evidence
           git rev-parse HEAD > evidence/commit.txt
-          node --test tests/*.test.mjs skills/eidolon/hooks/codex-hook.test.mjs skills/eidolon/scripts/install.test.mjs skills/eidolon/scripts/rehost.test.mjs skills/setup/tests/*.test.mjs 2>&1 | tee evidence/compatibility.txt
+          node --test tests/*.test.mjs skills/eidolon/hooks/codex-hook.test.mjs skills/eidolon/scripts/install.test.mjs skills/eidolon/scripts/rehost.test.mjs skills/eidolon/scripts/skill-router.test.mjs skills/setup/tests/*.test.mjs 2>&1 | tee evidence/compatibility.txt
+          node skills/eidolon/scripts/platform-refresh.mjs --check 2>&1 | tee evidence/platform-freshness.txt
       - name: PowerShell 7 and Windows PowerShell 5.1 copy core
         if: runner.os == 'Windows'
         shell: pwsh
