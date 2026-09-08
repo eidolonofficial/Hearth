@@ -85,9 +85,11 @@ server.listen(0, '127.0.0.1', () => {
   const {port} = server.address();
   const url = `http://127.0.0.1:${port}/`;
   console.log(`Hearth is ready at ${url}`);
+  if (process.env.HEARTH_NO_OPEN === '1') return;
   const open = process.platform === 'win32' ? ['cmd',['/c','start','',url]] : process.platform === 'darwin' ? ['open',[url]] : ['xdg-open',[url]];
   try { spawn(open[0], open[1], {detached:true, stdio:'ignore'}).unref(); }
   catch { console.log('Open the address above in your browser.'); }
 });
 
 process.on('SIGINT', () => server.close(() => process.exit(0)));
+process.on('SIGTERM', () => server.close(() => process.exit(0)));
