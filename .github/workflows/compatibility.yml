@@ -1,0 +1,112 @@
+name: Hearth compatibility
+on:
+  push:
+    branches: [main, release/codex-claude-compat]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prepare:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/release/codex-claude-compat'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: release/codex-claude-compat
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: eidolonofficial/eidolon
+          ref: 8fca9d67209310eb5c77ff3c5693dc99fb5af7b0
+          path: .ci-source/eidolon
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: eidolonofficial/eidolon-setup
+          ref: b68f7b88b54e3d275f589c43142adc0637be2bff
+          path: .ci-source/setup
+          persist-credentials: false
+      - name: Regenerate from reviewed pins and test before commit
+        run: |
+          node scripts/sync-bundles.mjs
+          node scripts/sync-bundles.mjs --check
+          node scripts/prepare-legacy.mjs
+          node --test tests/*.test.mjs
+      - name: Commit generated bundle only on review branch
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = 'release/codex-claude-compat'
+          git add skills/eidolon skills/setup vendor-lock.json gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'build: sync reviewed Codex-compatible bundles and legacy consent fixes'
+            git push origin HEAD:refs/heads/release/codex-claude-compat
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  compatibility:
+    needs: prepare
+    if: always() && (needs.prepare.result == 'success' || needs.prepare.result == 'skipped')
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ needs.prepare.outputs.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Installer and bundled compatibility tests
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p evidence
+          git rev-parse HEAD > evidence/commit.txt
+          node --test tests/*.test.mjs skills/eidolon/hooks/codex-hook.test.mjs skills/eidolon/scripts/install.test.mjs skills/eidolon/scripts/rehost.test.mjs skills/setup/tests/*.test.mjs 2>&1 | tee evidence/compatibility.txt
+      - name: PowerShell copy core
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./tests/windows-core.ps1
+      - name: POSIX copy core and shell syntax
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          bash -n macos/hearth-core.sh
+          bash -n 'macos/Start Agents.command'
+          bash -n macos/Welcome.command
+          bash -n macos/Hearth.app/Contents/MacOS/Hearth
+          export HOME="$(mktemp -d)"
+          trap 'rm -rf "$HOME"' EXIT
+          source macos/hearth-core.sh
+          hc_install_skills "$PWD"
+          if hc_install_skills "$PWD"; then echo 'Unexpected unapproved replacement'; exit 1; fi
+      - name: Full bundled suite and source archive
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test skills/eidolon/hooks/*.test.mjs skills/eidolon/scripts/*.test.mjs 2>&1 | tee evidence/full-suite.txt
+          (cd skills/eidolon && node scripts/selfcheck.mjs && node scripts/eidolon-audit.mjs) 2>&1 | tee evidence/audit.txt
+          git archive --format=tar HEAD > evidence/source.tar
+          cp vendor-lock.json evidence/
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hearth-${{ runner.os }}
+          path: evidence/
+          retention-days: 7
+          if-no-files-found: error
