@@ -113,7 +113,7 @@ function Run-Install-Skills {
         $el.SkillsStatus.Text = "Done. Setup and Eidolon are in place ($($result.copied) files)."
         $script:installed = @('Setup', 'Eidolon')
     } else {
-        $el.SkillsStatus.Text = "I could not finish the copy. Make sure the whole Hearth folder stayed together, then run this again. You have not broken anything."
+        $el.SkillsStatus.Text = "Installation stopped: $($result.error). Use Start Agents for an explicitly backed-up replacement."
     }
     $el.BtnNext.Content = 'Next'
     Set-Footer @('BtnNext')

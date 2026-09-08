@@ -1,7 +1,7 @@
 @echo off
 title Hearth
 REM Double-click this to begin. It opens the Hearth window: a real window, no typing.
-REM It cannot harm your computer, and nothing happens without your yes.
+REM Review the listed changes before approving.
 REM
 REM First choice: open the graphical window (no console). If PowerShell is missing
 REM entirely, fall through to the text installer in this same window.
