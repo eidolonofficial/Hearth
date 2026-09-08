@@ -6,6 +6,8 @@ import { join, relative } from 'node:path';
 const ROOT = new URL('..', import.meta.url).pathname;
 const SKIP_DIRS = new Set(['.git', 'node_modules', '.ci-source']);
 const BINARY_EXT = /\.(png|jpg|jpeg|gif|webp|ico|icns|pdf|zip|tar|gz|woff2?|ttf|otf)$/i;
+const legacyName = ['Fable', 'fox'].join('');
+const legacyPattern = new RegExp(legacyName, 'i');
 
 function walk(dir, hits = []) {
   for (const name of readdirSync(dir)) {
@@ -18,14 +20,14 @@ function walk(dir, hits = []) {
     try { text = readFileSync(path, 'utf8'); } catch { continue; }
     const lines = text.split(/\r?\n/);
     lines.forEach((line, index) => {
-      if (/fablefox/i.test(line)) hits.push(`${relative(ROOT, path)}:${index + 1}: ${line.trim()}`);
+      if (legacyPattern.test(line)) hits.push(`${relative(ROOT, path)}:${index + 1}: ${line.trim()}`);
     });
-    if (/fablefox/i.test(name)) hits.push(`${relative(ROOT, path)}: filename contains legacy character name`);
+    if (legacyPattern.test(name)) hits.push(`${relative(ROOT, path)}: filename contains legacy character name`);
   }
   return hits;
 }
 
 test('user-facing character name is Eidolon everywhere', () => {
   const hits = walk(ROOT);
-  assert.deepEqual(hits, [], `Legacy Fablefox references remain:\n${hits.join('\n')}`);
+  assert.deepEqual(hits, [], `Legacy character-name references remain:\n${hits.join('\n')}`);
 });
