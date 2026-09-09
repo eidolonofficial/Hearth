@@ -1,0 +1,15 @@
+{
+  "scripts/hearth-ui.mjs": "8d99b2abe0d1cce4429eb0fb48710c86725c8e6708d8d9bfc9b3233cfb3c5055",
+  "scripts/graphical-installer.mjs": "28c06e749d39bd09295c2fa8146893b24b1ef48792740c9cb162af547ab2fe45",
+  "scripts/install.mjs": "9a3152b08c01a8168d4de1e734522dbe68388d755d9f71316eed856d2a853f26",
+  "scripts/welcome.mjs": "96e86be796b163d9ab4d489de2ceabafaeca02bddee911f538f7b82f1be0847d",
+  "scripts/sync-bundles.mjs": "7de709f4feed787c08889925aa3d3fc8c4ff323e5d857f04d9db48b69f1b9958",
+  "installer/app.js": "c6162888480d4341671f98900bb7d6be339b2276584328de111f003134abfe22",
+  "tests/hearth-ui.test.mjs": "b5eefceb91aeee307e56beba54f7a16769afe3dbab40fb7d12a57fb9b627a2fb",
+  ".gitattributes": "57a7df10803ad7553319169dec2fe9f676d5ea6e5bbcf8bc84411db9f9c8dc72",
+  ".gitignore": "107e45146726eece28ca2f172f876b3d61dd6c084aa481975620f5bf782745f7",
+  "Start Agents.cmd": "2b79fa596c032328036757a4899533cd4f2b3b265a744bc56e4d247ef12be244",
+  "macos/Start Agents.command": "3ff69ab6a30a9c528fccfdf58beac555a8e587961b8a52de188167f0d8a4e5be",
+  "gui/HearthCore.ps1": "bac5ae0bd5ebb74fba78a6b665f5cd7e52ed8ce5a26ff9beddbae58e96432cc8",
+  "macos/hearth-core.sh": "a5cc1c9bc3b05c64d59cbffd679ac7d4651e70069fe1c22f2503bcf750e01715"
+}
