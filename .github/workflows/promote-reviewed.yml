@@ -31,10 +31,14 @@ jobs:
           path: .ci-source/setup
           persist-credentials: false
       - name: Materialize the exact reviewed candidate
+        shell: bash
         run: |
+          set -o pipefail
           mkdir -p .ci-evidence
           node .ci/promote-reviewed.mjs | tee .ci-evidence/promotion.txt
+          git diff --exit-code -- .github
       - name: Gate generated files before committing them
+        shell: bash
         run: |
           node --test --test-reporter=tap tests/*.test.mjs > .ci-evidence/hearth.tap
           (cd skills/eidolon && node --test --test-reporter=tap hooks/*.test.mjs scripts/*.test.mjs) > .ci-evidence/eidolon.tap
@@ -46,11 +50,11 @@ jobs:
         shell: bash
         run: |
           test "$GITHUB_REF_NAME" = 'ci/github-verification-20260909'
-          git diff --exit-code -- assets installer/index.html installer/styles.css
+          git diff --exit-code -- .github assets installer/index.html installer/styles.css
           git diff --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- .ci/prepare-integration.mjs .gitattributes .gitignore .github/workflows/compatibility.yml .github/workflows/integration-verification.yml .github/workflows/regenerate-bundles.yml .github/workflows/ui-snapshot.yml README.md 'Start Agents.cmd' gui/HearthCore.ps1 installer/app.js 'macos/Start Agents.command' macos/hearth-core.sh scripts/hearth-ui.mjs scripts/sync-bundles.mjs scripts/welcome.mjs skills tests/hearth-ui.test.mjs vendor-lock.json
+          git add -- .ci/prepare-integration.mjs .gitattributes .gitignore README.md 'Start Agents.cmd' gui/HearthCore.ps1 installer/app.js 'macos/Start Agents.command' macos/hearth-core.sh scripts/hearth-ui.mjs scripts/sync-bundles.mjs scripts/welcome.mjs skills tests/hearth-ui.test.mjs vendor-lock.json
           if ! git diff --cached --quiet; then
             git commit -m 'build: commit the reviewed distribution and sealed bundle'
             git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"

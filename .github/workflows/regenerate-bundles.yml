@@ -19,13 +19,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon
-          ref: a075bbb51cbd5e75330057191b8147fe42a667a0
+          ref: 54ded26e23b731c02eb5156d1304aa343c3ce0b1
           path: .ci-source/eidolon
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon-setup
-          ref: ed077751d985b5b8154300e42b4bb48f1c8903ad
+          ref: 3e96e7119fd9778165063cdb0569c9b7a5891776
           path: .ci-source/setup
           persist-credentials: false
       - name: Regenerate exact bundles

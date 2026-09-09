@@ -1,7 +1,8 @@
 name: Reviewed ecosystem integration
 on:
   push:
-    branches: [ci/github-verification-20260909]
+    branches: [main, ci/github-verification-20260909]
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
@@ -32,15 +33,22 @@ jobs:
           ref: 3e96e7119fd9778165063cdb0569c9b7a5891776
           path: .ci-source/setup
           persist-credentials: false
-      - name: Assemble and verify the pending candidate without publishing it
+      - name: Verify the committed distribution without rewriting it
         shell: bash
         run: |
           set -o pipefail
           mkdir -p .ci-evidence
           git rev-parse HEAD > .ci-evidence/hearth-commit.txt
           node --version > .ci-evidence/node-version.txt
-          node .ci/prepare-integration.mjs 2>&1 | tee .ci-evidence/assembly.txt
+          node scripts/sync-bundles.mjs --check 2>&1 | tee .ci-evidence/bundle-integrity.txt
           cp vendor-lock.json .ci-evidence/vendor-lock.json
+          git diff --exit-code
+          git archive --format=tar HEAD > .ci-evidence/source.tar
+      - name: Tampered lock and mirror are refused without repairs
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-reporter=tap scripts/generator-regression.test.mjs 2>&1 | tee .ci-evidence/generator.tap
       - name: Hearth real server, protocol and disposable installation tests
         shell: bash
         run: |
