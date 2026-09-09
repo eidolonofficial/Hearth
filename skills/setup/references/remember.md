@@ -47,9 +47,19 @@ Bound it too: say what the insight is NOT, so it does not get over-applied later
 
 ## Keep it lean
 
-When these records grow, retire the entries that have stopped earning their
-place. Growing the record is not a win. Every entry is a cost the next reader
-pays. A record nobody reads is not memory, it is clutter.
+Keep historical evidence append-only. Do not delete, shorten or rewrite a fix,
+insight or decision to make the active memory smaller. Add a correction or a
+superseding entry that points to the original evidence.
+
+Retire stale guidance from a separate active index, such as
+`docs/memory-index.json`. The index records which lessons still apply and why;
+it does not replace the historical records. Check project scope and source
+freshness before reusing a lesson. A previous approval is not authority for a
+new operation.
+
+Explicit privacy redaction or record deletion is a separate, human-approved
+maintenance operation. Neither a desire for a shorter prompt nor an agent's
+own conclusion authorizes erasing history.
 
 ## Source
 

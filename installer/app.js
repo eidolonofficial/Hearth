@@ -7,6 +7,7 @@ const installing = document.querySelector('#installing');
 const ritualStatus = document.querySelector('#ritual-status');
 let token = '';
 let reviewedFingerprint = '';
+let previewId = '';
 
 const values = () => ({
   host: new FormData(form).get('host'),
@@ -70,6 +71,7 @@ previewButton.addEventListener('click', async () => {
   try {
     const data = await api('/api/preview', request);
     reviewedFingerprint = fingerprint(request);
+    previewId = data.previewId;
     const paths = (data.paths || []).map(path => `<li>${escapeHtml(path)}</li>`).join('');
     preview.innerHTML = `<h3>Hearth will prepare</h3><ul>${paths}</ul>${request.replace ? '<p class="backup-note">Existing skill folders may be replaced only after a backup is created.</p>' : ''}`;
     preview.hidden = false;
@@ -96,7 +98,7 @@ form.addEventListener('submit', async event => {
   showInstalling('Staging the complete bundle and verifying every file before Hearth changes a destination.');
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   try {
-    const data = await api('/api/install', {...request, confirm:true});
+    const data = await api('/api/install', {confirm:true, previewId});
     ritualStatus.textContent = 'Everything is in place. Verifying the finished installation and recording any rollback receipt.';
     await new Promise(resolve => setTimeout(resolve, 520));
     const backup = data.backups ? ` Backup receipt: ${data.backups}` : '';
@@ -105,8 +107,8 @@ form.addEventListener('submit', async event => {
     reviewedFingerprint = '';
     celebrate();
   } catch (error) {
-    setStatus(error.message, 'error');
-    installButton.disabled = false;
+    setStatus(error.message + ' Review the plan before retrying.', 'error');
+    reviewedFingerprint = ''; previewId = ''; installButton.disabled = true;
   } finally {
     hideInstalling();
     previewButton.disabled = false;
@@ -125,7 +127,7 @@ async function enhanceScene() {
   const canvas = document.querySelector('#hearth-scene');
   if (!canvas || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   try {
-    const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js');
+    const THREE = await import('/assets/three.module.js');
     const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, powerPreference:'low-power'});
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.7));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -225,4 +227,5 @@ async function enhanceScene() {
 }
 
 loadSession();
-enhanceScene();
+// Optional local enhancement; the unchanged artwork remains the default.
+if(document.documentElement.dataset.enableLocalScene === 'true') enhanceScene();

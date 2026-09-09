@@ -24,7 +24,7 @@ function waitForUrl(child) {
 async function post(base, path, token, body) {
   return fetch(new URL(path, base), {
     method: 'POST',
-    headers: {'content-type':'application/json','x-hearth-token':token},
+    headers: {'content-type':'application/json','x-hearth-token':token,'origin':new URL(base).origin},
     body: JSON.stringify(body)
   });
 }
@@ -57,7 +57,7 @@ test('graphical installer previews before explicit install and uses the real eng
   assert.equal(existsSync(join(project,'.agents')), false, 'preview must not write Codex files');
   assert.equal(existsSync(join(project,'.claude')), false, 'preview must not write Claude files');
 
-  const install = await post(base, '/api/install', token, {host:'both',project,replace:false,confirm:true});
+  const install = await post(base, '/api/install', token, {confirm:true,previewId:plan.previewId});
   assert.equal(install.status, 200);
   const result = await install.json();
   assert.equal(result.dryRun, false);

@@ -49,6 +49,22 @@ description: Begin a Claude Code or Codex work session with explicit working bou
     were selected (and why), and the concrete evidence behind completion claims. Let
     the user make the final call.
 
+## Preservation and persona handoff
+
+Retire guidance through an active index, never by deleting historical evidence.
+The current `references/remember.md` resolves the old retirement wording in the
+preserved session workflow. Corrections append or supersede; privacy deletion
+is separate operator-approved maintenance.
+
+When Eidolon is installed, pass the session's original goal, every deliverable,
+answered and pending questions, exclusions, project scope and observable checks
+to its task contract. Use its `scripts/orchestrate.mjs` `deploy-plan` action to
+select grounded personas and prepare scoped context packets. Missing required
+roles remain gaps. A selected persona or saved answer grants no permission.
+The host's actual agent tools perform dispatch; Setup does not claim a worker
+was launched because a plan was printed. Do not relaunch work while a known
+worker is still running, and do not advance dependencies on self-reported success.
+
 ## Evals
 
 - Codex session: `$setup` loads; instructions use AGENTS.md and do not invent Claude-only controls. The four working-boundary questions remain.
