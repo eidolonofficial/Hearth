@@ -5,7 +5,7 @@ hc_has() { command -v "$1" >/dev/null 2>&1; }
 # Existing installations require explicit replacement through Start Agents.
 hc_install_skills() {
   local root="$1" result count
-  hc_has node || { echo "ERR Node.js 18 or newer is required; nothing installed"; return 1; }
+  hc_has node || { echo "ERR Node.js 22 or newer is required; nothing installed"; return 1; }
   result="$(node "$root/scripts/install.mjs" --host claude --yes)" || { echo "ERR install refused or incomplete; use Start Agents for replacement"; return 1; }
   count="$(printf '%s' "$result" | node -e 'let s="";process.stdin.on("data",c=>s+=c);process.stdin.on("end",()=>{try{const r=JSON.parse(s);if(!r.ok)process.exit(1);console.log(r.copied)}catch{process.exit(1)}})')" || { echo "ERR verification"; return 1; }
   echo "OK $count"

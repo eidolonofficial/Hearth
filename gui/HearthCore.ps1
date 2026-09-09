@@ -56,7 +56,7 @@ function Install-HearthSkills {
     # Replacements are refused here; Start Agents obtains separate replacement consent.
     param([string]$Root, [scriptblock]$OnFile = $null)
     if (-not (Test-HearthCommand 'node')) {
-        return @{ ok = $false; copied = 0; total = 0; error = 'Node.js 18 or newer is required. Nothing was installed.' }
+        return @{ ok = $false; copied = 0; total = 0; error = 'Node.js 22 or newer is required. Nothing was installed.' }
     }
     try {
         $output = & node (Join-Path $Root 'scripts/install.mjs') --host claude --yes 2>&1

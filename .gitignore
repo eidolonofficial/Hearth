@@ -12,3 +12,7 @@ node_modules/
 .claude/.session-state
 .claude/.memory-synced-head
 verify-packet/
+
+# Disposable bundle inputs and local test evidence.
+/.ci-source/
+/.ci-evidence/

@@ -1,0 +1,76 @@
+name: Reviewed ecosystem integration
+on:
+  push:
+    branches: [main, ci/github-verification-20260909]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: eidolonofficial/eidolon
+          ref: 54ded26e23b731c02eb5156d1304aa343c3ce0b1
+          path: .ci-source/eidolon
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: eidolonofficial/eidolon-setup
+          ref: 3e96e7119fd9778165063cdb0569c9b7a5891776
+          path: .ci-source/setup
+          persist-credentials: false
+      - name: Verify the committed distribution without rewriting it
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .ci-evidence
+          git rev-parse HEAD > .ci-evidence/hearth-commit.txt
+          node --version > .ci-evidence/node-version.txt
+          node scripts/sync-bundles.mjs --check 2>&1 | tee .ci-evidence/bundle-integrity.txt
+          cp vendor-lock.json .ci-evidence/vendor-lock.json
+          git diff --exit-code
+          git archive --format=tar HEAD > .ci-evidence/source.tar
+      - name: Tampered lock and mirror are refused without repairs
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-reporter=tap scripts/generator-regression.test.mjs 2>&1 | tee .ci-evidence/generator.tap
+      - name: Hearth real server, protocol and disposable installation tests
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test --test-reporter=tap tests/*.test.mjs 2>&1 | tee .ci-evidence/hearth.tap
+      - name: Full bundled policy, persona, routing and installation suite
+        shell: bash
+        run: |
+          set -o pipefail
+          (cd skills/eidolon && node --test --test-reporter=tap hooks/*.test.mjs scripts/*.test.mjs) 2>&1 | tee .ci-evidence/eidolon.tap
+          (cd skills/eidolon && node scripts/selfcheck.mjs && node scripts/eidolon-audit.mjs) 2>&1 | tee .ci-evidence/audit.txt
+      - name: All bundled Setup tests
+        shell: bash
+        run: |
+          set -o pipefail
+          (cd skills/setup && node --test --test-reporter=tap tests/*.test.mjs) 2>&1 | tee .ci-evidence/setup.tap
+      - name: Preserve actual evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ecosystem-verification-${{ runner.os }}
+          path: .ci-evidence/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: error
