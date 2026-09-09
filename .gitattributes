@@ -2,3 +2,6 @@
 *.png binary
 *.ico binary
 *.icns binary
+
+# Vendored upstream source bytes are pinned, including original persona newlines.
+skills/** -text

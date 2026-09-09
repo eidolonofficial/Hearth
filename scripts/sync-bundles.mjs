@@ -4,8 +4,9 @@ import { existsSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSyn
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+import {isDeepStrictEqual} from 'node:util';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const pins = { eidolon: 'a075bbb51cbd5e75330057191b8147fe42a667a0', setup: 'ed077751d985b5b8154300e42b4bb48f1c8903ad' };
+const pins = { eidolon: '54ded26e23b731c02eb5156d1304aa343c3ce0b1', setup: '3e96e7119fd9778165063cdb0569c9b7a5891776' };
 const skip = /^(?:\.git|\.github|\.claude|\.codex|\.agents|\.eidolon)(?:\/|$)/;
 const lock = { sources: pins, excluded: skip.source, files: {} };
 function countFiles(dir) {
@@ -29,6 +30,7 @@ for (const name of ['eidolon', 'setup']) {
     if (countFiles(dest) !== files.length) throw Error('Unexpected bundled file count');
     for (const file of files) {
       if (!existsSync(join(dest, file.name)) || !readFileSync(join(dest, file.name)).equals(file.bytes)) throw Error('Bundled file differs from its pin: ' + name + '/' + file.name);
+      if (process.platform !== 'win32' && (lstatSync(join(dest,file.name)).mode & 0o111) !== (file.mode & 0o111)) throw Error('Bundled executable mode differs: '+name+'/'+file.name);
     }
   } else {
     // Tracked source regeneration on a review branch; Git retains the prior bundle.
@@ -36,5 +38,6 @@ for (const name of ['eidolon', 'setup']) {
     for (const file of files) { const path = join(dest, file.name); mkdirSync(dirname(path), { recursive: true }); writeFileSync(path, file.bytes, { mode: file.mode }); }
   }
 }
+if (process.argv.includes('--check') && !isDeepStrictEqual(JSON.parse(readFileSync(join(root,'vendor-lock.json'),'utf8')),lock)) throw Error('Vendor lock differs from the exact source inventory');
 if (!process.argv.includes('--check')) writeFileSync(join(root, 'vendor-lock.json'), JSON.stringify(lock, null, 2) + '\n');
 console.log('Bundle pins and ' + Object.keys(lock.files).length + ' file hashes verified.');
