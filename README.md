@@ -6,7 +6,7 @@ installers remain Claude-only; they now use that engine too.
 
 ## Start here
 
-Requires Node.js 18 or newer on PATH and Git. Hearth does not silently install
+Requires Node.js 22 or newer on PATH and Git. Hearth does not silently install
 Node, API credentials, or optional services.
 
 - Windows: double-click **Start Agents.cmd** to choose Codex, Claude, or both.
@@ -78,3 +78,18 @@ Hearth and the authored skills are MIT licensed; see the root `LICENSE`.
 The vendored ASI-Evolve engine retains its Apache-2.0 `LICENSE`, `NOTICE`,
 and provenance inside `skills/eidolon/engine/asi-evolve/`.
 `CREDITS.md` preserves the upstream acknowledgments.
+
+## Committed distribution checks
+
+The browser and terminal apply the same plan the user reviewed. Confirmation cannot
+change its target, and a stale or already consumed preview requires another review.
+The browser page, scripts, styles and original artwork are served locally.
+
+The distribution contains the pinned source files directly. CI verifies the
+committed bundle and its lock before testing; it does not patch the application
+into a different passing program. Full policy, persona, routing and installation
+tests run on Linux, Windows and macOS. Optional services are not prerequisites.
+
+Automated HTTP and installer tests are separate from real-client approval checks
+and native graphical acceptance. An interrupted installer retains its journal
+and backups for reviewed recovery; automatic crash recovery is not claimed.

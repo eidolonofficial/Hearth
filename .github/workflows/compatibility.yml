@@ -1,7 +1,7 @@
 name: Hearth compatibility
 on:
   push:
-    branches: [main, release/codex-claude-compat]
+    branches: [main, release/codex-claude-compat, ci/github-verification-20260909]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -20,13 +20,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon
-          ref: a075bbb51cbd5e75330057191b8147fe42a667a0
+          ref: 54ded26e23b731c02eb5156d1304aa343c3ce0b1
           path: .ci-source/eidolon
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon-setup
-          ref: ed077751d985b5b8154300e42b4bb48f1c8903ad
+          ref: 3e96e7119fd9778165063cdb0569c9b7a5891776
           path: .ci-source/setup
           persist-credentials: false
       - name: Check committed bundles against reviewed source commits
@@ -52,10 +52,10 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          mkdir -p evidence
-          git rev-parse HEAD > evidence/commit.txt
-          node --test tests/*.test.mjs skills/eidolon/hooks/codex-hook.test.mjs skills/eidolon/scripts/install.test.mjs skills/eidolon/scripts/rehost.test.mjs skills/eidolon/scripts/skill-router.test.mjs skills/setup/tests/*.test.mjs 2>&1 | tee evidence/compatibility.txt
-          (cd skills/eidolon && node scripts/platform-refresh.mjs --check) 2>&1 | tee evidence/platform-freshness.txt
+          mkdir -p .ci-evidence
+          git rev-parse HEAD > .ci-evidence/commit.txt
+          node --test tests/*.test.mjs skills/eidolon/hooks/codex-hook.test.mjs skills/eidolon/scripts/install.test.mjs skills/eidolon/scripts/rehost.test.mjs skills/eidolon/scripts/skill-router.test.mjs skills/setup/tests/*.test.mjs 2>&1 | tee .ci-evidence/compatibility.txt
+          (cd skills/eidolon && node scripts/platform-refresh.mjs --check) 2>&1 | tee .ci-evidence/platform-freshness.txt
       - name: PowerShell 7 and Windows PowerShell 5.1 copy core
         if: runner.os == 'Windows'
         shell: pwsh
@@ -82,15 +82,16 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          node --test skills/eidolon/hooks/*.test.mjs skills/eidolon/scripts/*.test.mjs 2>&1 | tee evidence/full-suite.txt
-          (cd skills/eidolon && node scripts/selfcheck.mjs && node scripts/eidolon-audit.mjs) 2>&1 | tee evidence/audit.txt
-          git archive --format=tar HEAD > evidence/source.tar
-          cp vendor-lock.json evidence/
+          node --test skills/eidolon/hooks/*.test.mjs skills/eidolon/scripts/*.test.mjs 2>&1 | tee .ci-evidence/full-suite.txt
+          (cd skills/eidolon && node scripts/selfcheck.mjs && node scripts/eidolon-audit.mjs) 2>&1 | tee .ci-evidence/audit.txt
+          git archive --format=tar HEAD > .ci-evidence/source.tar
+          cp vendor-lock.json .ci-evidence/
       - name: Preserve evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: hearth-${{ runner.os }}
-          path: evidence/
+          path: .ci-evidence/
+          include-hidden-files: true
           retention-days: 7
           if-no-files-found: error
