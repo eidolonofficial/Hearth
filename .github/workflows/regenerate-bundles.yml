@@ -1,12 +1,13 @@
 name: Regenerate reviewed bundles
 on:
   push:
-    branches: [release/codex-claude-compat]
+    branches: [release/codex-claude-compat, refresh/merged-bundles-20260909]
   workflow_dispatch:
 permissions:
   contents: write
 jobs:
   regenerate:
+    if: github.ref_name == 'release/codex-claude-compat' || github.ref_name == 'refresh/merged-bundles-20260909'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -19,18 +20,19 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon
-          ref: 54ded26e23b731c02eb5156d1304aa343c3ce0b1
+          ref: d663e571636801a1df17f7f1e1262d3641723454
           path: .ci-source/eidolon
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon-setup
-          ref: 3e96e7119fd9778165063cdb0569c9b7a5891776
+          ref: 5fa96f532bb65bc60484b86038a27157d4afd3fb
           path: .ci-source/setup
           persist-credentials: false
       - name: Regenerate exact bundles
         run: |
           node scripts/sync-bundles.mjs
+          node scripts/sync-bundles.mjs --check
           node scripts/prepare-legacy.mjs
       - name: Gate generated content before commit
         run: |
@@ -39,6 +41,11 @@ jobs:
       - name: Commit regenerated tracked bundle only when changed
         shell: bash
         run: |
+          set -euo pipefail
+          case "$GITHUB_REF_NAME" in
+            release/codex-claude-compat|refresh/merged-bundles-20260909) ;;
+            *) echo 'Refusing generation outside an explicit review branch'; exit 1 ;;
+          esac
           if git diff --quiet -- skills vendor-lock.json gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth; then
             echo 'Bundles already match reviewed pins.'
             exit 0
@@ -46,5 +53,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add skills vendor-lock.json gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth
-          git commit -m 'build: sync intelligent Claude and Codex bundles from merged pins'
-          git push origin HEAD:release/codex-claude-compat
+          git commit -m 'build: refresh Eidolon and Setup bundles from merged hardening pins'
+          git push origin "HEAD:$GITHUB_REF_NAME"
