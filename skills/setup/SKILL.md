@@ -75,3 +75,10 @@ worker is still running, and do not advance dependencies on self-reported succes
 - No matching skill: record a gap instead of fabricating one.
 - No memory backend installed: record explicit local notes, not a false capture claim.
 - No trusted Codex hooks: report this limitation instead of promising enforcement.
+
+## Engine and operator approval
+
+Read `references/engine-contract.md` before preparing an ASI-Evolve run, installing
+optional services, or handing an engine task to another actor. The reviewed plan
+and observed host outcome, not a selected persona or chat yes, determine what
+is authorized and what actually completed.
