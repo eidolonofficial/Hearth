@@ -24,13 +24,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon
-          ref: 54ded26e23b731c02eb5156d1304aa343c3ce0b1
+          ref: d663e571636801a1df17f7f1e1262d3641723454
           path: .ci-source/eidolon
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon-setup
-          ref: 3e96e7119fd9778165063cdb0569c9b7a5891776
+          ref: 5fa96f532bb65bc60484b86038a27157d4afd3fb
           path: .ci-source/setup
           persist-credentials: false
       - name: Verify the committed distribution without rewriting it
