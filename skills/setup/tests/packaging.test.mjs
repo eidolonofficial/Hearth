@@ -30,7 +30,8 @@ test('standalone setup does not claim installed automation', () => {
   assert.match(text('README.md'), /not live model behavior/);
 });
 test('instruction files preserve cross-host maintenance rules', () => {
-  assert.match(text('CLAUDE.md'), /@AGENTS.md/);
+  assert.match(text('CLAUDE.md'), /# Setup for Claude Code/);
+  assert.doesNotMatch(text('CLAUDE.md'), /@AGENTS\.md/);
   assert.match(text('AGENTS.md'), /current host capabilities/);
   assert.match(text('AGENTS.md'), /smallest sufficient set/);
 });
