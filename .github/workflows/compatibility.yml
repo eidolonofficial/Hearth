@@ -68,15 +68,13 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: |
+          set -o pipefail
           bash -n macos/hearth-core.sh
           bash -n 'macos/Start Agents.command'
           bash -n macos/Welcome.command
           bash -n macos/Hearth.app/Contents/MacOS/Hearth
-          export HOME="$(mktemp -d)"
-          trap 'rm -rf "$HOME"' EXIT
-          source macos/hearth-core.sh
-          hc_install_skills "$PWD"
-          if hc_install_skills "$PWD"; then echo 'Unexpected unapproved replacement'; exit 1; fi
+          bash -n tests/posix-core.sh
+          bash tests/posix-core.sh 2>&1 | tee .ci-evidence/posix-core.txt
       - name: Full bundled suite and source archive
         if: runner.os == 'Linux'
         shell: bash
