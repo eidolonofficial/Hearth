@@ -1,13 +1,13 @@
 name: Regenerate reviewed bundles
 on:
   push:
-    branches: [release/codex-claude-compat, refresh/merged-bundles-20260909]
+    branches: [release/codex-claude-compat, restore/claude-native-instructions]
   workflow_dispatch:
 permissions:
   contents: write
 jobs:
   regenerate:
-    if: github.ref_name == 'release/codex-claude-compat' || github.ref_name == 'refresh/merged-bundles-20260909'
+    if: github.ref_name == 'release/codex-claude-compat' || github.ref_name == 'restore/claude-native-instructions'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -20,13 +20,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon
-          ref: d663e571636801a1df17f7f1e1262d3641723454
+          ref: 3b67f1f45137636c00f62624fd6bd1418a97e4ae
           path: .ci-source/eidolon
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon-setup
-          ref: 5fa96f532bb65bc60484b86038a27157d4afd3fb
+          ref: 8fcd7c7a59bd3702b786ee3878a133828435b477
           path: .ci-source/setup
           persist-credentials: false
       - name: Regenerate exact bundles
@@ -43,7 +43,7 @@ jobs:
         run: |
           set -euo pipefail
           case "$GITHUB_REF_NAME" in
-            release/codex-claude-compat|refresh/merged-bundles-20260909) ;;
+            release/codex-claude-compat|restore/claude-native-instructions) ;;
             *) echo 'Refusing generation outside an explicit review branch'; exit 1 ;;
           esac
           if git diff --quiet -- skills vendor-lock.json gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth; then
@@ -53,5 +53,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add skills vendor-lock.json gui/MainWindow.xaml gui/Hearth.ps1 'Start Here.cmd' macos/Hearth.app/Contents/MacOS/Hearth
-          git commit -m 'build: refresh Eidolon and Setup bundles from merged hardening pins'
+          git commit -m 'build: restore Claude-native instructions in bundled source copies'
           git push origin "HEAD:$GITHUB_REF_NAME"
