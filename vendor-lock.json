@@ -1,14 +1,14 @@
 {
   "sources": {
-    "eidolon": "d663e571636801a1df17f7f1e1262d3641723454",
-    "setup": "5fa96f532bb65bc60484b86038a27157d4afd3fb"
+    "eidolon": "3b67f1f45137636c00f62624fd6bd1418a97e4ae",
+    "setup": "8fcd7c7a59bd3702b786ee3878a133828435b477"
   },
   "excluded": "^(?:\\.git|\\.github|\\.claude|\\.codex|\\.agents|\\.eidolon)(?:\\/|$)",
   "files": {
     "eidolon/.gitattributes": "30e1f034824a6055fdd4c7e37e3342d5288f02253e209136578823fc309b0ecd",
     "eidolon/.gitignore": "0a4ed4612883805e800e324904d57d20c026c4df5a40b4348d2bb07f8be49fec",
     "eidolon/AGENTS.md": "77f91539d38ad5f32591799a4d866b5c28e8a0ee8fc27df328ea8ff7d02f065d",
-    "eidolon/CLAUDE.md": "b62e6ee346468339633ab3c2963c9124f0193d5a93eb7080d938a62b3ce97295",
+    "eidolon/CLAUDE.md": "b4e53fd0072330a24ee1f9157c6f96d0ec5d957bd0ab3fd537057e38b98450ee",
     "eidolon/CREDITS.md": "7f7520ae44bc696f446906adf047341c826df96f2f67740857a4a25c22008fd6",
     "eidolon/LICENSE": "ea094d3f1d075922bc6094bd59e93ccdceaeb720419eeda38f9789f091aa11ac",
     "eidolon/README.md": "ed0f2a6ab83767c1dee622fa5e8936d635b8ff211b527c8939dc9e6251a17ac6",
@@ -204,6 +204,8 @@
     "eidolon/references/trust-safety-swarm.md": "00b12f1e41c0954613fb85064b5f1bfa827860e6048b8dec575afc3e8013d51f",
     "eidolon/scripts/approval-contract.mjs": "5e7f16138085f0d0651d0f2083041770526f7df949dd67c9c55196894330dfa3",
     "eidolon/scripts/approval-contract.test.mjs": "7be3881283ecde18ad2989e848fb614de6ec3a6d16bbc19e484eec5f06f40f57",
+    "eidolon/scripts/claude-entry.test.mjs": "9d8d2e1fc5770b3815988ae52cf2f317f78916f6d8a9ddd1c15186a51997539c",
+    "eidolon/scripts/claude-install.test.mjs": "dc41b01d2b5d6a8513b4abf29d746568f3f115d407cf96957f6ab9b0c7af58de",
     "eidolon/scripts/dependency-audit.py": "cc514a8760c8f6a23c8aff8b4b86f348ae5651f765c60e522d1aa4c8fbc85b10",
     "eidolon/scripts/dispatch-plan.mjs": "163aa6684bcbec53d431b5082756643b8aadc258868b7c8f27ebfc6e4d776d4a",
     "eidolon/scripts/dispatch-plan.test.mjs": "3410abf65e79bfd1c66c92a70ce78fe6419e59878e75da8db1696f402ced2fa2",
@@ -211,8 +213,8 @@
     "eidolon/scripts/eidolon-audit.test.mjs": "98bb329168c4b3376e40bd2b2c5a6a0cf1d5a5d9c1213d6c8024499125c1c8cd",
     "eidolon/scripts/inspect-git-hooks.mjs": "34b68a8470062cf2302ea42ad99347f4c66ecb4add684f08749bb13f30721494",
     "eidolon/scripts/inspect-git-hooks.test.mjs": "158b51d42e13ed380e3f267c86e0c798c91687b791592ec15c7d7964c24ac43a",
-    "eidolon/scripts/install.mjs": "dcca3f3cad2aa0228abc9e3c1c7a9b2798f5c822b0977c1f06b1cd24c78929e1",
-    "eidolon/scripts/install.test.mjs": "ef340f298f50224e92d00dfa21a3537f2ebe7a739cf4588ba813ee89428cad11",
+    "eidolon/scripts/install.mjs": "824eb9af5f72a749d202c3bb4a197de4d1ba22988f862240f907829672f89a08",
+    "eidolon/scripts/install.test.mjs": "8fe76a97a5a3361a2182e1260456dbc7da54bd960f836fe9972fe26262b4524a",
     "eidolon/scripts/orchestrate.mjs": "5c1de24486387bd116521f37a615f7b98d81e78fbfe9e697e3deb97b00f4947f",
     "eidolon/scripts/persona-lint.mjs": "cbdaefbcae750dc1ea37c9a77671d682fee333c15bf82975c2e043ee08bbc549",
     "eidolon/scripts/persona-lint.test.mjs": "33eefb8462e72f53bedc157ba684f0001c5f3d370506d07b46e6aaca344fe742",
@@ -243,7 +245,7 @@
     "setup/.gitattributes": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c",
     "setup/.gitignore": "19ce3a2764d6ad934a8258b593ea9fa9ef391e1d385634addac319cef7aa1220",
     "setup/AGENTS.md": "e51ac8aa98990a253d165f5d59dfb6dec4d517d45b0fa38ff9e76b47fe83b557",
-    "setup/CLAUDE.md": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+    "setup/CLAUDE.md": "6da62a199812e3c767c689b605722db1992a8e81fe1125b043d2134854ce7fbf",
     "setup/LICENSE": "ea094d3f1d075922bc6094bd59e93ccdceaeb720419eeda38f9789f091aa11ac",
     "setup/README.md": "d0da9c3a8e06a7e1bae867fa370a5e6f8c4a98d69ffc6187ca3ad5cdc747e8c0",
     "setup/SKILL.md": "69e32a59e1c3f6481aa49b0946515c3c099dd9f2c21cf07905d8460ec8f6b65d",
@@ -254,8 +256,9 @@
     "setup/references/remember.md": "1e14d316c0dc8f9530d6be84ba59c549c69955bc36015606c27da9ceed014d31",
     "setup/references/session-workflow.md": "d2851b281c35524dc66cf9d7d31d529028220f5f584a3cbb50b47d6117cc1203",
     "setup/references/verify.md": "721e4efdcd804e073be0eaa8974279a00675955607542aba1fc7186dd22d137d",
+    "setup/tests/claude-entry.test.mjs": "d7c2cd418fdea1fe89a4d0cc5c08172f886f2c4dd7d78ff4802adc4c2d3beb6b",
     "setup/tests/engine-contract.test.mjs": "110c5fe500ef1608fe14e472042b1c202819dca616a08a84644d566d56aac785",
-    "setup/tests/packaging.test.mjs": "61cdfd7c6c2a1d1e7258b228f0c1ebc1cd327cc175016b3b7a225b360c80b337",
+    "setup/tests/packaging.test.mjs": "85b9cc3bf8ed8c8aef0c0c1dfb9027f0fddc2d4fb55caf2561999599b2dab87f",
     "setup/tests/record-contract.test.mjs": "a2632723d949ed1bb82357fcb9460cbb466e3dca432dc117e49d34e0723d57b3"
   }
 }
