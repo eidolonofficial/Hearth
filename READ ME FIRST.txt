@@ -1,24 +1,36 @@
-HEARTH: START HERE
+HEARTH: READ ME FIRST
 
-Use Start Agents.cmd on Windows, or macos/Start Agents.command on a Mac.
-Choose Codex, Claude Code, or both. Node.js 18 or newer and Git are required.
-The picker shows the paths before it asks for permission to write.
+What this is
+Hearth puts two skills into Claude Code: Setup and Eidolon. That is all it does.
 
-A blank project folder installs user skills only. Choosing a project also wires
-project-local instructions and hooks. Existing skills require explicit
-replacement consent and are retained in .eidolon/backups with a receipt.
+What will happen
+1. You double-click "Start Here.cmd".
+2. A window opens and says what it will do.
+3. It copies the two skills into the .claude\skills folder in your user folder.
+4. It lists each file as it copies it, then tells you what is installed.
 
-In Codex, restart in the target project, review project trust, then inspect and
-trust /hooks. A skill file alone does not provide executable enforcement.
-Use $eidolon and $setup in Codex, or /eidolon and /setup in Claude Code.
+Nothing runs without your yes
+If you already have a skill with the same name, Hearth asks you first. You type
+"replace" to swap it, or press Enter to skip. Skip is the default. If you replace,
+your old copy is saved first, in .claude\skills\.hearth-backups, under the date and time.
 
-Codex ask-tier operations stay blocked for manual operator review; the adapter
-never silently treats an unsupported approval response as permission.
+Nothing else is installed. No extra programs, no background tasks, no account sign-in.
 
-The original graphical installers remain Claude-only. Their text fallback opens
-the new picker. Their optional external services are separate from the bundled
-skills. Review current official instructions before installing optional tools.
+How to start
+Open Claude Code. Type /setup or /eidolon.
 
-README.md explains compatibility limits. gui/TESTING.md lists live-client and
-GUI checks still needed before release. CREDITS.md and LICENSE preserve credit
-and licensing, including the ASI-Evolve engine's separate Apache-2.0 terms.
+If something goes wrong
+Hearth tells you the one thing to try. Nothing is broken when it stops. You can run
+"Start Here.cmd" again.
+
+How to undo
+Delete these two folders from the .claude\skills folder in your user folder:
+  eidolon
+  setup
+If Hearth saved an older copy, it is in .claude\skills\.hearth-backups. Move it back.
+
+For people who want project hooks
+There is a second door, "Operator Setup.cmd". It needs Node 22 or newer. You do not
+need it for the steps above.
+
+More: README.md. Credits: CREDITS.md. License: LICENSE.

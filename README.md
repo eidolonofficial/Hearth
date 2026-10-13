@@ -1,95 +1,87 @@
 # Hearth
 
-Install **Eidolon and Setup for Codex, Claude Code, or both**. The new host picker
-and command-line installer share one tested copy engine. The existing graphical
-installers remain Claude-only; they now use that engine too.
+Hearth installs two skills for Claude Code: Setup and Eidolon.
 
-## Start here
+Setup asks a few short questions at the start of a session and keeps notes for
+you. Eidolon reads a project and writes the files Claude Code needs to work well
+in it. In Claude Code you start them with `/setup` and `/eidolon`.
 
-Requires Node.js 22 or newer on PATH and Git. Hearth does not silently install
-Node, API credentials, or optional services.
+Hearth works with Claude Code only. It has two doors. Pick one.
 
-- Windows: double-click **Start Agents.cmd** to choose Codex, Claude, or both.
-- macOS: open **macos/Start Agents.command** for the same terminal-based picker.
-- Linux or any terminal: `node scripts/welcome.mjs`.
+## Door 1: the novice door
 
-The picker shows the target paths and requires an explicit yes before writing.
-A blank project path installs user skills only. A project path also installs
-project-local instructions and hook configuration.
+Use this if you want the skills and nothing else. No Node, no Git, no extra tools.
 
-For a non-interactive preview, from this checkout:
+- Windows: double-click `Start Here.cmd`. It runs `welcome.ps1` in Windows PowerShell 5.1.
+- macOS: open `macos/Welcome.command`. It is a plain bash script. Status: untested on hardware.
 
-```sh
-node scripts/install.mjs --host codex --project /path/to/project
-node scripts/install.mjs --host both --project /path/to/project --yes
-```
+It copies the `skills/` folder into `.claude/skills` in your user folder, so you end up
+with `.claude/skills/eidolon` and `.claude/skills/setup`. It writes nothing else.
+It adds no hooks and installs no other tool.
 
-Omit `--project` for user skills only. Existing skill directories are refused
-unless `--replace` is explicitly supplied. Replaced files remain under
-`.eidolon/backups/` with a receipt. Byte verification must succeed for the whole
-bundle before targets change; a failed transaction attempts rollback and reports
-any recovery work rather than calling a partial copy successful.
+If a skill is already there, it asks `replace` or `skip`. Skip is the default. On
+replace, your old folder moves to `.claude/skills/.hearth-backups/<yyyyMMdd-HHmmss>/<name>`
+before the new one is copied. Each file is printed as it lands.
 
-After a Codex project install, restart Codex, review project trust, then inspect
-and trust `/hooks`. User skill installation alone does not enable project hooks.
-Invoke `$eidolon` and `$setup` in Codex; `/eidolon` and `/setup` in Claude Code.
+Both scripts accept test flags: `-Yes -Home <path>` on Windows and
+`--yes --home <path>` on macOS. `-Yes` replaces without asking. `-Home` swaps your user
+folder for another one.
 
-## Compatibility boundary
+## Door 2: the operator door
 
-The shared policy evaluators retain the Claude behavior. Codex edits are parsed
-as patches, not shell commands. Unsupported or ambiguous patch formats fail
-closed. Codex does not support the same native ask response: ask-tier operations
-stay blocked for operator review outside the agent or until the documented
-prerequisite is satisfied. No bypass receipt is manufactured from a chat yes.
-See `skills/eidolon/codex/README.md` for the exact boundary and test checklist.
+Use this if you want project hooks. It needs Node 22 or newer.
 
-The original GUI launchers remain Claude-specific; their text fallback now uses
-the host picker. Their visual behavior still needs real Windows/macOS acceptance
-testing; automated installer tests are not a claim that the windows have been
-clicked through.
+- Windows: double-click `Operator Setup.cmd`.
+- macOS: open `macos/Operator Setup.command`. Status: untested on hardware.
+- Any terminal: `node scripts/welcome.mjs`.
 
-## What is bundled
+It checks your Node version first. If Node is missing or too old, it points you to
+https://nodejs.org and stops. Then it asks for a project folder. Blank means user skills
+only.
 
-Setup establishes the session's working boundaries and project notes. Eidolon
-provides setup/build/evolve workflows, shared policy checks and host adapters.
-The source-of-record repositories remain `eidolonofficial/eidolon` and
-`eidolonofficial/eidolon-setup`. `vendor-lock.json` records exact commits and
-per-file hashes; `scripts/sync-bundles.mjs` regenerates tracked bundles from those
-reviewed pins, not from moving default branches.
+It shows every path it will write under "Proposed locations:", and the text it will
+add where there is some. It writes only after you type `yes`. Then it prints the
+verified file count, the path of the backup receipt, and the next step.
 
-The new picker installs no third-party optional services. The legacy GUI's
-Graphify and MemPalace offers remain separate and Claude-specific. Verify each
-optional tool's current official instructions before use.
+A project install writes these inside the project:
 
-## Verification
+- `.claude/skills/eidolon` and `.claude/skills/setup`
+- `.claude/settings.json` with the hook entries, and `.claude/eidolon-manifest.yaml`
+- `.eidolon/policy-manifest.json`
+- marked sections in `CLAUDE.md`, `AGENTS.md` and `.gitignore`
+
+Restart Claude Code in the project. The hooks are active in the next session. They run
+Node, so keep Node installed for that project.
+
+If a skill already exists, you must type `replace` to review a replacement plan.
+Old files are kept under `.eidolon/backups/<id>/` in the target folder, with a
+`receipt.json`. Nothing is deleted. A plan that changed after you reviewed it is
+refused, and a failed install is never reported as a success.
+
+For scripts, `node scripts/install.mjs [--project PATH | --home PATH] [--yes] [--replace]`
+previews by default and installs only with `--yes`.
+
+## What is in this folder
+
+- `skills/eidolon` and `skills/setup` are copies of the skills from their own repositories
+  (`eidolonofficial/eidolon` and `eidolonofficial/eidolon-setup`). `vendor-lock.json` pins
+  the exact commits and file hashes. Regenerate them only with `node scripts/sync-bundles.mjs`.
+- `READ ME FIRST.txt` is the printable guide for the novice door. `macos/READ ME FIRST.txt`
+  is the macOS copy.
+- `HEARTH-SPEC.md` is the design record. `CHANGELOG.md` lists what changed.
+
+## Check it
 
 ```sh
 node --test tests/*.test.mjs
-node --test skills/eidolon/hooks/*.test.mjs skills/eidolon/scripts/*.test.mjs
-node --test skills/setup/tests/*.test.mjs
 ```
 
-See `gui/TESTING.md` for the real-client and GUI acceptance checks that remain
-separate from automated tests.
+The bundled suites run with `node --test "skills/eidolon/hooks/*.test.mjs" "skills/eidolon/scripts/*.test.mjs"`
+and `node --test skills/setup/tests/*.test.mjs`. A passing test is not a click-through on a
+real machine. The macOS doors have only had a syntax check (`bash -n`) and a run on Windows
+through Git Bash. They stay marked untested on hardware until a Mac run is recorded.
 
 ## License and credits
 
-Hearth and the authored skills are MIT licensed; see the root `LICENSE`.
-The vendored ASI-Evolve engine retains its Apache-2.0 `LICENSE`, `NOTICE`,
-and provenance inside `skills/eidolon/engine/asi-evolve/`.
-`CREDITS.md` preserves the upstream acknowledgments.
-
-## Committed distribution checks
-
-The browser and terminal apply the same plan the user reviewed. Confirmation cannot
-change its target, and a stale or already consumed preview requires another review.
-The browser page, scripts, styles and original artwork are served locally.
-
-The distribution contains the pinned source files directly. CI verifies the
-committed bundle and its lock before testing; it does not patch the application
-into a different passing program. Full policy, persona, routing and installation
-tests run on Linux, Windows and macOS. Optional services are not prerequisites.
-
-Automated HTTP and installer tests are separate from real-client approval checks
-and native graphical acceptance. An interrupted installer retains its journal
-and backups for reviewed recovery; automatic crash recovery is not claimed.
+Hearth and the skills are MIT licensed. See `LICENSE`. `CREDITS.md` names the people whose
+work Hearth stands on.
