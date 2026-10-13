@@ -1,6 +1,6 @@
 {
   "sources": {
-    "eidolon": "e8e586463e42c4828b8d1dd31fb60f3a932a7c10",
+    "eidolon": "a5486465b73e14c28a9279275fe3f1b9754570b9",
     "setup": "3255e07f00180b43936ffc86e72024613be64ce6"
   },
   "excluded": "^(?:\\.git|\\.github|\\.claude|\\.codex|\\.agents|\\.eidolon)(?:\\/|$)",
@@ -37,7 +37,7 @@
     "eidolon/docs/decisions/2026-07-09-feature-triage-study.md": "adfcf124c4c5f1f56f358d7471c679eef129e02e76e8e8c355f3f47c5b325709",
     "eidolon/docs/decisions/2026-09-09-persona-pipelines-and-review-repairs.md": "477ebbdb3f46f65e6fc6e95ec89dc98732621d244c0df3cc17a7cf3572811810",
     "eidolon/docs/decisions/2026-09-09-reviewed-persona-pipelines.md": "f16ded41e7e3f217cc804a0478c0f68c76a83c66b2d89a58af94c0a3e224901c",
-    "eidolon/docs/decisions/2026-10-13-archive-branches-and-v010-re-cut.md": "4923dc9648dac33568db2e7f78c9c9cdda531605ab10d90ed0a63de614143c33",
+    "eidolon/docs/decisions/2026-10-13-archive-branches-and-v010-re-cut.md": "5ea8ee7e51434dd179c21a22b0f5756396ab33e3ff168d88b97f081b65eeff34",
     "eidolon/docs/examples/personas/fraud-forensic-replay-primary.md": "68ef87112cdb0bcd9cb949c2458e3a5a09646b9a57b327e2a1f191c2502e39c8",
     "eidolon/docs/fixes/FIX-2026-06-16-engine-hook-suite-exemption.md": "38a417fdb300ed77e4b6eb2003e2f8cf72230766a31b58d598a966f53550e26d",
     "eidolon/docs/fixes/FIX-2026-09-08-effective-git-hooks.md": "d4a260d641da76e31f660a84cffff2dc57adaa7451d8c37b830f87ed510893e0",

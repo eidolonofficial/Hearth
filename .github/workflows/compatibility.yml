@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon
-          ref: e8e586463e42c4828b8d1dd31fb60f3a932a7c10
+          ref: a5486465b73e14c28a9279275fe3f1b9754570b9
           path: .ci-source/eidolon
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
