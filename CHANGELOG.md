@@ -36,7 +36,7 @@ Changed
 - CI runs the Hearth tests, the bundled Eidolon and Setup suites, selfcheck and audit on
   Linux, Windows and macOS, and fails if the novice scripts mention Node.
 - README, READ ME FIRST files, HEARTH-SPEC.md, CLAUDE.md and CREDITS.md describe what ships.
-- `skills/` and `vendor-lock.json` regenerated with `node scripts/sync-bundles.mjs` from eidolon e8e586463e42c4828b8d1dd31fb60f3a932a7c10 and eidolon-setup 3255e07f00180b43936ffc86e72024613be64ce6; CI checks out those commits.
+- `skills/` and `vendor-lock.json` regenerated with `node scripts/sync-bundles.mjs` from eidolon a5486465b73e14c28a9279275fe3f1b9754570b9 and eidolon-setup 3255e07f00180b43936ffc86e72024613be64ce6; CI checks out those commits.
 
 Not done
 
