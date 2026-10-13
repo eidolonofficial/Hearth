@@ -80,3 +80,52 @@ test('welcome.ps1 normalizes CRLF and BOM sources and leaves skip as the default
   assert.equal(readFileSync(target, 'utf8'), 'mine');
   assert.equal(existsSync(join(home, '.claude', 'skills', '.hearth-backups')), false);
 });
+
+// The bash door, run for real wherever bash exists: Git Bash on Windows, and the Linux and macOS runners in CI.
+const bashDoor = (args, home, input = '') => spawnSync('bash', [command, ...args, '--home', home], { encoding: 'utf8', input, timeout: 110000 });
+test('Welcome.command copies every skill file byte for byte, keeps a skipped skill, then backs up on replace', { skip: !hasBash && 'bash is not available' }, t => {
+  const home = temp(t), dest = join(home, '.claude', 'skills');
+  let r = bashDoor(['--yes'], home);
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /Installed now: eidolon setup/);
+  const expected = files(join(root, 'skills')).sort();
+  assert.deepEqual(files(dest).sort(), expected);
+  for (const rel of expected) {
+    const want = readFileSync(join(root, 'skills', rel)), got = readFileSync(join(dest, rel));
+    assert.ok(want.equals(got), rel);
+    assert.ok(!got.includes(13), 'CR in ' + rel);
+  }
+  // Enter at the prompt keeps the existing copy.
+  writeFileSync(join(dest, 'setup', 'SKILL.md'), 'local edit');
+  r = bashDoor([], home, '\n\n');
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  assert.match(r.stdout, /Skipped, still your own copy/);
+  assert.equal(readFileSync(join(dest, 'setup', 'SKILL.md'), 'utf8'), 'local edit');
+  assert.equal(existsSync(join(dest, '.hearth-backups')), false);
+  // --yes replaces, and the old copy moves to a stamped backup.
+  r = bashDoor(['--yes'], home);
+  assert.equal(r.status, 0, r.stdout + r.stderr);
+  const stamps = readdirSync(join(dest, '.hearth-backups'));
+  assert.equal(stamps.length, 1);
+  assert.match(stamps[0], /^\d{8}-\d{6}$/);
+  assert.equal(readFileSync(join(dest, '.hearth-backups', stamps[0], 'setup', 'SKILL.md'), 'utf8'), 'local edit');
+  assert.ok(readFileSync(join(dest, 'setup', 'SKILL.md')).equals(readFileSync(join(root, 'skills', 'setup', 'SKILL.md'))));
+});
+test('Welcome.command refuses an unknown option and a missing --home value without writing', { skip: !hasBash && 'bash is not available' }, t => {
+  const home = temp(t);
+  for (const args of [['--frobnicate'], ['--home']]) {
+    const r = spawnSync('bash', [command, ...args], { encoding: 'utf8', timeout: 30000, env: { ...process.env, HOME: home } });
+    assert.equal(r.status, 2, args.join(' ') + ': ' + r.stdout + r.stderr);
+    assert.match(r.stdout, /Nothing was installed/);
+  }
+  assert.equal(existsSync(join(home, '.claude')), false);
+});
+test('Operator Setup.command hands off to the picker and the picker stops cleanly on a blank answer', { skip: !hasBash && 'bash is not available' }, t => {
+  // A blank project answer previews a home install, so the home is a temp folder, never the real one.
+  const home = temp(t);
+  const r = spawnSync('bash', [join(root, 'macos', 'Operator Setup.command')], { encoding: 'utf8', input: '\nno\n', timeout: 110000, env: { ...process.env, HOME: home, USERPROFILE: home } });
+  assert.match(r.stdout, /Hearth operator setup/);
+  assert.match(r.stdout, /Proposed locations:/);
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr, /Stopped; nothing installed/);
+});
