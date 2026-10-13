@@ -70,7 +70,7 @@ macos/
 scripts/
   welcome.mjs                Operator picker: project folder, preview, yes, apply.
   install.mjs                Claude-only wrapper over the bundled Eidolon installer.
-  sync-bundles.mjs           Regenerates skills/ from the pinned commits in vendor-lock.json.
+  sync-bundles.mjs           Regenerates skills/ from the commits pinned in the script and writes vendor-lock.json.
   generator-regression.test.mjs  Checks that tampered bundles are refused. Needs .ci-source/.
 skills/
   eidolon/                   The Eidolon skill, as pinned in vendor-lock.json.
@@ -78,7 +78,7 @@ skills/
 tests/                       install, merge-acceptance, novice-door, claude-entry, branding-name.
 assets/                      EidolonLogo.png, lantern.svg.
 vendor-lock.json             Commit pins and per-file hashes for skills/.
-README.md  CLAUDE.md  AGENTS.md  CHANGELOG.md  CREDITS.md  LICENSE  HEARTH-SPEC.md
+README.md  CLAUDE.md  CHANGELOG.md  CREDITS.md  LICENSE  HEARTH-SPEC.md
 docs/decisions/              Dated decision records.
 .github/workflows/           compatibility.yml and integration-verification.yml.
 ```
@@ -105,8 +105,10 @@ Operator door:
 
 1. Check that `node` exists and is version 22 or newer. If not, print where to get it and stop.
 2. Ask for a project folder. Blank means user skills only.
-3. Run a preview. If a skill exists, ask for `replace` and explain the backup.
-4. Print `Proposed locations:` and every path, with the text to be written under it.
+3. Check every bundled file against `vendor-lock.json`, then run a preview. If a skill
+   exists, ask for `replace` and explain the backup.
+4. Print `Proposed locations:` and every path, with the text to be written, the settings
+   diff, or the replace lists (added, changed, removed) under it.
 5. Require the literal `yes`. Apply the same plan that was previewed.
 6. Print the verified file count, the backup receipt path, and the next step: restart
    Claude Code. Project hooks are active in the next session.
@@ -117,6 +119,7 @@ Operator door:
 - The novice door writes only under `.claude/skills` in the chosen home folder.
 - The operator door previews first, applies only the previewed plan, and refuses a
   plan whose targets changed after the preview.
+- The operator door checks every bundled file against `vendor-lock.json` before it plans.
 - Replacement needs its own answer. Old files are kept with a receipt.
 - A partial copy is never reported as a success.
 - Hearth does not install Node, credentials, models, or any service.
@@ -130,7 +133,7 @@ Operator door:
 - Skill files are written UTF-8 without a BOM, with LF line endings. `welcome.ps1` is
   ASCII only, so Windows PowerShell 5.1 reads it correctly with no BOM.
 - `skills/` is never edited by hand. It is regenerated with `node scripts/sync-bundles.mjs`
-  from the commits pinned in `vendor-lock.json`.
+  from the commits pinned in that script; `vendor-lock.json` records the pins and every file hash.
 - Verification uses a second signal. The PowerShell parser must report zero errors,
   `bash -n` must pass, the novice scripts must not contain the word node, and a real copy
   into a temp folder must match the source byte for byte.

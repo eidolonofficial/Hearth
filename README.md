@@ -39,16 +39,18 @@ It checks your Node version first. If Node is missing or too old, it points you 
 https://nodejs.org and stops. Then it asks for a project folder. Blank means user skills
 only.
 
-It shows every path it will write under "Proposed locations:", and the text it will
-add where there is some. It writes only after you type `yes`. Then it prints the
-verified file count, the path of the backup receipt, and the next step.
+Before it plans, it checks every bundled file against `vendor-lock.json` and stops on a
+mismatch. It shows every path it will write under "Proposed locations:", with the text it
+will add, the settings diff, or the files a replacement adds, changes and removes. It writes
+only after you type `yes`. Then it prints the verified file count, the path of the backup
+receipt, and the next step.
 
 A project install writes these inside the project:
 
 - `.claude/skills/eidolon` and `.claude/skills/setup`
 - `.claude/settings.json` with the hook entries, and `.claude/eidolon-manifest.yaml`
 - `.eidolon/policy-manifest.json`
-- marked sections in `CLAUDE.md`, `AGENTS.md` and `.gitignore`
+- marked sections in `CLAUDE.md` and `.gitignore`, between `eidolon:begin` and `eidolon:end` lines
 
 Restart Claude Code in the project. The hooks are active in the next session. They run
 Node, so keep Node installed for that project.
@@ -58,8 +60,9 @@ Old files are kept under `.eidolon/backups/<id>/` in the target folder, with a
 `receipt.json`. Nothing is deleted. A plan that changed after you reviewed it is
 refused, and a failed install is never reported as a success.
 
-For scripts, `node scripts/install.mjs [--project PATH | --home PATH] [--yes] [--replace]`
-previews by default and installs only with `--yes`.
+For scripts, `node scripts/install.mjs [--project PATH | --home PATH] [--yes --expect-plan DIGEST] [--replace]`
+previews by default. The preview prints a `planDigest`; `--yes` is refused unless `--expect-plan`
+carries that digest, so only the previewed plan is applied.
 
 ## What is in this folder
 
