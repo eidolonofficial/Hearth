@@ -6,6 +6,10 @@ probes. The pair is paired by contract: every red finding becomes a blue task,
 and the pair closes only when blue's post-fix verify passes on a signal
 independent of the one that detected it.
 
+This swarm reviews the CODE under build. Dispatching this red/blue swarm itself is
+one of the sensitive dispatches the consent gate covers
+(hooks/dispatch-attestation-guard.mjs; references/security-policy.md).
+
 Every standard and tool here was verified against its primary source on
 2026-06-08. Versions are pinned because these standards move. Re-fetch every
 cited URL at CLOSE and require an exact match of the control identifier;

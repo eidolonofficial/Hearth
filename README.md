@@ -73,8 +73,11 @@ HEARTH-SPEC.md          the design spec
 CREDITS.md              everyone whose work made Hearth possible, in their own words
 assets/                 the logo
 skills/setup/           the Setup skill
-skills/eidolon/         the full Eidolon harness: its skill, hooks, references,
-                        scripts, and its own spec and decision logs
+skills/eidolon/         the full Eidolon harness: its skill, hooks, references, and
+                        scripts, mirrored from its source repo at a pinned commit
+                        (skills/eidolon/MIRROR names it)
+tools/remirror.mjs      a maintainer script that refreshes the bundled skills; you
+                        never need to run it
 ```
 
 ## Credits

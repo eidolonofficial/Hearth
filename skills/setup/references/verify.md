@@ -14,7 +14,7 @@ For anything load-bearing:
 3. Decide what counts as pass or fail before you run it.
 4. Run it, keep the result, and act on what you found.
 
-This is the before_done check from the shared base (your uncertainty protocol).
+This is the before_done check from the shared base (upstream: the uncertainty protocol).
 A good check has three properties: it is independent of the first signal, it
 rests on a real and current source, and you set pass or fail before running it.
 Hedged words ("should work", "probably", "I think") are the tell that a claim
@@ -67,6 +67,7 @@ both.
 
 ## Source
 
-This is the plain-English version of your trust-but-verify skill, which stays
-the source of record (github.com/gmrmk/trust-but-verify). Internal name: the
-before_done check is your uncertainty protocol.
+This is the plain-English version of the trust-but-verify skill, which stays
+the source of record (github.com/gmrmk/trust-but-verify). It does not need to
+be installed: this file stands alone. Upstream name: the before_done check is
+the uncertainty protocol.

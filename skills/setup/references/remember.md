@@ -40,7 +40,7 @@ related issues); and what would catch it earlier next time.
 - something worked, AND
 - it would transfer beyond this one spot
 
-This is the before_reuse check from the shared base (your synthesis protocol).
+This is the before_reuse check from the shared base (upstream: the synthesis protocol).
 Run it honestly. If the lesson only helped right here, it is not an insight.
 Name two or three other places the same idea would apply before you save it.
 Bound it too: say what the insight is NOT, so it does not get over-applied later.
@@ -53,7 +53,8 @@ pays. A record nobody reads is not memory, it is clutter.
 
 ## Source
 
-This is the plain-English version of your dual-log-memory skill. The full text,
+This is the plain-English version of the dual-log-memory skill. The full text,
 with the synthesis protocol and the sunset rules, stays in that repo
-(github.com/gmrmk/dual-log-memory) as the source of record. Internal name: the
-insight side is your synthesis protocol.
+(github.com/gmrmk/dual-log-memory) as the source of record. It does not need to
+be installed: this file stands alone. Upstream name: the insight side is the
+synthesis protocol.

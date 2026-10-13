@@ -1,0 +1,5 @@
+source: C:/Users/strid/projects/eidolon
+commit: d42576ea3df2dd615d83edd9a7186595c62f6556
+date: 2026-07-10
+excluded: .git, .claude, tasks/, graphify-out/, docs/decisions/, docs/spec/, engine/, *.test.mjs
+regenerate with: node tools/remirror.mjs

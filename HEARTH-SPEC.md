@@ -2,7 +2,8 @@
 
 Date: 2026-06-08
 Author: Jonah Butterbaugh (with Claude)
-Status: draft for review. Nothing gets built until Jonah approves this document.
+Status: living spec. Hearth is built and shipped; this document describes what
+the bundle actually contains and is kept current with it.
 
 ---
 
@@ -58,7 +59,21 @@ Hearth/
   welcome.ps1           the kind, plain-language guided installer (the heart of it).
   READ ME FIRST.txt     the same five W's and How in calm, printable plain text,
                         for someone who would rather read before clicking anything.
+  README.md             the repo front page.
+  HEARTH-SPEC.md        this document.
   CREDITS.md            the complete "with thanks" record. Every contributor, linked.
+  skills/
+    setup/              the Setup skill: SKILL.md plus three references.
+    eidolon/            the full Eidolon harness, mirrored from its source repo at
+                        a pinned commit. skills/eidolon/MIRROR names the exact
+                        commit and what is left out of the mirror.
+  macos/
+    Welcome.command     the macOS installer, double-clickable, same flow as Windows.
+    READ ME FIRST.txt   the macOS reading copy, with the one-time first-open steps.
+  tools/
+    remirror.mjs        maintainer script that regenerates the bundled skills from
+                        their source repos and writes the MIRROR records. Novices
+                        never run it.
   assets/
     EidolonLogo.png     Jonah's logo (1536 x 1024). Used in the docs and any future
                         web credits page. The console shows an ASCII rendition since
@@ -74,8 +89,11 @@ This is the line that keeps Jonah out of trouble, so it is a hard rule.
 - **Setup** (trigger `/setup`). Formerly "basecamp". The start-of-session skill:
   a few calm questions up front, then memory, self-checking, and attunement to how
   you like to work. Four files (SKILL.md plus three references).
-- **Eidolon** (trigger `/eidolon`, display name capitalized). The repo setup skill.
-  One file.
+- **Eidolon** (trigger `/eidolon`, display name capitalized). The repo setup and
+  build pipeline harness. A full tree, not one file: SKILL.md plus its references,
+  hooks, and scripts, mirrored from the source repo at a pinned commit recorded in
+  `skills/eidolon/MIRROR`. The source repo's internal housekeeping (decision logs,
+  internal specs, tests) stays out of the mirror.
 
 **Pointed to (other people's tools, never bundled, installed from the official
 source only on an explicit yes):**
@@ -189,10 +207,14 @@ On an explicit yes, and only then. Sources verified against primary docs.
   Register its memory server cleanly with `claude mcp add mempalace -- mempalace-mcp`
   (the supported CLI, so we never hand-edit the large `~/.claude.json`), pointing at
   the portable uv-installed shim rather than any one machine's Python path.
-- **graphify**: `pip install graphifyy && graphify install` (official README; the
-  package is `graphifyy`, the command stays `graphify`). On Windows, if the command
-  is not found, the script guides adding the Python Scripts folder to PATH, or uses
-  `uv tool install graphifyy` which handles PATH.
+- **graphify**: on Windows, `pip install graphifyy` then `graphify install`
+  (official README; the package is `graphifyy`, the command stays `graphify`).
+  On macOS, `uv tool install graphifyy` then `graphify install`, which also
+  handles PATH.
+- **Claude Code** (`claude`): never installed by Hearth. Its presence is checked
+  before mempalace's registration step and before the send-off. If it is missing,
+  Hearth explains plainly that Claude Code comes first and points to the official
+  page, https://claude.com/claude-code.
 - **Runtimes (uv, Python)**: check-and-instruct only. If missing, Hearth shows the
   one verified install command and stops, so the person installs it themselves or
   approves it. Python's winget id is verified (`Python.Python.3.13`). uv's exact
@@ -218,10 +240,14 @@ On an explicit yes, and only then. Sources verified against primary docs.
   eidolon arrow bug). The console output encoding is set to UTF-8 at startup so the
   box breathing glyphs render. Installed skill files are written UTF-8 without BOM,
   LF line endings, to match Jonah's originals exactly.
-- **Verification.** Every generated command and path is checked against an
-  independent second signal before it ships. The build will syntax-parse each script,
-  dry-run the installers into a sandbox, and diff the result against the source files,
-  exactly as we did for the first three installers.
+- **Verification.** What is actually verified, with artifacts: both installers
+  parse clean (the PowerShell language parser for `welcome.ps1`, `bash -n` for
+  `macos/Welcome.command`); `tools/remirror.mjs` passes `node --check`; the
+  mirrored hook tests run green from the bundle; and the mirror itself is pinned
+  to an exact source commit in `skills/eidolon/MIRROR`, so freshness is checkable
+  rather than promised. The v1 draft also promised a sandbox dry-run of the
+  installers diffed against the source files; that ceremony left no artifact and
+  is not claimed here.
 
 ## 14. Renames applied at build time (not to live files yet)
 
@@ -240,6 +266,6 @@ On an explicit yes, and only then. Sources verified against primary docs.
 
 - The deep warm bios from the research panel (Addy first) fold into the credits when
   they land. The verified facts above are enough to write the gallery either way.
-- uv's exact install command verified at build time.
-- The logo is staged locally. It will sit in `Hearth/assets/` in the final build.
-```
+- Closed: uv's install command shipped as `winget install --id=astral-sh.uv -e`
+  (macOS: the astral.sh installer or Homebrew).
+- Closed: the logo sits in `Hearth/assets/EidolonLogo.png`.

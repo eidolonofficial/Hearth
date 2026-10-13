@@ -16,7 +16,7 @@ macOS is careful with files that came from somewhere else, so the very first tim
 
   - Right-click (or hold Control and click) "Welcome.command", choose Open, then click Open again in the box that appears. After that first time, a normal double-click works.
 
-  - If it still will not run, open the Terminal app, type  chmod +x  followed by a space, drag "Welcome.command" onto the Terminal window, and press Enter. Then double-click the file as usual.
+  - Only if it still will not run after that (this is rare; it can happen when a download does not keep the file's permission to run), open the Terminal app, type  chmod +x  followed by a space, drag "Welcome.command" onto the Terminal window, and press Enter. Then double-click the file as usual. This is just a fallback; most people never need it.
 
 You are safe the whole way. Nothing happens without your yes, you can close the window any time, and it cannot harm your computer.
 

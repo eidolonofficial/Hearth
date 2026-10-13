@@ -261,6 +261,55 @@ function Test-Have {
 }
 
 # ----------------------------------------------------------------------------
+# Update-SessionPath: re-read the machine and user PATH from the registry.
+# A fresh install (uv, winget, or a uv tool) lands on the registry PATH, but
+# this window keeps the copy it started with. Re-reading both lets us see a
+# tool that finished installing a moment ago, without asking anyone to close
+# and reopen anything.
+# ----------------------------------------------------------------------------
+function Update-SessionPath {
+    try {
+        $machine = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+        $user    = [Environment]::GetEnvironmentVariable('Path', 'User')
+        $joined  = (@($machine, $user) | Where-Object { $_ }) -join ';'
+        if ($joined) { $env:Path = $joined }
+    } catch {}
+}
+
+# ----------------------------------------------------------------------------
+# Test-RealPython: true only when a real Python answers. Windows ships a
+# look-alike python (an App Execution Alias) that just opens the Store page
+# and prints no version, so checking the name alone is not enough.
+# ----------------------------------------------------------------------------
+function Test-RealPython {
+    if (-not (Test-Have 'python')) { return $false }
+    $v = ''
+    try { $v = cmd /c "python --version 2>nul" } catch { $v = '' }
+    return ([string]$v -match 'Python \d')
+}
+
+# ----------------------------------------------------------------------------
+# Show-ClaudeMissing: a plain card for when Claude Code itself is not here.
+# The skills live inside Claude Code, and mempalace registers with its claude
+# command, so it has to come first.
+# ----------------------------------------------------------------------------
+function Show-ClaudeMissing {
+    Write-Host ""
+    Write-Host "    One thing has to come first: Claude Code itself." -ForegroundColor $cWarm
+    Write-Host ""
+    Write-Host "    Claude Code is the program your new skills live inside. I looked for its" -ForegroundColor $cCyan
+    Write-Host "    claude command just now and could not find it on this computer." -ForegroundColor $cCyan
+    Write-Host "    Nothing is wrong, and nothing you did caused this. It is simply not installed yet." -ForegroundColor $cCyan
+    Write-Host ""
+    Write-Host "    The official place to get it, straight from its maker Anthropic:" -ForegroundColor $cWarm
+    Write-Host ""
+    Write-Host "        https://claude.com/claude-code" -ForegroundColor $cGreen
+    Write-Host ""
+    Write-Host "    Install it from there, then run Hearth again. Everything set up so far stays." -ForegroundColor $cCyan
+    Write-Host ""
+}
+
+# ----------------------------------------------------------------------------
 # Install-Skills: copy every file under skills\ into ~/.claude/skills.
 # Written UTF-8 without a BOM, with LF line endings, to match the originals.
 # This is the instant win. No questions asked.
@@ -363,7 +412,7 @@ function Ensure-Runtime {
     }
 
     if ($which -eq 'python') {
-        if ((Test-Have 'python') -or (Test-Have 'py')) {
+        if ((Test-RealPython) -or (Test-Have 'py')) {
             Write-Host "    Good. Python is already here, so we are ready." -ForegroundColor $cGreen
             return 'ready'
         }
@@ -373,6 +422,13 @@ function Ensure-Runtime {
             return 'ready'
         }
         Write-Host ""
+        if (Test-Have 'python') {
+            # The name python exists, but it is the Store look-alike, not the real thing.
+            Write-Host "    A quick note: Windows comes with a look-alike named python that only" -ForegroundColor $cCyan
+            Write-Host "    opens the Store page. It is not the real thing, so we treat it as not" -ForegroundColor $cCyan
+            Write-Host "    installed yet. That is Windows being odd, not anything you did." -ForegroundColor $cCyan
+            Write-Host ""
+        }
         Write-Host "    This tool needs Python, the language it is written in." -ForegroundColor $cCyan
         Write-Host "    It is not on your computer yet, and I will not install it for you without asking." -ForegroundColor $cCyan
         Write-Host ""
@@ -436,6 +492,10 @@ function Offer-Tool {
     $allGood = $true
     foreach ($step in $steps) {
         $code = Invoke-WithBreathing -work $step -workingDir $workingDir
+        # A step may have just installed a command the next step (or our
+        # check below) calls, and new installs land on the registry PATH,
+        # not this window's copy. Pick up the fresh PATH before moving on.
+        Update-SessionPath
         if ($null -eq $code) { $code = 0 }
         if ($code -ne 0) { $allGood = $false; break }
     }
@@ -525,7 +585,18 @@ $mempalaceSteps = @(
     { mempalace init },
     { claude mcp add mempalace -- mempalace-mcp }
 )
-Offer-Tool -card $mempalaceCard -runtime 'uv' -steps $mempalaceSteps -verifyCmd 'mempalace' -workingDir $null
+# The last step registers memory with the claude command, so Claude Code has to
+# be here first. If it is not, we say so plainly and leave mempalace for the
+# next run, instead of walking into a step that cannot succeed.
+Update-SessionPath
+if (Test-Have 'claude') {
+    Offer-Tool -card $mempalaceCard -runtime 'uv' -steps $mempalaceSteps -verifyCmd 'mempalace' -workingDir $null
+} else {
+    Show-ClaudeMissing
+    Write-Host "    We will leave mempalace for that next run, since it registers itself" -ForegroundColor $cCyan
+    Write-Host "    with Claude Code. Nothing is lost by waiting." -ForegroundColor $cCyan
+    Write-Host ""
+}
 
 # 5. Warm send-off.
 Write-Host ""
@@ -540,8 +611,18 @@ Write-Host "      Any helpers you said yes to, installed from their own makers."
 Write-Host ""
 Write-Host "    How to use your new skills:" -ForegroundColor $cWarm
 Write-Host ""
-Write-Host "      Open Claude Code, and type a single slash, the / key." -ForegroundColor $cCyan
-Write-Host "      A list of your skills appears. Pick one and follow along." -ForegroundColor $cCyan
+if (Test-Have 'claude') {
+    Write-Host "      Open Claude Code, and type a single slash, the / key." -ForegroundColor $cCyan
+    Write-Host "      A list of your skills appears. Pick one and follow along." -ForegroundColor $cCyan
+} else {
+    Write-Host "      Your skills are in place and waiting. They live inside Claude Code," -ForegroundColor $cCyan
+    Write-Host "      which is not on this computer yet. The official place to get it is:" -ForegroundColor $cCyan
+    Write-Host ""
+    Write-Host "        https://claude.com/claude-code" -ForegroundColor $cGreen
+    Write-Host ""
+    Write-Host "      Once it is in, open it and type a single slash, the / key." -ForegroundColor $cCyan
+    Write-Host "      A list of your skills appears. Pick one and follow along." -ForegroundColor $cCyan
+}
 Write-Host ""
 Write-Host "    If you ever feel unsure, help is close by:" -ForegroundColor $cWarm
 Write-Host ""

@@ -106,7 +106,8 @@ it fixes the next ten moments. When there is time, give the reason.
 
 ## Source
 
-This is the plain-English version of your ai-pairing-playbook skill, which
-stays the source of record (github.com/gmrmk/ai-pairing-playbook). Internal
-names: the six habits are your 6 prompt-shifts, the three kinds of work are your
-work-lanes, and the watch words are your drift-tell catalog.
+This is the plain-English version of the ai-pairing-playbook skill, which
+stays the source of record (github.com/gmrmk/ai-pairing-playbook). It does not
+need to be installed: this file stands alone. Upstream names: the six habits
+are the playbook's 6 prompt-shifts, the three kinds of work are its work-lanes,
+and the watch words are its drift-tell catalog.
