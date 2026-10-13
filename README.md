@@ -13,7 +13,9 @@ Hearth works with Claude Code only. It has two doors. Pick one.
 Use this if you want the skills and nothing else. No Node, no Git, no extra tools.
 
 - Windows: double-click `Start Here.cmd`. It runs `welcome.ps1` in Windows PowerShell 5.1.
-- macOS: open `macos/Welcome.command`. It is a plain bash script. Status: untested on hardware.
+- macOS: open `macos/Welcome.command`. It is a plain bash script. Status: run on GitHub's macOS
+  runner on 2026-10-13 (the test copies, skips and replaces there) and under WSL Ubuntu; not yet
+  on a user's own Mac.
 
 It copies the `skills/` folder into `.claude/skills` in your user folder, so you end up
 with `.claude/skills/eidolon` and `.claude/skills/setup`. It writes nothing else.
@@ -32,7 +34,8 @@ folder for another one.
 Use this if you want project hooks. It needs Node 22 or newer.
 
 - Windows: double-click `Operator Setup.cmd`.
-- macOS: open `macos/Operator Setup.command`. Status: untested on hardware.
+- macOS: open `macos/Operator Setup.command`. Status: run on GitHub's macOS runner on 2026-10-13;
+  not yet on a user's own Mac.
 - Any terminal: `node scripts/welcome.mjs`.
 
 It checks your Node version first. If Node is missing or too old, it points you to
@@ -81,8 +84,9 @@ node --test tests/*.test.mjs
 
 The bundled suites run with `node --test "skills/eidolon/hooks/*.test.mjs" "skills/eidolon/scripts/*.test.mjs"`
 and `node --test skills/setup/tests/*.test.mjs`. A passing test is not a click-through on a
-real machine. The macOS doors have only had a syntax check (`bash -n`) and a run on Windows
-through Git Bash. They stay marked untested on hardware until a Mac run is recorded.
+real machine. The bash door and the operator wrapper run for real in the test suite wherever
+bash exists: Git Bash on Windows, and the Linux and macOS runners in CI. A run on a user's own
+Mac is still to be recorded.
 
 ## License and credits
 

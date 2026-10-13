@@ -59,9 +59,10 @@ en dash. Use `node scripts/sync-bundles.mjs --check` with the exact reviewed sou
 checkouts under `.ci-source/`. Compare bytes, modes, source pins, and the whole lock
 inventory. Do not rewrite a failing bundle during verification.
 
-A unit test is not a signed-in Claude session, and a run on Windows is not a run on a
-Mac. The macOS doors stay marked untested on hardware until a Mac run is recorded.
-Say what was checked and leave the remaining uncertainty visible.
+A unit test is not a signed-in Claude session, and a run on a CI runner is not a run on a
+person's own machine. The macOS doors run on GitHub's macOS runner in the test suite; a
+run on a user's own Mac is still to be recorded. Say what was checked and leave the
+remaining uncertainty visible.
 
 ## Repository maintenance
 
@@ -71,6 +72,6 @@ Hearth supports Claude Code only. The installed result keeps explicit consent, s
 Run `node --test tests/*.test.mjs` and the bundled Eidolon/Setup test suites.
 Keep the operator installer dry-run by default, verify all bytes, preserve backups and require replacement consent.
 Keep the novice door free of Node: `welcome.ps1` and `macos/Welcome.command` must never call it.
-A unit test is not a click-through on a real machine, and a run on Windows is not a run on a Mac.
+A unit test is not a click-through on a real machine, and a CI runner is not a person's own Mac.
 Model names, skill activation behavior, hook schemas and subagent behavior are freshness-sensitive; bundled `references/current-platform-contract.md` is authoritative over older point-in-time notes.
 Merge/release/publication follow the operator's current explicit instruction. Never rewrite history, bypass consent, or weaken a guard to make CI green.

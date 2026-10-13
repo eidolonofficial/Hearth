@@ -1,7 +1,7 @@
 HEARTH ON macOS: READ ME FIRST
 
-Status: untested on hardware. The script passes a bash syntax check and a test run
-on Windows. It has not been run on a Mac yet.
+Status: run on GitHub's macOS test machines on 2026-10-13 (it copied, skipped and
+replaced there) and on Linux. It has not been run on a person's own Mac yet.
 
 What this is
 Hearth puts two skills into Claude Code: Setup and Eidolon. That is all it does.

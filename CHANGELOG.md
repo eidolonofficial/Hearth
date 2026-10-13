@@ -36,8 +36,13 @@ Changed
 - CI runs the Hearth tests, the bundled Eidolon and Setup suites, selfcheck and audit on
   Linux, Windows and macOS, and fails if the novice scripts mention Node.
 - README, READ ME FIRST files, HEARTH-SPEC.md, CLAUDE.md and CREDITS.md describe what ships.
-- `skills/` and `vendor-lock.json` regenerated with `node scripts/sync-bundles.mjs` from eidolon 88859589ebca91b2f8f8f8147887729a73a41e21 and eidolon-setup 3255e07f00180b43936ffc86e72024613be64ce6; CI checks out those commits.
+- `skills/` and `vendor-lock.json` regenerated with `node scripts/sync-bundles.mjs` from eidolon 1e372cbd8f0ace593c93568bd1353f89cc70e43c and eidolon-setup 2733f2e9c5d09c26040c2348ad082b2adf93513d; CI checks out those commits.
+
+- `tests/novice-door.test.mjs` also runs the bash door and the operator wrapper for real
+  wherever bash exists, so the Linux and macOS CI runners exercise the macOS door (copy,
+  skip, replace with backup, option refusals, picker handoff).
 
 Not done
 
-- The macOS doors have not been run on a Mac.
+- The macOS doors have run on GitHub's macOS runner and under WSL Ubuntu, not yet on a
+  user's own Mac.
