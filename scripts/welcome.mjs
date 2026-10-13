@@ -4,11 +4,14 @@ import { stdin, stdout } from 'node:process';
 import { join } from 'node:path';
 import { prepareHearth, applyHearth } from './install.mjs';
 
-// Print the text a plan will write and any settings diff, under the path it belongs to.
-function showItem(item) {
-  console.log('  ' + item.path);
-  for (const body of [item.text, item.diff, item.settingsDiff]) {
-    if (typeof body === 'string' && body.length) console.log(body.replace(/^/gm, '      '));
+// Under each path: the text a plan will write, the settings diff, or the files a replacement adds, changes and removes.
+function show(plan, previews) {
+  for (const item of plan.items) {
+    console.log('  ' + item.path);
+    const preview = previews.find(p => p.path === item.path);
+    if (!preview) continue;
+    if (preview.files) { for (const [kind, list] of Object.entries(preview.files)) if (list.length) console.log('      ' + kind + ' (' + list.length + '): ' + list.join(', ')); }
+    else console.log((preview.diff ?? preview.text).trimEnd().replace(/^/gm, '      '));
   }
 }
 
@@ -26,8 +29,7 @@ try {
     plan = prepareHearth({ project, replace }); preview = applyHearth(plan, { dryRun: true, replace });
   }
   console.log('Proposed locations:');
-  plan.items.forEach(showItem);
-  if (typeof preview.settingsDiff === 'string' && preview.settingsDiff.length) console.log(preview.settingsDiff);
+  show(plan, preview.previews);
   if ((await rl.question('Type yes to apply exactly this plan: ')).trim() !== 'yes') throw Error('Stopped; nothing installed');
   const result = applyHearth(plan, { replace, dryRun: false });
   console.log('Verified skill files: ' + result.copied);

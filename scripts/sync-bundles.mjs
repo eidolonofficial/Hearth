@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import {isDeepStrictEqual} from 'node:util';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const pins = { eidolon: '3b67f1f45137636c00f62624fd6bd1418a97e4ae', setup: '8fcd7c7a59bd3702b786ee3878a133828435b477' };
+const pins = { eidolon: 'e8e586463e42c4828b8d1dd31fb60f3a932a7c10', setup: '3255e07f00180b43936ffc86e72024613be64ce6' };
 const skip = /^(?:\.git|\.github|\.claude|\.codex|\.agents|\.eidolon)(?:\/|$)/;
 const lock = { sources: pins, excluded: skip.source, files: {} };
 function countFiles(dir) {

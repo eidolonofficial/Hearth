@@ -11,6 +11,7 @@ Removed
 - The optional tool cards and the dependency offers that went with them.
 - `scripts/prepare-legacy.mjs`, `.ci/`, and the `apply-native-ui`, `ui-snapshot` and
   `regenerate-bundles` workflows.
+- `AGENTS.md`. Claude Code reads `CLAUDE.md`, which carries the maintenance rules itself.
 
 Added
 
@@ -27,16 +28,16 @@ Added
 
 Changed
 
-- `scripts/install.mjs` is Claude-only. The `--host` option is gone.
-- `scripts/welcome.mjs` no longer asks for a host. It prints the proposed text and any
-  settings diff under their paths, and needs the literal `yes`.
+- `scripts/install.mjs` is Claude-only. The `--host` option is gone. It passes `vendor-lock.json`
+  to the bundled installer, so every bundled file is verified before a plan exists, and `--yes`
+  needs `--expect-plan` with the digest the preview printed.
+- `scripts/welcome.mjs` no longer asks for a host. It prints the proposed text, the settings
+  diff and the replace lists (added, changed, removed) under their paths, and needs the literal `yes`.
 - CI runs the Hearth tests, the bundled Eidolon and Setup suites, selfcheck and audit on
   Linux, Windows and macOS, and fails if the novice scripts mention Node.
-- README, READ ME FIRST files, HEARTH-SPEC.md, CLAUDE.md, AGENTS.md and CREDITS.md
-  describe what ships.
+- README, READ ME FIRST files, HEARTH-SPEC.md, CLAUDE.md and CREDITS.md describe what ships.
+- `skills/` and `vendor-lock.json` regenerated with `node scripts/sync-bundles.mjs` from eidolon e8e586463e42c4828b8d1dd31fb60f3a932a7c10 and eidolon-setup 3255e07f00180b43936ffc86e72024613be64ce6; CI checks out those commits.
 
 Not done
 
 - The macOS doors have not been run on a Mac.
-- `skills/` and `vendor-lock.json` are unchanged. The bundles are regenerated later from
-  pinned commits.

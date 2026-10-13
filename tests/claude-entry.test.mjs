@@ -11,9 +11,10 @@ test('Claude has a direct native entry point, not an AGENTS import', () => {
   assert.match(text, /^# .+ for Claude Code/m);
   for (const phrase of ["Keep the warmth; skip the sales pitch.", "exact installation plan", "vendor-lock.json", ".claude/skills/", "automatic optional-service holds", "canonical repository first"]) assert.ok(text.includes(phrase), phrase);
 });
-test('Claude retains every shared repository-maintenance rule without delegation', () => {
-  const shared = read('AGENTS.md').split('\n').slice(2).join('\n').trim();
-  assert.ok(read('CLAUDE.md').includes(shared), 'Both entry points must carry the same maintenance rules');
+test('Hearth has no AGENTS.md; CLAUDE.md carries the maintenance rules itself', () => {
+  assert.equal(existsSync(join(root, 'AGENTS.md')), false);
+  const text = read('CLAUDE.md');
+  for (const phrase of ['never hand-edit anything under `skills/`', 'Keep the novice door free of Node', 'Never rewrite history']) assert.ok(text.includes(phrase), phrase);
 });
 test('Claude instruction references resolve in the shipped repository', () => {
   const text = read('CLAUDE.md');

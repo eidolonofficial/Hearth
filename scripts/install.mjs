@@ -3,8 +3,9 @@ import {dirname,resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {planInstall,applyPlan} from '../skills/eidolon/scripts/install.mjs';
 const ROOT=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+// Every bundled file is checked against vendor-lock.json before a plan exists; a mismatch stops here.
 export function prepareHearth(options={}) {
-  return planInstall({...options,host:'claude',sources:[{name:'eidolon',source:join(ROOT,'skills/eidolon')},{name:'setup',source:join(ROOT,'skills/setup')}]});
+  return planInstall({...options,lock:join(ROOT,'vendor-lock.json'),sources:[{name:'eidolon',source:join(ROOT,'skills/eidolon')},{name:'setup',source:join(ROOT,'skills/setup')}]});
 }
 export function applyHearth(plan,options={}) {
   const result=applyPlan(plan,options);
@@ -29,10 +30,11 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
         const value=args[++i]; if(!value||value.startsWith('--')) throw Error('Missing option value');
         options[flag==='--expect-plan'?'expectedPlan':flag.slice(2)]=value;
       } else if(flag==='--help') {
-        console.log('node scripts/install.mjs [--project PATH | --home PATH] [--yes] [--replace] [--expect-plan DIGEST]\nDefault: preview only. Installs for Claude Code. A home install copies skills; a project install also wires hooks.'); process.exit(0);
+        console.log('node scripts/install.mjs [--project PATH | --home PATH] [--yes --expect-plan DIGEST] [--replace]\nDefault: preview only. Installs for Claude Code. A home install copies skills; a project install also wires hooks.\n--yes applies only the previewed plan: pass the planDigest the preview prints as --expect-plan, or the install is refused.'); process.exit(0);
       } else throw Error('Unknown option');
     }
     if(options.project&&options.home) throw Error('Choose project or home, not both');
+    if(!options.dryRun&&!options.expectedPlan) throw Error('--yes needs --expect-plan so that exactly the previewed plan is applied; preview first and pass its planDigest');
     console.log(JSON.stringify(installHearth(options),null,2));
   } catch(e) { console.error('HEARTH INSTALL: '+e.message);process.exitCode=1; }
 }
