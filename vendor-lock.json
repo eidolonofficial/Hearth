@@ -1,6 +1,6 @@
 {
   "sources": {
-    "eidolon": "0dc020fbc7a97a53fd00b9ae8e1775cd22151f56",
+    "eidolon": "88859589ebca91b2f8f8f8147887729a73a41e21",
     "setup": "3255e07f00180b43936ffc86e72024613be64ce6"
   },
   "excluded": "^(?:\\.git|\\.github|\\.claude|\\.codex|\\.agents|\\.eidolon)(?:\\/|$)",
@@ -78,7 +78,7 @@
     "eidolon/hooks/review-hardening.test.mjs": "bf34af38be8d42ef4b201115bfa8be136d03668e1e97e0253fd45beb3fec96c7",
     "eidolon/hooks/review-round2-2026-10-13.test.mjs": "43a7135b22577503d52bde198fd187e9964a91403c152ab28e31cc52b18fd29c",
     "eidolon/hooks/review-round3-2026-10-13.test.mjs": "f7924fcd716f28545990dcfe7621212d9f9c432033ac288368ad1f08f049851d",
-    "eidolon/hooks/review-round4-2026-10-13.test.mjs": "cc752128285ef1f8c5cd39fb28dee0562113e88ae494e91575192da2145b7a06",
+    "eidolon/hooks/review-round4-2026-10-13.test.mjs": "3ba62b096e23426898837f55aa52e12d48467a96dbd2aeb3c088460d430f1dee",
     "eidolon/hooks/runtime-integrity-guard.mjs": "904068f59e4cd3662e4936cd4100f4c23f4ad2a41253596a50d334eef77ecf1b",
     "eidolon/hooks/seat-surface.mjs": "a7744cc2569975c6a78227c9b92ffbd5f2bbeb7c1155168fc59215b4acfad23b",
     "eidolon/hooks/session-restore.mjs": "cf7b7d106d38dc82cf8e591ca02a632b7ae7e15ed0c9e33314e3fc9306a114f7",
