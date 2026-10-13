@@ -1,7 +1,7 @@
 {
   "sources": {
-    "eidolon": "88859589ebca91b2f8f8f8147887729a73a41e21",
-    "setup": "3255e07f00180b43936ffc86e72024613be64ce6"
+    "eidolon": "1e372cbd8f0ace593c93568bd1353f89cc70e43c",
+    "setup": "2733f2e9c5d09c26040c2348ad082b2adf93513d"
   },
   "excluded": "^(?:\\.git|\\.github|\\.claude|\\.codex|\\.agents|\\.eidolon)(?:\\/|$)",
   "files": {
@@ -37,7 +37,7 @@
     "eidolon/docs/decisions/2026-07-09-feature-triage-study.md": "adfcf124c4c5f1f56f358d7471c679eef129e02e76e8e8c355f3f47c5b325709",
     "eidolon/docs/decisions/2026-09-09-persona-pipelines-and-review-repairs.md": "477ebbdb3f46f65e6fc6e95ec89dc98732621d244c0df3cc17a7cf3572811810",
     "eidolon/docs/decisions/2026-09-09-reviewed-persona-pipelines.md": "f16ded41e7e3f217cc804a0478c0f68c76a83c66b2d89a58af94c0a3e224901c",
-    "eidolon/docs/decisions/2026-10-13-archive-branches-and-v010-re-cut.md": "5ea8ee7e51434dd179c21a22b0f5756396ab33e3ff168d88b97f081b65eeff34",
+    "eidolon/docs/decisions/2026-10-13-archive-branches-and-v010-re-cut.md": "587a80d3b724929497f72cc3a414933587da8818bc6fb2bd3382e26fb4dca53a",
     "eidolon/docs/examples/personas/fraud-forensic-replay-primary.md": "68ef87112cdb0bcd9cb949c2458e3a5a09646b9a57b327e2a1f191c2502e39c8",
     "eidolon/docs/fixes/FIX-2026-06-16-engine-hook-suite-exemption.md": "38a417fdb300ed77e4b6eb2003e2f8cf72230766a31b58d598a966f53550e26d",
     "eidolon/docs/fixes/FIX-2026-09-08-effective-git-hooks.md": "d4a260d641da76e31f660a84cffff2dc57adaa7451d8c37b830f87ed510893e0",
@@ -93,17 +93,17 @@
     "eidolon/references/agents/skill-scout.md": "a09d848f01dff16b8db0c405ed3cde2c00616a46d36687333cd0061a80f3b98b",
     "eidolon/references/antibehavior-catalog.md": "bb645278fe6a38d44e8f63a865531cd743f034dfa397037c24fb86a68d825fbe",
     "eidolon/references/architect-synthesis.md": "ee2eed44da8114108908ce88b78ad2bfc3d338a10ad9bc996331c8b6d57bdd4d",
-    "eidolon/references/autopilot-guide.md": "2bf504b934fd54eae1470faf3adc091619d4b57987c9838dcb3eb51fc88bdaec",
+    "eidolon/references/autopilot-guide.md": "fde0399802874afdde8ef63dadf86f6a4b8fc6cac5485e806051a5fe4b4d59ef",
     "eidolon/references/build-pipeline.md": "ae057f64d8f587ebbd1446bfef0024e9414155adc7fcd36ad6fc0f29c1e3e214",
     "eidolon/references/conductor-standard.md": "3138f86689cf7e9909365b6e4ba3df08b2d060fa053d04941f447d79446fc0bb",
     "eidolon/references/cross-session.md": "abf229c6be392da92c08fec717c9f99e97fabff8a06545337f51eeda4512268f",
-    "eidolon/references/current-platform-contract.md": "45a25bd6ca63eece5b1e4e1445142d9eb0080408e7575bdb384a6a24c4937c5f",
+    "eidolon/references/current-platform-contract.md": "92b0d22b49d8192cc3b55f0d1b12e25f7f2e97f87a0783a768ad7eab55df0d0d",
     "eidolon/references/engineering-principles.md": "fcf5accc7be3be21653cbdb122aa169d1c81d7dcb5ab7b6fa2ed3f095b901765",
     "eidolon/references/example-skill/SKILL.md": "70a24e5dfb23bcfa2216277127258d9655d78de3fee031c2685a4c1673949efb",
     "eidolon/references/explain-mode.md": "37b6c1d7c9d4d689310a17dee878d27355900825e7950d42ad0c736957b7e842",
     "eidolon/references/find-skills-reach.md": "ccf239036a52c1f62679e1e4eaf8d83c9cbfdc39135c5128888f1bd5f1ea27b9",
     "eidolon/references/git-hooks-path.md": "57233c9590d5a30ba53c34794fefbf389894ca26abb006f0deb5609d98029721",
-    "eidolon/references/interview.md": "0684de4f827cc99e85738c33b1da2971f2c249896c0aa5807d0e28b34762bd95",
+    "eidolon/references/interview.md": "8873d8a79d54aae869e5be4e0a96ce81dc752da48255c440431ed2c0901bc91d",
     "eidolon/references/loop-suite.md": "d7652f0fbcc22b35ec52f54b462fac7dd0082601b0841d4584b639ea9d8c5134",
     "eidolon/references/partner-notes-template.md": "8e07fbd8d93a3741edd6c60af18e4b5eb17feaf74c0bee0e25b44db549ab00e5",
     "eidolon/references/persona-template.md": "ab4a014c32570b08cf71e2f7ab4fbd8bce53e57aa15e9d232a877fcf7dbc7a17",
@@ -157,7 +157,7 @@
     "setup/README.md": "0f8c3426313c77adcb515c39dd4e62bde491d1b7b88412865162469b6623cecc",
     "setup/SKILL.md": "219c5bc2283130f3b6092f710e302940d6df27f264fb4d73e0e24c92a38cfe35",
     "setup/references/collaborate.md": "426896fcad8bbdc4107b984bd5543d90893cd31e5d5f893dac43d2b103e0bcd6",
-    "setup/references/interview.md": "7cfbccc389cb76755adab9f22b878116306bea0b937a720fd235a45357a7dc90",
+    "setup/references/interview.md": "08ee1ebbb0e18d39d13dcc510f2da8659e2bf930c1c0e529db07fd37667d22e3",
     "setup/references/remember.md": "d48acd71aed119eb36c0627a0b7d16f0ca48072906761dde81af0ba05772976a",
     "setup/references/session-workflow.md": "d123f7be4e04c098b24555f05e002e3c14e11ca0ba4a5ba8221c5ee8aa4374cb",
     "setup/references/verify.md": "721e4efdcd804e073be0eaa8974279a00675955607542aba1fc7186dd22d137d",

@@ -124,8 +124,9 @@ Operator door:
 - A partial copy is never reported as a success.
 - Hearth does not install Node, credentials, models, or any service.
 - The EidolonLogo is the author's own art. No third-party imagery is used.
-- A test is not a click-through on a real machine. The macOS doors are marked
-  untested on hardware until a Mac run is recorded.
+- A test is not a click-through on a real machine. The macOS doors run for real in the
+  test suite on GitHub's macOS and Linux runners (copy, skip, replace with backup, the
+  operator handoff); a run on a user's own Mac is still to be recorded.
 
 ## 13. Engineering discipline
 
