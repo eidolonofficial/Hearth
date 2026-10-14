@@ -1,6 +1,6 @@
 {
   "name": "eidolon-hearth",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Installs the Eidolon and Setup skills for Claude Code: previews every write, applies only the plan you approved, keeps backups, verifies the bundled files against a lock. Run npx eidolon-hearth for user skills, or npx eidolon-hearth . to wire a project with its hooks.",
   "license": "MIT",
   "type": "module",
