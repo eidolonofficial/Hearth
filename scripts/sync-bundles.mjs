@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import {isDeepStrictEqual} from 'node:util';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const pins = { eidolon: '6a416f025218dc6dd33dffafe643d1a43201b860', setup: '2733f2e9c5d09c26040c2348ad082b2adf93513d' };
+const pins = { eidolon: '40bee9bcd9a5a318fc48254d159bec563e305a5b', setup: '2733f2e9c5d09c26040c2348ad082b2adf93513d' };
 // The source repos' own root .gitignore stays out: npm renames .gitignore to .npmignore inside a published package, so a locked copy could never match there.
 const skip = /^(?:\.git|\.github|\.claude|\.eidolon)(?:\/|$)|^\.gitignore$/;
 const lock = { sources: pins, excluded: skip.source, files: {} };

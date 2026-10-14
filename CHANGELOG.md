@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.2 (2026-10-14)
+
+Bundles
+
+- Eidolon at v0.1.3 (40bee9b): the last mentions of the second host's vendor removed from its
+  records and test fixtures. Setup stays at v0.1.0. Nothing in Hearth's own doors or picker changed.
+
 ## v0.1.1 (2026-10-14)
 
 Bundles
