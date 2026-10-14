@@ -2,7 +2,7 @@
 
 A few habits that make working with Claude smoother. This part is two-way: it
 covers how you prompt and how Claude responds. It relies on the shared base in
-SKILL.md.
+references/session-workflow.md.
 
 ## Six habits
 

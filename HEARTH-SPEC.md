@@ -2,276 +2,150 @@
 
 Date: 2026-06-08
 Author: Jonah Butterbaugh (with Claude)
-Status: built and shipping; kept as the design record. The installers this spec
-describes are in this repo, and section 15 reflects the shipped scope.
+Status: shipped as described, 2026-10-13. Section numbers are kept from the first
+spec so older references still resolve. Sections 8 to 11 and 14 were removed in the
+2026-10-13 re-cut, and section 16 went with them.
 
 ---
 
 ## 1. What Hearth is
 
 Hearth is a plain-language front door for Claude Code. A person who is nervous
-around computers can open it, follow a clear conversation, and walk away with a
-working setup. It installs Jonah's own Claude skills, and for the outside
-tools they might also want, it explains each one in plain language and offers to
-install it from its official source, only on a clear yes.
+around computers can open it, read a few short lines, and walk away with two
+skills installed: Setup and Eidolon.
 
 The name Hearth is the home. Setup and Eidolon are the skills it lays down.
-Everything else is a guest it introduces you to, never a thing it smuggles in.
+It installs nothing else.
 
 ## 2. Who it is for
 
-Everyday people trying to run their own business, who are not confident with
-computers and would freeze at "open PowerShell and paste this command." The
-whole tool is built so that person never feels lost and never feels small.
+Everyday people running their own business, who are not confident with
+computers and would stop at "open PowerShell and paste this command." Hearth is
+built so that person is never lost and never made to feel small.
+
+A second, smaller group is operators who want project hooks wired in. They get
+their own door.
 
 ## 3. The voice
 
-Warm and human, confident and concrete, with a light wit. Precision without
-coldness, personality without noise.
+Plain and warm. Short sentences. Second person, present tense.
 
-- **Warm at the core.** You are glad the person is here and you are on their
-  side. Never cold, never corporate, never talking down.
-- **Confident and concrete.** Say what Hearth does in vivid, specific terms, with
-  strong verbs and real nouns. "Give Claude a memory and a backbone," not "a calm
-  way to set up Claude."
-- **A light, dry wit.** About one wink per screen. Charm, not a comedy act, used
-  to settle nerves rather than show off.
-- **Safety through clarity, not mood.** Reassurance comes from "you say yes to
-  every step" and "close it anytime, it cannot harm your computer," stated plainly,
-  not from soothing adjectives. The person should feel capable, not coddled.
-- **Honest.** Technically true, never overpromising. The trust model (the five W's
-  card, official-source-only installs) stays in plain view.
-- Second person, present tense. Plain language, never baby talk. Every step ends
-  by saying what just happened and what comes next.
-- **Banned crutch-words** (as filler): quietly, calm, gently, soft, mindful,
-  breathing, seamless, "no fuss," "out of the way," "take it slowly together."
-- Em dashes, once banned outright, are now allowed sparingly, for rhythm.
+- Say what will happen before it happens. Say what happened after.
+- Say where files will go, with the full path.
+- Safety comes from stating the facts: you say yes to every change, and skipping
+  is always allowed. Do not soothe. Do not sell.
+- Every failure says the one thing to try and that nothing is broken.
+- No promotional adjectives. No taglines.
+- No filler words such as calm, gently, quietly, mindful, or breathing.
+- No em dashes and no en dashes, in any file outside the bundled skills.
+  A test script can check this with a regular expression for the characters U+2013 and U+2014.
+- Be true. Do not promise more than a check has shown.
 
 ## 4. Design pillars
 
-1. You are in control. Every real action is an explicit yes, no, or later.
-   Nothing happens unless you say so. You can close it anytime and it cannot
-   harm your computer.
-2. No black boxes. Each outside tool gets a plain five W's and How card before
-   the yes or no. Nothing opaque, nothing you are asked to blindly trust. This
-   is the opposite of the base64 file that started all this.
-3. Instant win first. Jonah's own two skills install right away, no questions,
-   so the person sees success in the first few seconds and relaxes.
-4. Failure is never your fault. No red ERROR. Instead: "That did not go through.
-   Here is the one thing to try, or skip it for now. You have not broken anything."
-5. End on "you did it." A warm summary of what they now have and how to use it.
-6. Real progress. During any real wait, a true progress indicator advances,
-   labeled with the step it is on. No frozen window, no mystery spinner.
-7. Flowers. Everyone whose tools Hearth stands on is credited, in their own words.
+1. You are in control. Every change to your machine waits for your answer.
+   The novice door asks before it replaces anything. The operator door shows the
+   plan and needs the word `yes`.
+2. Two skills, nothing else. Hearth copies Setup and Eidolon. It installs no other
+   tool, service, or runtime.
+3. Your old copy is kept. A replaced skill moves to a backup folder first. Nothing
+   is deleted.
+4. The novice door needs nothing. It is pure PowerShell on Windows and pure bash on
+   macOS. It has no Node, no hooks, and no third-party tools.
+5. Failure is never your fault. A failure message names the one thing to try and
+   says nothing is broken.
+6. Every file is plain text you can read. No encoded blobs.
 
 ## 5. What ships
 
-A single folder, `Hearth/`, with human file names:
-
 ```
-Hearth/
-  Start Here.cmd        double-clickable Windows launcher (novices cannot double-click
-                        a .ps1). Fully readable. Opens the graphical window, and falls
-                        back to the text installer if the window cannot run.
-  gui/                  the Windows installer window (WPF), plus the shared install core
-                        the window and the text installer both call.
-  welcome.ps1           the text installer, used as the fallback (and by anyone who
-                        prefers plain text).
-  macos/
-    Hearth.app          the double-clickable macOS installer window.
-    Welcome.command     the macOS text installer, used as the fallback.
-    hearth-core.sh      the shared install core Hearth.app and Welcome.command both call.
-    build-icon.command  optional; run once on a Mac to build Hearth.icns from the logo.
-    READ ME FIRST.txt   the macOS version of the printable guide.
-  READ ME FIRST.txt     the same five W's and How in printable plain text, for someone
-                        who would rather read before clicking anything.
-  CREDITS.md            the complete "with thanks" record. Every contributor, linked.
-  assets/
-    EidolonLogo.png     Jonah's logo (1536 x 1024). The graphical installer renders it
-                        directly; the text installer shows an ASCII wordmark.
-  skills/
-    setup/              the Setup skill, in plain text (SKILL.md plus three references).
-    eidolon/            the full Eidolon harness (skill, hooks, references, scripts,
-                        engine, docs). Both installers copy skills/ into ~/.claude/skills.
+Start Here.cmd               Windows novice door. Runs welcome.ps1 and pauses.
+welcome.ps1                  Windows novice door script. PowerShell 5.1, ASCII only.
+Operator Setup.cmd           Windows operator door. Checks for Node 22, runs scripts/welcome.mjs.
+READ ME FIRST.txt            Printable guide for the novice door.
+macos/
+  Welcome.command            macOS novice door. Bash.
+  Operator Setup.command     macOS operator door. Checks for Node 22, runs scripts/welcome.mjs.
+  READ ME FIRST.txt          Printable guide, macOS version.
+scripts/
+  welcome.mjs                Operator picker: project folder, preview, yes, apply.
+  install.mjs                Claude-only wrapper over the bundled Eidolon installer.
+  sync-bundles.mjs           Regenerates skills/ from the commits pinned in the script and writes vendor-lock.json.
+  generator-regression.test.mjs  Checks that tampered bundles are refused. Needs .ci-source/.
+skills/
+  eidolon/                   The Eidolon skill, as pinned in vendor-lock.json.
+  setup/                     The Setup skill, as pinned in vendor-lock.json.
+tests/                       install, merge-acceptance, novice-door, claude-entry, branding-name.
+assets/                      EidolonLogo.png, lantern.svg.
+vendor-lock.json             Commit pins and per-file hashes for skills/.
+README.md  CLAUDE.md  CHANGELOG.md  CREDITS.md  LICENSE  HEARTH-SPEC.md
+docs/decisions/              Dated decision records.
+.github/workflows/           compatibility.yml and integration-verification.yml.
 ```
 
-## 6. What gets installed, and what gets pointed to
+## 6. What is bundled
 
-This is the line that keeps Jonah out of trouble, so it is a hard rule.
+Bundled: Setup (`/setup`) and Eidolon (`/eidolon`). Both are the author's own work,
+copied into `skills/` from their repositories at pinned commits.
 
-**Bundled (Jonah's own work, installed directly into `~/.claude/skills`):**
-
-- **Setup** (trigger `/setup`). Formerly "basecamp". The start-of-session skill:
-  a few short questions up front, then memory, self-checking, and attunement to how
-  you like to work. Four files (SKILL.md plus three references).
-- **Eidolon** (trigger `/eidolon`, display name capitalized). The repo setup skill,
-  bundled as the full harness: its skill, hooks, references, scripts, and docs.
-
-**Pointed to (other people's tools, never bundled, installed from the official
-source only on an explicit yes):**
-
-- **graphify** by Safi Shamsi.
-- **mempalace** (lead author igorls, Claude plugin published by milla-jovovich).
-- **uv** by Astral and **Python** by the Python Software Foundation, the runtimes
-  the two tools above need.
-
-Hearth carries none of these tools' code. It explains them and points to where the
-person can get them, first hand, from the makers.
+Nothing is pointed to. Nothing is bundled from third parties. Hearth does not name,
+offer, or install any outside tool.
 
 ## 7. The flow
 
-1. **Greeting.** Warm welcome. "Here is what this is. You are safe. You can stop
-   anytime. Nothing here can hurt your computer."
-2. **Instant win.** Install Setup and Eidolon. Show a green check for each.
-3. **Power-ups, one at a time.** For graphify, then mempalace:
-   a. Show the five W's and How card (section 8).
-   b. Ask: yes, no, or later.
-   c. On yes, check for the runtime it needs (uv, Python). If missing, explain it
-      the same kind way and show the one verified command to install it, then stop
-      and let the person run it or approve it. Never silently install system tooling
-      (check-and-instruct, section 11).
-   d. With the runtime present, run the official install for the tool. A progress
-      indicator advances during the wait.
-   e. On no or later, move on. No pressure.
-4. **Send-off.** Warm summary: what you now have, how to use it (type `/` in Claude
-   Code to see your skills), where help lives.
-5. **With thanks.** Show the credits gallery (section 10), and write `CREDITS.md`.
+Novice door:
 
-## 8. The five W's and How card
+1. A greeting of three lines: what will happen, where, and that nothing else is installed.
+2. For each skill that already exists at the destination: `replace` or `skip`, skip by default.
+   Replace moves the old folder to `.claude/skills/.hearth-backups/<yyyyMMdd-HHmmss>/<name>`.
+3. Each file is printed as it lands.
+4. A closing line says what is installed and how to start: open Claude Code, type `/eidolon` or `/setup`.
 
-Shown before every yes-or-no on an outside tool. Short, honest, true.
+Operator door:
 
-```
-<Tool name>
-  What:  one plain sentence on what it does.
-  Why:   why you might want it, in your-business terms.
-  Who:   who made it, with a link to their work.
-  Where: the official source it installs from.
-  When:  when you would reach for it.
-  How:   what will happen if you say yes (the exact command, named plainly).
-Want this set up?   [ yes ]   [ no ]   [ maybe later ]
-```
+1. Check that `node` exists and is version 22 or newer. If not, print where to get it and stop.
+2. Ask for a project folder. Blank means user skills only.
+3. Check every bundled file against `vendor-lock.json`, then run a preview. If a skill
+   exists, ask for `replace` and explain the backup.
+4. Print `Proposed locations:` and every path, with the text to be written, the settings
+   diff, or the replace lists (added, changed, removed) under it.
+5. Require the literal `yes`. Apply the same plan that was previewed.
+6. Print the verified file count, the backup receipt path, and the next step: restart
+   Claude Code. Project hooks are active in the next session.
 
-## 9. Real progress, not a frozen window
+## 12. Safety and consent
 
-During any real wait (an install or download), a determinate progress indicator
-advances and names the step it is on ("Installing graphify..."). In the graphical
-installer it is an ember progress bar; in the text fallback it is a single status
-line that updates in place. It moves only while real work is happening, and it says
-what finished when the work is done. No frozen window, no mystery spinner.
-
-## 10. Credits: the "with thanks" gallery
-
-On the warm screen: the leads and notable hands, named with a short line and a link
-to their own page. In `CREDITS.md`: the complete record, every contributor by linked
-handle, leads marked, bots left out since they are not people. The big foundations
-are credited by linking their own thank-you pages.
-
-The gallery features Addy Osmani first:
-
-- **Addy Osmani**, who built the agent-skills harness this pattern grows from. He
-  sits at the top because the pattern starts with his work. A clear, warm card like
-  the others, just placed first. His deep bio folds in when the research panel lands.
-
-Then the makers of the tools Hearth points to. Verified material in hand (sources
-double-checked, including a second gh query):
-
-- **graphify**: Safi Shamsi leads (557 of ~570 commits), 66 contributors total.
-  github.com/safishamsi/graphify, MIT, PyPI `graphifyy`. Sponsor: github.com/sponsors/safishamsi.
-- **mempalace**: igorls leads (568 commits), then bensig, mvalentsev, milla-jovovich
-  (the Claude plugin's author of record), jphein, and a tail to 80 people.
-  github.com/MemPalace/mempalace, MIT.
-- **uv / Astral**: github.com/astral-sh/uv. **Python / PSF**: python.org/psf, CPython's
-  own `Misc/ACKS`. **Chroma**: github.com/chroma-core/chroma. **Hugging Face**:
-  the transformers contributors page. **NumPy**: its own `THANKS.txt`.
-
-Jonah's own card (his work, his name):
-
-> **Jonah Butterbaugh**
-> Creator of Hearth, Setup, and Eidolon
-> github.com/gmrmk · linkedin.com/in/jonah-butterbaugh-2288033b1
->
-> A Trust and Safety investigator who spends his days reading the patterns most
-> people never notice. Account takeovers, supplier fraud, collusion rings, the
-> quiet signals that something is wrong. More than a decade of that work across
-> consumer banking, property and casualty insurance, and platform risk, with hands-on KYC, AML, and OFAC reporting along the way.
->
-> Hearth grows straight out of that instinct. The same care he brings to
-> protecting people from fraud, he brings to protecting a nervous beginner from
-> feeling lost. He taught himself SQL, Splunk, PowerShell, and a whole stack of
-> agentic AI workflows the way he has learned everything else, by paying close
-> attention and refusing to leave anyone behind. His roots reach back into design
-> too, real hands-on craft, page layout and offset presses and bookbinding, which
-> is where the eye for warmth and shape comes from.
->
-> He is quick to say he just wired these tools together. That undersells it.
-> Hearth is his idea of what technology should feel like: kindness shaped, consent
-> first, and generous with credit to everyone who made the parts. He built it
-> alongside Claude, the two of them working together.
-
-His private contact details stay off the public page.
-
-## 11. Dependency commands (verified, and how they run)
-
-On an explicit yes, and only then. Sources verified against primary docs.
-
-- **mempalace**: `uv tool install mempalace` (official README), then `mempalace init`.
-  Register its memory server cleanly with `claude mcp add mempalace -- mempalace-mcp`
-  (the supported CLI, so we never hand-edit the large `~/.claude.json`), pointing at
-  the portable uv-installed shim rather than any one machine's Python path.
-- **graphify**: `pip install graphifyy && graphify install` (official README; the
-  package is `graphifyy`, the command stays `graphify`). On Windows, if the command
-  is not found, the script guides adding the Python Scripts folder to PATH, or uses
-  `uv tool install graphifyy` which handles PATH.
-- **Runtimes (uv, Python)**: check-and-instruct only. If missing, Hearth shows the
-  one verified install command and stops, so the person installs it themselves or
-  approves it. Python's winget id is verified (`Python.Python.3.13`). uv's exact
-  install command will be confirmed against astral.sh docs at build time before it
-  ships. Hearth never silently installs system tooling.
-
-## 12. Safety, consent, and "no trouble" posture (hard requirements)
-
-- Ship only Jonah's own code. Everything else installs from its official source.
-- Never bundle or copy a third-party tool. Never silently install runtimes.
-- Refer to tools by name (allowed). Do not use their logos. Do not imply endorsement.
-- Note each tool's license. All involved are permissive (MIT, Apache, BSD, PSF).
-- Never silently edit shared config. mempalace's server is registered through the
-  supported `claude mcp add` command, on consent.
-- The EidolonLogo is Jonah's own art. No third-party imagery is used.
+- Hearth ships the author's two skills and no one else's code.
+- The novice door writes only under `.claude/skills` in the chosen home folder.
+- The operator door previews first, applies only the previewed plan, and refuses a
+  plan whose targets changed after the preview.
+- The operator door checks every bundled file against `vendor-lock.json` before it plans.
+- Replacement needs its own answer. Old files are kept with a receipt.
+- A partial copy is never reported as a success.
+- Hearth does not install Node, credentials, models, or any service.
+- The EidolonLogo is the author's own art. No third-party imagery is used.
+- A test is not a click-through on a real machine. The macOS doors run for real in the
+  test suite on GitHub's macOS and Linux runners (copy, skip, replace with backup, the
+  operator handoff); a run on a user's own Mac is still to be recorded.
 
 ## 13. Engineering discipline
 
-- **No base64.** Every skill file is visible plain text in the installer. This is
-  the fix for the original safety flag.
-- **Encoding, the lesson learned the hard way.** The PowerShell scripts are saved
-  as UTF-8 with a BOM so Windows PowerShell 5.1 reads their non-ASCII characters
-  correctly (the eidolon arrow bug). The console output encoding is set to UTF-8 at
-  startup so the text installer's glyphs render. Installed skill files are written
-  UTF-8 without BOM, LF line endings, to match Jonah's originals exactly.
-- **Verification.** Every generated command and path is checked against an
-  independent second signal before it ships. The build will syntax-parse each script,
-  dry-run the installers into a sandbox, and diff the result against the source files,
-  exactly as we did for the first three installers.
-
-## 14. Renames applied at build time (not to live files yet)
-
-- basecamp becomes Setup: folder `~/.claude/skills/basecamp` to `setup`, frontmatter
-  `name` and `trigger` to `setup` and `/setup`, and the in-text mentions of "basecamp"
-  updated to "Setup".
-- eidolon display name capitalized to Eidolon. Trigger stays `/eidolon`.
+- No base64. Every file is readable text.
+- Skill files are written UTF-8 without a BOM, with LF line endings. `welcome.ps1` is
+  ASCII only, so Windows PowerShell 5.1 reads it correctly with no BOM.
+- `skills/` is never edited by hand. It is regenerated with `node scripts/sync-bundles.mjs`
+  from the commits pinned in that script; `vendor-lock.json` records the pins and every file hash.
+- Verification uses a second signal. The PowerShell parser must report zero errors,
+  `bash -n` must pass, the novice scripts must not contain the word node, and a real copy
+  into a temp folder must match the source byte for byte.
+- Tests write to the OS temp folder, never to a real user folder.
 
 ## 15. Scope
 
-- The graphical window now ships: a native double-click installer on Windows (WPF)
-  and macOS (a small app), with the text installer kept as the fallback. Code
-  signing and notarization are the next polish step, not a v1 blocker.
-- Still out of scope: auto-installing runtimes, editing arbitrary user config, and
-  bundling third-party code, ever.
-
-## 16. Open items
-
-- The deep warm bios from the research panel (Addy first) fold into the credits when
-  they land. The verified facts above are enough to write the gallery either way.
-- uv's exact install command verified at build time.
-- Done: the logo lives in `Hearth/assets/EidolonLogo.png` (with a copy inside
-  macos/Hearth.app/Contents/Resources/).
+- Two doors: the novice door (PowerShell on Windows, bash on macOS) and the operator
+  door (a Node terminal picker).
+- Claude Code only.
+- The three graphical installers (WPF window, macOS app, browser page) were removed on
+  2026-10-13, along with Codex support and the optional tool cards.
+- Out of scope, always: installing runtimes, editing user configuration beyond the
+  previewed plan, and bundling third-party code.

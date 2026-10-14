@@ -51,16 +51,19 @@ actually transfer is only half the discipline.
 
 ## When it runs: the opening questions
 
+The session opens with the brain dump offer from `references/interview.md`
+(chips: Start talking, Ask me questions instead, Skip). The dump is extracted
+into the interview schema and reflected back, and only the fields the dump left
+null are asked. Order: brain dump, then the four quick questions, then the
+familiarity question last.
+
 At the start of real work, ask a few short questions. Use tap-to-answer
-buttons, not a wall of text. Match the person's tone: if they are short and
+buttons (`AskUserQuestion`), or lettered plain-text options when that tool is
+unavailable, not a wall of text. Match the person's tone: if they are short and
 direct, give one path and act; if they say "let's explore", offer options.
 
-```
-1. Which parts do you want this session?   remember / check-my-work / both
-2. How should I treat "go ahead"?          you checked it / you trust a second look / do cheap steps then pause
-3. How far should I run before checking?   one step / until tests pass / the whole plan
-4. What kind of work is this?              routine / a judgment call / wrapping up
-```
+The questions and their chip options live in `references/interview.md`. Ask those,
+not a restated copy.
 
 The answers are not thrown away. They set what loads and how careful to be,
 and the work itself gets recorded (see "the shared base").
@@ -71,11 +74,7 @@ People come to this at every level, and there is no wrong answer. Near the
 start, ask how familiar the person is with coding and engineering, so you can
 pitch everything right:
 
-```
-People come to this at all different levels, and there is no wrong answer.
-How familiar are you with coding and engineering?
-  new to this  /  some familiarity  /  comfortable, I code  /  expert
-```
+The familiarity question and its options live in `references/interview.md`.
 
 This sets how plainly you talk and how often you check in:
 
@@ -133,7 +132,7 @@ short enough to actually get read at the moment a decision is made.
 
 ## Handing the answers to eidolon
 
-If the project also uses eidolon (the setup tool), write the answers to a
+If the project also uses Eidolon (the conductor skill), write the answers to a
 small file it can read. eidolon does not need to know how the answers were
 collected.
 
@@ -150,27 +149,25 @@ intent:                  # filled in by Interview Mode, when it was used
   never:  "what it must never do"
   done:   "what done looks like, checkable"
   risk:   "where the risk lives"
-security:                # the session-start security tier eidolon reads (optional)
-  policy:       references/security-policy.md            # the policy an agent reads + hashes
-  attestation:  .claude/security-attestation.json        # where the signed attestation lives
-  required_for: [destructive, sensitive]                 # dispatch tiers that ASK without a valid attestation
 ```
 
-At the start of a session, eidolon surfaces this policy and the attestation
-status, and a destructive or sensitive dispatch with no valid attestation asks
-you first. The training itself lives in eidolon's
-references/security-awareness.md; here Setup just names where it lives, the same
-way it hands over the rest of the session file.
+The security policy lives in the Eidolon skill (its references/security-policy.md);
+Setup does not ship it. The training itself lives in Eidolon's
+references/security-awareness.md.
 
 ## Keeping context across long sessions
 
-When a session runs long, Claude's working context can get trimmed. Two
-small hooks prevent losing your place:
+When a session runs long, Claude's working context can get trimmed. When
+Eidolon's hooks are installed in the project, its session-save and
+session-restore templates cover this:
 
 ```
 session-save       before context is trimmed   save a short note of where things stand
 session-restore    when a session starts        bring that note back
 ```
+
+Setup alone keeps the handoff in `.claude/session.yaml` and claims no
+automatic capture or restore.
 
 ## Where this comes from
 
@@ -192,9 +189,10 @@ changes on a copy first) live in references/collaborate.md.
 
 ## How to use this in a conversation
 
-1. At the start of real work, ask the familiarity question once, then the four
-   quick questions. Offer Interview Mode if they want Claude to understand the
-   project more deeply first. Keep it short.
+1. At the start of real work, offer the brain dump, then ask the four quick
+   questions the dump left open, then the familiarity question once, last. Offer
+   Interview Mode if they want Claude to understand the project more deeply
+   first. Keep it short.
 2. Match the person's tone and their stated familiarity. Do not over-explain.
 3. Load only the parts they picked.
 4. Record decisions and corrections as you go (what broke to docs/fixes,
