@@ -2,7 +2,9 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {mkdtempSync,mkdirSync,cpSync,readFileSync,writeFileSync,rmSync,existsSync} from 'node:fs';
 import {join,resolve,dirname} from 'node:path';import {tmpdir} from 'node:os';import {spawnSync} from 'node:child_process';
-test('bundle check rejects lock and mirror drift without repairing either',t=>{
+const missing=!existsSync(resolve('.ci-source/eidolon'))||!existsSync(resolve('.ci-source/setup'));
+if(missing)console.log('generator-regression: skipped, .ci-source/ checkouts are absent (CI provides them)');
+test('bundle check rejects lock and mirror drift without repairing either',{skip:missing&&'.ci-source/ is absent'},t=>{
  const original=resolve('.');const fixture=mkdtempSync(join(tmpdir(),'hearth-generator-'));t.after(()=>rmSync(fixture,{recursive:true,force:true}));
  mkdirSync(join(fixture,'scripts'));cpSync('scripts/sync-bundles.mjs',join(fixture,'scripts/sync-bundles.mjs'));cpSync('skills',join(fixture,'skills'),{recursive:true});cpSync('vendor-lock.json',join(fixture,'vendor-lock.json'));mkdirSync(join(fixture,'.ci-source'));
  const lock=JSON.parse(readFileSync('vendor-lock.json','utf8'));

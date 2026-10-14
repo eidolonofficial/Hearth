@@ -5,7 +5,8 @@ broke, checks its own claims, and adapts to how the person likes to work.
 They answer the questions; Claude does the rest.
 
 Use `/setup` and the root `SKILL.md`. Keep the original workflow in
-`references/session-workflow.md`; load the three parts only when they are needed.
+`references/session-workflow.md` and the question bank in
+`references/interview.md`; load the three parts only when they are needed.
 For repository maintenance, follow the requested change rather than opening a new
 interview. Loading this file does not authorize installation or start a memory service.
 
@@ -29,23 +30,17 @@ keep_short: retire stale guidance through an active index; keep historical evide
 
 ## Start from the answers already given
 
-Ask only what is still missing. Do not make the person repeat themselves or
-turn a clear instruction into another round of permission to begin.
-
-```text
-1. Which parts do you want this session?   remember / check-my-work / both
-2. How should I treat "go ahead"?          you checked it / you trust a second look / do cheap steps then pause
-3. How far should I run before checking?   one step / until tests pass / the whole plan
-4. What kind of work is this?              routine / a judgment call / wrapping up
-```
+Offer the brain dump first, then ask only what is still missing. Do not make the
+person repeat themselves or turn a clear instruction into another round of permission
+to begin. The invitation, schema, chips and the four opening questions live in
+`references/interview.md`; ask those, not a restated copy.
 
 Use Claude's `AskUserQuestion` when available. Otherwise ask in plain language;
 do not pretend a button or tool exists. These working preferences never replace
 Claude's native permission checks or consent for an install, deployment, or deletion.
 
-Ask familiarity once if it is not already known: new to this, some familiarity,
-comfortable, or expert. It is a starting point, not a cage. Never talk down, and
-never show off. The warmth stays the same at every level.
+Ask familiarity once if it is not already known. It is a starting point, not a cage.
+Never talk down, and never show off. The warmth stays the same at every level.
 
 ## Interview Mode
 
@@ -84,11 +79,8 @@ exclusions, familiarity, run boundary, and answered questions. Use Claude's
 `CLAUDE.md` and `.claude/skills/` paths. Keep controller and worker state separate;
 a worker must not rewrite the controller's handoff or another worker's persona.
 
-When Eidolon is installed, use its task and persona contracts to prepare bounded
-context for the actual host agent tools. A saved plan is not a launched agent.
-Read `references/engine-contract.md` before engine work: exact plan-digest consent,
-trusted-local versus sandbox boundaries, immutable evaluated evidence, and separate
-approval for optional dependencies and data access remain required.
+When Eidolon is installed, use its brief contract (references/persona-template.md in Eidolon) to prepare bounded context for the
+actual agent tools. A saved plan is not a launched agent.
 
 Setup is an instruction skill, not an executable hook or a running memory service.
 Only claim capture or restore after observing the installed integration work.
@@ -98,8 +90,8 @@ Say what ran, what changed, and what remains unsure. Let the person make the fin
 ## Repository maintenance
 
 Preserve the original workflow in `references/session-workflow.md`.
-Keep Codex and Claude mappings explicit. Never promise executable hooks from a text skill.
-Treat current host capabilities as fresher than remembered model/version behavior.
+Never promise executable hooks from a text skill.
+Treat current Claude Code capabilities as fresher than remembered model/version behavior.
 When multiple installed skills could apply, preserve the user story: explicit choice first, then narrow task triggers, inspected repo evidence, risk, description fit, exclusions and prerequisites; choose the smallest sufficient set and return a gap instead of guessing.
 Skill selection does not require delegation. Use subagents only when parallelism, isolated context, specialist work, or independent verification adds value.
 Run: `node --test tests/*.test.mjs`.

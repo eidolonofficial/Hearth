@@ -1,7 +1,7 @@
 name: Reviewed ecosystem integration
 on:
   push:
-    branches: [main, ci/github-verification-20260909]
+    branches: [main, 'release/**']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -24,13 +24,13 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon
-          ref: 3b67f1f45137636c00f62624fd6bd1418a97e4ae
+          ref: 067434664e3630b52ef1f1d4460bafd2c5c9274a
           path: .ci-source/eidolon
           persist-credentials: false
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           repository: eidolonofficial/eidolon-setup
-          ref: 8fcd7c7a59bd3702b786ee3878a133828435b477
+          ref: 2733f2e9c5d09c26040c2348ad082b2adf93513d
           path: .ci-source/setup
           persist-credentials: false
       - name: Verify the committed distribution without rewriting it
@@ -49,7 +49,7 @@ jobs:
         run: |
           set -o pipefail
           node --test --test-reporter=tap scripts/generator-regression.test.mjs 2>&1 | tee .ci-evidence/generator.tap
-      - name: Hearth real server, protocol and disposable installation tests
+      - name: Hearth installer, operator picker and novice door tests
         shell: bash
         run: |
           set -o pipefail

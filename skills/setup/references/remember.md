@@ -1,7 +1,7 @@
 # remember
 
 Keep two running records so a later session picks up where this one left off.
-Both rely on the shared base in SKILL.md. Do not repeat those rules here.
+Both rely on the shared base in references/session-workflow.md. Do not repeat those rules here.
 
 ## Why two records
 
