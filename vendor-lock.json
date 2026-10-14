@@ -1,12 +1,12 @@
 {
   "sources": {
-    "eidolon": "6a416f025218dc6dd33dffafe643d1a43201b860",
+    "eidolon": "40bee9bcd9a5a318fc48254d159bec563e305a5b",
     "setup": "2733f2e9c5d09c26040c2348ad082b2adf93513d"
   },
   "excluded": "^(?:\\.git|\\.github|\\.claude|\\.eidolon)(?:\\/|$)|^\\.gitignore$",
   "files": {
     "eidolon/.gitattributes": "30e1f034824a6055fdd4c7e37e3342d5288f02253e209136578823fc309b0ecd",
-    "eidolon/CHANGELOG.md": "ab0286721f4294a309346f1760b81d927a61773408fff32c44928d31ce6fcaac",
+    "eidolon/CHANGELOG.md": "db362d7e4b04f564c890012101e7d1dcded52bdb76f53e9deac630f6ca619a79",
     "eidolon/CLAUDE.md": "fb3ffea57820f86e01c801559b83993a8205f57adf0ad077ee1818fa8c6ffe14",
     "eidolon/CREDITS.md": "05fa148328ce168cee380a449cad5a4f45a351a93a268946ebf33e89374822c3",
     "eidolon/LICENSE": "ea094d3f1d075922bc6094bd59e93ccdceaeb720419eeda38f9789f091aa11ac",
@@ -35,8 +35,8 @@
     "eidolon/docs/decisions/2026-07-03-fable-behavior-pack.md": "b738fb6c7d04f9a2cfbc3bcaeeb569033192dde07b18a193094d8017396aa4c3",
     "eidolon/docs/decisions/2026-07-09-feature-triage-study.md": "adfcf124c4c5f1f56f358d7471c679eef129e02e76e8e8c355f3f47c5b325709",
     "eidolon/docs/decisions/2026-09-09-persona-pipelines-and-review-repairs.md": "6bf086619b032b42ea9af325e5d9a352acdbadc9f9da7e8fcbee87d4fca781b9",
-    "eidolon/docs/decisions/2026-09-09-reviewed-persona-pipelines.md": "384a6ac0dd256dbad62dfa8846ae19ad09a4b9499ca173f0f5ccff36e39fcfe5",
-    "eidolon/docs/decisions/2026-10-13-archive-branches-and-v010-re-cut.md": "006246324888e4b5bd52859a109d13f823f92b13926c83da095091d32f00b897",
+    "eidolon/docs/decisions/2026-09-09-reviewed-persona-pipelines.md": "54fe863375bf83b53c204f055c7a71f71014ceabbaa8f078199537762ed22d6a",
+    "eidolon/docs/decisions/2026-10-13-archive-branches-and-v010-re-cut.md": "67f4a63621b5690155ae5921cd0d8949311f3b1de7bdeb2c9f596f6dba5ec015",
     "eidolon/docs/examples/personas/fraud-forensic-replay-primary.md": "fcd0e0f64bca7d422b5c74b5fd53cd5aa6595a6a11ed38ee79c975232cbbeb9f",
     "eidolon/docs/fixes/FIX-2026-06-16-engine-hook-suite-exemption.md": "38a417fdb300ed77e4b6eb2003e2f8cf72230766a31b58d598a966f53550e26d",
     "eidolon/docs/fixes/FIX-2026-09-08-effective-git-hooks.md": "d7ef965abd6dcc2760c37af9d25966634ae2b19e131bfe3f43223d0493244a2c",
@@ -146,9 +146,9 @@
     "eidolon/scripts/install-round2.test.mjs": "78d833d66a4405afb4231a9b354b2b8550fc6e65ddcf10bb2e600fdb78d5434b",
     "eidolon/scripts/install-round5.test.mjs": "c674bc04cd3ffb397de495d1e8929363537315f20ebdd149c03268c05ce11734",
     "eidolon/scripts/install.mjs": "789255dfc38f2b3dc25581d3746b4e09679077917a4e0cba9be2c68f38b35cb6",
-    "eidolon/scripts/install.test.mjs": "4b1c9aced4e80b92336c45080b743fab773bc86cde32c0541c627142f4bfc616",
+    "eidolon/scripts/install.test.mjs": "8e30486c31a5c6387ee70ba66202d7315a91c80ab435364f9cfc71634aeb79f5",
     "eidolon/scripts/persona-lint.mjs": "84c9d9932a47c83133aa1113feaf9ee49950e0b4ad1d71c6e76bd4f83676b109",
-    "eidolon/scripts/persona-lint.test.mjs": "e8e880358009a0c204332ebdb8db993d9e80d10e4b1fc9de0bb793cadea85aff",
+    "eidolon/scripts/persona-lint.test.mjs": "97f7901543a0339b4279d47098cfa523b2355937845661713602e2cbba729a19",
     "eidolon/scripts/scan-history.py": "56f39a9b576218d4ba041b0bf9cf327a2bc32cc7f92d41ce0627fbf944eb6b64",
     "eidolon/scripts/selfcheck.mjs": "bff635d0931477a74be4017f37821968a0739736eb1b6c04fed03ec2f97e6631",
     "eidolon/scripts/skill-lint.mjs": "fa054367a2ef91e961d7ad80e0f6ed315e50a47d09bb602f34d06cfc1edbc6ae",
