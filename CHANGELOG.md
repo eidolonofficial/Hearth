@@ -1,6 +1,12 @@
 # Changelog
 
-## v0.1.1 (unreleased)
+## v0.1.1 (2026-10-14)
+
+Bundles
+
+- Eidolon at v0.1.2 (6a416f0): hook review rounds 5 and 6, the update check, the house persona's
+  problem-solving method, the token economy reference. Setup stays at v0.1.0 (2733f2e). The lock
+  lists 164 files.
 
 Added
 
@@ -8,11 +14,19 @@ Added
   `npx eidolon-hearth .` installs into the current project with its hooks. The package ships the
   picker, the installer, the two bundles and the lock; `tests/package.test.mjs` checks the pack
   against the lock.
+- An update check in every door. Each door asks GitHub once for the latest Hearth release
+  (three seconds at most, silent on failure, `EIDOLON_UPDATE_CHECK=0` turns it off) and asks
+  before it acts: the novice doors open the download page on `yes`, the picker runs the newer
+  version through `npm exec` with the same arguments. The Eidolon skill runs the same check at
+  its start (`scripts/check-updates.mjs`, cached for a day) and asks before updating.
+  `tests/update-notice.test.mjs` drives all three doors against a local release server.
+- Picker flags `--yes` (apply without typed answers; replaces with a backup), `--home <path>`
+  and `--version`.
 
 Changed
 
 - Bundles leave out each source repository's root `.gitignore`, because npm renames that file
-  inside a published package; the lock lists 157 files.
+  inside a published package.
 - Second-host wording and directory handling removed.
 
 ## v0.1.0 (2026-10-13)

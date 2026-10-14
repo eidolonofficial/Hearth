@@ -29,6 +29,12 @@ Both scripts accept test flags: `-Yes -Home <path>` on Windows and
 `--yes --home <path>` on macOS. `-Yes` replaces without asking. `-Home` swaps your user
 folder for another one.
 
+Before it copies, each door asks GitHub once for the latest Hearth release (one request to
+`api.github.com`, three seconds at most, nothing sent but a fixed user agent). If a newer
+release exists it says so and asks; `yes` opens the download page and stops, Enter continues
+with the copy you have. No answer from GitHub means no notice. Set `EIDOLON_UPDATE_CHECK=0`
+to turn the check off.
+
 ## Door 2: the operator door
 
 Use this if you want project hooks. It needs Node 22 or newer.
@@ -41,8 +47,14 @@ Use this if you want project hooks. It needs Node 22 or newer.
   project to wire its hooks. It runs the same picker from the published package `eidolon-hearth`.
 
 It checks your Node version first. If Node is missing or too old, it points you to
-https://nodejs.org and stops. Then it asks for a project folder. Blank means user skills
-only.
+https://nodejs.org and stops. It then asks GitHub once for the latest Hearth release (cached
+for a day; `EIDOLON_UPDATE_CHECK=0` turns it off). If a newer one exists it asks `Update now?`;
+`yes` runs the newer version in place of this one through `npm exec`, with the same arguments,
+and Enter continues with this copy. Then it asks for a project folder. Blank means user skills
+only. Flags: `--yes` applies without the typed answers (an existing copy is replaced, with a
+backup, and the update question is skipped), `--home <path>` swaps your user folder (tests),
+`--version` prints the version. Inside a Claude Code session, the Eidolon skill runs the same
+check at its start and asks you before it runs `npx -y eidolon-hearth@latest --yes`.
 
 Before it plans, it checks every bundled file against `vendor-lock.json` and stops on a
 mismatch. It shows every path it will write under "Proposed locations:", with the text it

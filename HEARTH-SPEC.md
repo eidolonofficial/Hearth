@@ -123,6 +123,9 @@ Operator door:
 - Replacement needs its own answer. Old files are kept with a receipt.
 - A partial copy is never reported as a success.
 - Hearth does not install Node, credentials, models, or any service.
+- The only network request a door makes is one read of the latest Hearth release on
+  GitHub, three seconds at most, with nothing sent but a fixed user agent; a newer release
+  is named and the person decides. `EIDOLON_UPDATE_CHECK=0` turns the check off.
 - The EidolonLogo is the author's own art. No third-party imagery is used.
 - A test is not a click-through on a real machine. The macOS doors run for real in the
   test suite on GitHub's macOS and Linux runners (copy, skip, replace with backup, the
