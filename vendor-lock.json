@@ -1,13 +1,13 @@
 {
   "sources": {
-    "eidolon": "1e372cbd8f0ace593c93568bd1353f89cc70e43c",
+    "eidolon": "067434664e3630b52ef1f1d4460bafd2c5c9274a",
     "setup": "2733f2e9c5d09c26040c2348ad082b2adf93513d"
   },
   "excluded": "^(?:\\.git|\\.github|\\.claude|\\.codex|\\.agents|\\.eidolon)(?:\\/|$)",
   "files": {
     "eidolon/.gitattributes": "30e1f034824a6055fdd4c7e37e3342d5288f02253e209136578823fc309b0ecd",
     "eidolon/.gitignore": "e8d4db3547d13604d92e440224f0914ca503adb3eb93c950704e5842de3bc12f",
-    "eidolon/CHANGELOG.md": "a0cdc501211cd402dd7feddb4a931f54f08f96ce13fd41b20d2fba9ee7443005",
+    "eidolon/CHANGELOG.md": "010666ebb6c30c54bbe7d1733297d95af0000df3779276131fe7a4f47d156a3e",
     "eidolon/CLAUDE.md": "fb3ffea57820f86e01c801559b83993a8205f57adf0ad077ee1818fa8c6ffe14",
     "eidolon/CREDITS.md": "54e66e4d0c305bce2a574273baefc6269e946b1bb7d57c4259b4eaac511143eb",
     "eidolon/LICENSE": "ea094d3f1d075922bc6094bd59e93ccdceaeb720419eeda38f9789f091aa11ac",
