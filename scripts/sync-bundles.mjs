@@ -7,7 +7,8 @@ import { createHash } from 'node:crypto';
 import {isDeepStrictEqual} from 'node:util';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const pins = { eidolon: '067434664e3630b52ef1f1d4460bafd2c5c9274a', setup: '2733f2e9c5d09c26040c2348ad082b2adf93513d' };
-const skip = /^(?:\.git|\.github|\.claude|\.codex|\.agents|\.eidolon)(?:\/|$)/;
+// The source repos' own root .gitignore stays out: npm renames .gitignore to .npmignore inside a published package, so a locked copy could never match there.
+const skip = /^(?:\.git|\.github|\.claude|\.codex|\.agents|\.eidolon)(?:\/|$)|^\.gitignore$/;
 const lock = { sources: pins, excluded: skip.source, files: {} };
 function countFiles(dir) {
   return readdirSync(dir).reduce((sum, name) => { const path = join(dir, name), stat = lstatSync(path); if (stat.isSymbolicLink()) throw Error('Unexpected bundled symlink'); return sum + (stat.isDirectory() ? countFiles(path) : 1); }, 0);

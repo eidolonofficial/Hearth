@@ -3,10 +3,9 @@
     "eidolon": "067434664e3630b52ef1f1d4460bafd2c5c9274a",
     "setup": "2733f2e9c5d09c26040c2348ad082b2adf93513d"
   },
-  "excluded": "^(?:\\.git|\\.github|\\.claude|\\.codex|\\.agents|\\.eidolon)(?:\\/|$)",
+  "excluded": "^(?:\\.git|\\.github|\\.claude|\\.codex|\\.agents|\\.eidolon)(?:\\/|$)|^\\.gitignore$",
   "files": {
     "eidolon/.gitattributes": "30e1f034824a6055fdd4c7e37e3342d5288f02253e209136578823fc309b0ecd",
-    "eidolon/.gitignore": "e8d4db3547d13604d92e440224f0914ca503adb3eb93c950704e5842de3bc12f",
     "eidolon/CHANGELOG.md": "010666ebb6c30c54bbe7d1733297d95af0000df3779276131fe7a4f47d156a3e",
     "eidolon/CLAUDE.md": "fb3ffea57820f86e01c801559b83993a8205f57adf0ad077ee1818fa8c6ffe14",
     "eidolon/CREDITS.md": "54e66e4d0c305bce2a574273baefc6269e946b1bb7d57c4259b4eaac511143eb",
@@ -151,7 +150,6 @@
     "eidolon/scripts/verify-packet.mjs": "a970cce961dad937eae24a1ccf78843ad5a952e7f8d036bbf5a6d649a610a58f",
     "eidolon/scripts/verify-packet.test.mjs": "a2d10687541c7da7fa9f66ec6d43f129958164d15edf3077a35d0aca702a0c9d",
     "setup/.gitattributes": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c",
-    "setup/.gitignore": "19ce3a2764d6ad934a8258b593ea9fa9ef391e1d385634addac319cef7aa1220",
     "setup/CLAUDE.md": "4f359c924f4ef8f8e9e125642cac66f0a8346fded5fcb833f3744ba1fc3ee302",
     "setup/LICENSE": "ea094d3f1d075922bc6094bd59e93ccdceaeb720419eeda38f9789f091aa11ac",
     "setup/README.md": "0f8c3426313c77adcb515c39dd4e62bde491d1b7b88412865162469b6623cecc",
