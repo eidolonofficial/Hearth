@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Operator door: terminal picker for Claude Code. Shows the plan, asks, then applies that plan.
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
@@ -18,7 +19,9 @@ function show(plan, previews) {
 const rl = createInterface({ input: stdin, output: stdout });
 try {
   console.log('Hearth operator setup. This installs Setup and Eidolon for Claude Code.');
-  const project = (await rl.question('Project folder (leave blank for user skills only): ')).trim() || undefined;
+  const given = process.argv.slice(2).find(a => !a.startsWith('-'));
+  const project = given !== undefined ? (given === '.' ? process.cwd() : given) : ((await rl.question('Project folder (leave blank for user skills only): ')).trim() || undefined);
+  if (given !== undefined) console.log('Project folder: ' + project);
   let replace = false, plan, preview;
   try { plan = prepareHearth({ project }); preview = applyHearth(plan, { dryRun: true }); }
   catch (e) {
