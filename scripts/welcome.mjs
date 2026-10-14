@@ -37,8 +37,7 @@ function show(plan, previews) {
 // One request to GitHub for the latest Hearth release (cached for a day), silent when it fails;
 // EIDOLON_UPDATE_CHECK=0 turns it off. On yes the newer version runs in place of this one, with the
 // same arguments. HEARTH_UPDATE_COMMAND (a JSON array) replaces the npm command in tests.
-async function updated(rl) {
-  const result = await checkForUpdate({ current: VERSION });
+async function updated(rl, result) {
   if (!result.newer) return false;
   console.log('Hearth v' + result.latest + ' is available. This copy is v' + VERSION + '.');
   console.log('Release: ' + result.url);
@@ -53,9 +52,12 @@ async function updated(rl) {
   return true;
 }
 
+// The check runs before readline attaches to stdin: answers piped in ahead of the first question stay
+// buffered in the stream, while readline would drop lines that arrive while no question is pending.
+const update = await checkForUpdate({ current: VERSION });
 const rl = createInterface({ input: stdin, output: stdout });
 try {
-  if (await updated(rl)) process.exit(0);
+  if (await updated(rl, update)) process.exit(0);
   console.log('Hearth operator setup. This installs Setup and Eidolon for Claude Code.');
   const given = positional[0];
   const project = given !== undefined ? (given === '.' ? process.cwd() : given)
