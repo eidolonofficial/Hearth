@@ -37,6 +37,8 @@ Use this if you want project hooks. It needs Node 22 or newer.
 - macOS: open `macos/Operator Setup.command`. Status: run on GitHub's macOS runner on 2026-10-13;
   not yet on a user's own Mac.
 - Any terminal: `node scripts/welcome.mjs`.
+- From npm, with Node 22: `npx eidolon-hearth` for user skills, or `npx eidolon-hearth .` inside a
+  project to wire its hooks. It runs the same picker from the published package `eidolon-hearth`.
 
 It checks your Node version first. If Node is missing or too old, it points you to
 https://nodejs.org and stops. Then it asks for a project folder. Blank means user skills
