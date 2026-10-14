@@ -146,6 +146,6 @@ Operator door:
   door (a Node terminal picker).
 - Claude Code only.
 - The three graphical installers (WPF window, macOS app, browser page) were removed on
-  2026-10-13, along with Codex support and the optional tool cards.
+  2026-10-13, along with second-host support and the optional tool cards.
 - Out of scope, always: installing runtimes, editing user configuration beyond the
   previewed plan, and bundling third-party code.

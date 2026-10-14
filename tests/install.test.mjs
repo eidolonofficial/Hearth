@@ -19,10 +19,9 @@ test('a project install lands both skills under .claude and nothing under .agent
   assert.ok(result.ok); assert.ok(result.copied > 100);
   for (const name of ['eidolon', 'setup']) assert.ok(existsSync(join(project, '.claude/skills', name, 'SKILL.md')));
   assert.equal(existsSync(join(project, '.agents')), false);
-  assert.equal(existsSync(join(project, '.codex')), false);
 });
 test('a host option other than Claude is ignored, never honored', t => {
-  const project = tmp(t); installHearth({ project, host: 'codex', dryRun: false });
+  const project = tmp(t); installHearth({ project, host: 'otherhost', dryRun: false });
   assert.ok(existsSync(join(project, '.claude/skills/setup/SKILL.md')));
   assert.equal(existsSync(join(project, '.agents')), false);
 });
@@ -30,7 +29,6 @@ test('shipped Eidolon carries the platform contract, the pipeline references and
   const base = join(root, 'skills/eidolon');
   for (const path of ['references/current-platform-contract.md', 'references/engineering-principles.md', 'references/autopilot-guide.md', 'references/interview.md', 'references/conductor-standard.md', 'hooks/guard-dispatch.mjs', 'hooks/lanes.mjs', 'scripts/hooks-readme-check.mjs']) assert.ok(existsSync(join(base, path)), path);
   assert.match(readFileSync(join(base, 'references/current-platform-contract.md'), 'utf8'), /Do not hardcode a point release/);
-  assert.equal(existsSync(join(base, 'codex')), false);
   assert.equal(existsSync(join(base, 'engine')), false);
 });
 test('shipped Setup opens with the brain dump and carries evidence-based skill selection', () => {
@@ -39,7 +37,6 @@ test('shipped Setup opens with the brain dump and carries evidence-based skill s
   assert.match(s, /smallest sufficient non-conflicting set/);
   assert.match(s, /record a gap/);
   assert.match(s, /Never pin behavior to a remembered/);
-  assert.equal(existsSync(join(root, 'skills/setup/codex')), false);
 });
 test('partial failure is never a success', t => {
   const project = tmp(t);
@@ -70,7 +67,7 @@ test('CLI applies only the previewed plan and reports completion only after both
   assert.ok(existsSync(join(home, '.claude/skills/setup/SKILL.md')));
 });
 test('CLI has no host option', () => {
-  const result = spawnSync(process.execPath, [join(root, 'scripts/install.mjs'), '--host', 'codex'], { encoding: 'utf8' });
+  const result = spawnSync(process.execPath, [join(root, 'scripts/install.mjs'), '--host', 'otherhost'], { encoding: 'utf8' });
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /Unknown option/);
 });

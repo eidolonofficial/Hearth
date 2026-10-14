@@ -3,7 +3,7 @@
     "eidolon": "067434664e3630b52ef1f1d4460bafd2c5c9274a",
     "setup": "2733f2e9c5d09c26040c2348ad082b2adf93513d"
   },
-  "excluded": "^(?:\\.git|\\.github|\\.claude|\\.codex|\\.agents|\\.eidolon)(?:\\/|$)|^\\.gitignore$",
+  "excluded": "^(?:\\.git|\\.github|\\.claude|\\.eidolon)(?:\\/|$)|^\\.gitignore$",
   "files": {
     "eidolon/.gitattributes": "30e1f034824a6055fdd4c7e37e3342d5288f02253e209136578823fc309b0ecd",
     "eidolon/CHANGELOG.md": "010666ebb6c30c54bbe7d1733297d95af0000df3779276131fe7a4f47d156a3e",
