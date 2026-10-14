@@ -33,7 +33,6 @@ Changed
 
 - Bundles leave out each source repository's root `.gitignore`, because npm renames that file
   inside a published package.
-- Second-host wording and directory handling removed.
 
 ## v0.1.0 (2026-10-13)
 
