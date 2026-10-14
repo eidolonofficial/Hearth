@@ -20,7 +20,7 @@ that other people put in first, and the trust they extended by giving it away.
 Creator of Hearth, Setup, and Eidolon
 github.com/gmrmk | linkedin.com/in/jonah-butterbaugh-2288033b1
 
-A Trust and Safety investigator who spends his days reading the patterns most people never notice. Account takeovers, supplier fraud, collusion rings, the quiet signals that something is wrong. More than a decade of that work across consumer banking, property and casualty insurance, and platform risk, now at Expedia Group, with hands-on KYC, AML, and OFAC reporting along the way. Hearth grows straight out of that instinct. The same care he brings to protecting people from fraud, he brings to protecting a nervous beginner from feeling lost. He built it alongside Claude, the two of them working together.
+A Trust and Safety investigator who spends his days reading the patterns most people never notice. Account takeovers, supplier fraud, collusion rings, the quiet signals that something is wrong. More than a decade of that work across consumer banking, property and casualty insurance, and platform risk, with hands-on KYC, AML, and OFAC reporting along the way. Hearth grows straight out of that instinct. The same care he brings to protecting people from fraud, he brings to protecting a nervous beginner from feeling lost. He built it alongside Claude, the two of them working together.
 
 And here are the people whose work Hearth stands on, starting with the one the whole pattern grows from.
 
